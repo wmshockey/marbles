@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_08_010043) do
+ActiveRecord::Schema.define(version: 2020_09_14_141508) do
 
   create_table "games", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name"
@@ -34,14 +34,6 @@ ActiveRecord::Schema.define(version: 2020_06_08_010043) do
     t.string "bplayer"
     t.string "gbteam"
     t.string "ryteam"
-  end
-
-  create_table "players", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
-    t.string "name"
-    t.string "handle"
-    t.string "color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
 end
