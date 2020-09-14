@@ -1,0 +1,125 @@
+<h1 id="header">New Game</h1>
+
+<div id="form_name", class="hidden"><%= "game" %></div>
+
+
+<%= form_with(model: @game, local: true) do |form| %>
+
+  <% if @game.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
+      <ul>
+      <% @game.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+<body class="container">
+
+<br>
+
+<div class="row">
+  <div class="col-sm-1"><%= form.label "Game Name:" %></div>
+  <div class="col-sm-2"><%= form.text_field :name %></div> 
+  <div class="col-sm-9"></div>
+</div>
+
+<br>
+
+<div class="row border">
+	<span class="col-sm-1"></span>
+	<div class="col-sm-2", style="color:yellow; text-align:center"><%= form.label "Yellow"%></div>
+	<div class="col-sm-2", style="color:red; text-align:center"><%= form.label "Red"%></div>
+	<div class="col-sm-2", style="color:green; text-align:center"><%= form.label "Green"%></div>
+	<div class="col-sm-2", style="color:blue; text-align:center"><%= form.label "Blue"%></div>
+    <span class="col-sm-1"></span>
+</div>
+
+<div class="row">
+	<div class="col-sm-1"><%= form.label "Players"%></div>
+	<div class="col-sm-2"><%= form.text_field :yplayer %></div>
+	<div class="col-sm-2"><%= form.text_field :rplayer %></div>
+	<div class="col-sm-2"><%= form.text_field :gplayer %></div>
+	<div class="col-sm-2"><%= form.text_field :bplayer %></div>
+    <span class="col-sm-3"></span>
+</div>
+	
+<div class="row">
+	<div class="col-sm-1"><%= form.label "Team Names"%></div>
+	<div class="col-sm-4"><%= form.text_field :ryteam, size: "48"%></div>
+	<div class="col-sm-4"><%= form.text_field :gbteam, size: "48"%></div>
+    <span class="col-sm-3"></span>
+</div>
+
+<br>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-2" >
+    <%= form.submit "Save", class:"btn-lg btn-primary", id:"Save"%>
+  </div>
+  <div class="col-sm-2"><%= link_to 'Back', games_path%></div>
+  <span class="col-sm-7"></span>
+</div>
+
+
+<br>
+
+<div class="hidden">
+
+<div class="row">
+  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
+  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
+  <span class="col-sm-8"></span>
+</div>
+
+
+<div class="row">
+	<span class="col-sm-2 top"><%= form.label "Hand"%></span>
+	<span class="col-sm-2 top"><%= form.text_area :yellowhand %></span>
+	<span class="col-sm-2 top"><%= form.text_area :redhand %></span>
+	<span class="col-sm-2 top"><%= form.text_area :greenhand %></span>
+	<span class="col-sm-2 top"><%= form.text_area :bluehand %></span>
+    <span class="col-sm-2"></span>
+</div>
+
+<div class="row">
+	<div class="col-sm-2 top"><%= form.label "Deck"%></div>
+	<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
+    <span class="col-sm-2"></span>
+</div>
+
+<div class="row">
+	<div class="col-sm-2 top"><%= form.label "Board"%></div>
+	<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
+    <span class="col-sm-2"></span>
+</div>
+
+<div class="row">
+	<div class="col-sm-2 top"><%= form.label "Discard Pile"%></div>
+	<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
+    <span class="col-sm-2"></span>
+</div>
+	
+
+<div class="row">
+	<div class="col-sm-2 top"><%= form.label "Message"%></div>
+	<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "2"%></div>
+	<span class="col-sm-2"></span>
+</div>
+
+</div>
+
+
+<br>
+
+ 
+</body>
+
+
+<% end %>
+
+
+
