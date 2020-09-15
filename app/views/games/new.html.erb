@@ -2,7 +2,6 @@
 
 <div id="form_name", class="hidden"><%= "game" %></div>
 
-
 <%= form_with(model: @game, local: true) do |form| %>
 
   <% if @game.errors.any? %>
@@ -22,36 +21,36 @@
 <br>
 
 <div class="row">
-  <div class="col-sm-1"><%= form.label "Game Name:" %></div>
+  <div class="col-sm-2"><%= form.label "Game Name:" %></div>
   <div class="col-sm-2"><%= form.text_field :name %></div> 
-  <div class="col-sm-9"></div>
+  <div class="col-sm-8"></div>
 </div>
 
 <br>
 
-<div class="row border">
-	<span class="col-sm-1"></span>
-	<div class="col-sm-2", style="color:yellow; text-align:center"><%= form.label "Yellow"%></div>
-	<div class="col-sm-2", style="color:red; text-align:center"><%= form.label "Red"%></div>
-	<div class="col-sm-2", style="color:green; text-align:center"><%= form.label "Green"%></div>
-	<div class="col-sm-2", style="color:blue; text-align:center"><%= form.label "Blue"%></div>
-    <span class="col-sm-1"></span>
+<div class="row border text-left">
+	<span class="col-sm-2"></span>
+	<div class="col-sm-2", style="color:yellow; text-align:left"><%= form.label "Yellow"%></div>
+	<div class="col-sm-2", style="color:red; text-align:left"><%= form.label "Red"%></div>
+	<div class="col-sm-2", style="color:green; text-align:left"><%= form.label "Green"%></div>
+	<div class="col-sm-2", style="color:blue; text-align:left"><%= form.label "Blue"%></div>
+    <span class="col-sm-2"></span>
 </div>
 
 <div class="row">
-	<div class="col-sm-1"><%= form.label "Players"%></div>
-	<div class="col-sm-2"><%= form.text_field :yplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :rplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :gplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :bplayer %></div>
-    <span class="col-sm-3"></span>
+	<div class="col-sm-2"><%= form.label "Players"%></div>
+	<div class="col-sm-2"><%= form.select :yplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+	<div class="col-sm-2"><%= form.select :rplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+	<div class="col-sm-2"><%= form.select :gplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+	<div class="col-sm-2"><%= form.select :bplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+    <span class="col-sm-2"></span>
 </div>
 	
 <div class="row">
-	<div class="col-sm-1"><%= form.label "Team Names"%></div>
+	<div class="col-sm-2"><%= form.label "Team names"%></div>
 	<div class="col-sm-4"><%= form.text_field :ryteam, size: "48"%></div>
 	<div class="col-sm-4"><%= form.text_field :gbteam, size: "48"%></div>
-    <span class="col-sm-3"></span>
+    <span class="col-sm-2"></span>
 </div>
 
 <br>
