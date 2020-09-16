@@ -5,7 +5,7 @@ $(document).ready(() => {
 
   $('[id="Save"]').on("click", function(){
 	  
-	  var header = document.getElementsByTagName("h1")[0].innerHTML;
+	  var header = document.getElementById("header").innerHTML;
 	  
 /* get the players list */
 	    yplayer = $("#game_yplayer").val();
@@ -98,7 +98,7 @@ $(document).ready(() => {
 		if (cardsDealt) {
 			alert("Cards have already been dealt.");
 		} else {
-			if (confirm("Are you sure you want to shuffle and deal?")) {
+			if (confirm("Deal cards?")) {
 				dealCards();
 				displayCards(turn_color);
 				$("#game_deck").val(deck.toString());
@@ -166,14 +166,16 @@ $(document).ready(() => {
 		var game_status = document.getElementById("game_status").innerHTML;
 		var turn = parseInt(document.getElementById("game_turn").innerHTML);
 		var comment = document.getElementById("game_comment").innerHTML;
+		user_name = document.getElementById("user_name").innerHTML;
 /* convert strings in page to arrays */	
 		var board = (document.getElementById("game_board").innerHTML).split(",");
 		var deck = (document.getElementById("game_deck").innerHTML).split(",");
 		var discardpile = (document.getElementById("game_discard").innerHTML).split(",");
-/* Reposition the header */
-		headerElement.style.position = "absolute";
-		headerElement.style.left = "20px";
-		headerElement.style.top = "5px";
+		var greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
+		var redhand = document.getElementById("game_redhand").innerHTML.split(",");
+		var bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
+		var yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+
 /* draw the board and card area */
 		drawBoard();
 		drawCardArea();
@@ -192,20 +194,23 @@ $(document).ready(() => {
 		rplayer = document.getElementById("game_rplayer").innerHTML;
 		bplayer = document.getElementById("game_bplayer").innerHTML;
 		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-		
-/* Show whose turn it is on the screen */
-		var t = document.createElement("h3");
-		t.setAttribute("id", "showturn");
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
-		t.innerHTML = "It is " + player + "'s turn right now";
-		t.style.color = turn_color;
-		t.style.position = "absolute";
-		t.style.left = '550px';
-		t.style.top = '5px';
-		document.body.appendChild(t);
-	}		
 
+/* Display cards of person who is logged in */
+		user_color = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][0] == user_name) {
+				user_color = playerList[i][1];
+			}
+		}
+		if (user_color != ""){
+			displayCards(user_color);
+			updateBoardArray();	
+		}
+		
+	}
+	
 		
 /*
 
@@ -221,6 +226,8 @@ $(document).ready(() => {
 		var game_status = $("#game_status").val();
 		var turn = parseInt($("#game_turn").val());
 		var comment = $("#game_comment").val();
+		user_name = document.getElementById("user_name").innerHTML;
+
 /* convert strings in form to arrays */	
 		var board = ($("#game_board").val()).split(","); 
 		var deck = ($("#game_deck").val()).split(",");
@@ -234,11 +241,6 @@ $(document).ready(() => {
 		var rplayer = $("#game_rplayer").val();
 		var bplayer = $("#game_bplayer").val();
 		
-/* Reposition the header */
-		headerElement.style.position = "absolute";
-		headerElement.style.left = "20px";
-		headerElement.style.top = "5px";
-				
 /* get the players list */
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		var player = playerList[turn][0];
@@ -252,20 +254,10 @@ $(document).ready(() => {
 /* Display cards of person whose turn it is */
 		displayCards(turn_color);
 		updateBoardArray();
-		
-	/* Show whose turn it is on the screen */
-		var t = document.createElement("h3");
-		t.setAttribute("id", "showturn");
-		t.innerHTML = "Player: " + player;
-		t.style.color = turn_color;
-		t.style.position = "absolute";
-		t.style.left = '850px';
-		t.style.top = '20px';
-		document.body.appendChild(t);		
-		
+				
 	}
 	
-	/* Save board and card hands at start of turn */
+/* Save board and card hands at start of turn */
 	board_start = board;
 	yellowhand_start = yellowhand;
 	greenhand_start = greenhand;
@@ -274,7 +266,11 @@ $(document).ready(() => {
 	discardpile_start = discardpile;
 	deck_start = deck;
 	
+
+
 /* Control is now turned over to drag and drop functions of browser */
+
+
 	
 /* -----------------------------FUNCTIONS----------------------------------- */
 
@@ -573,19 +569,18 @@ $(document).ready(() => {
 		d.style.top = '100px';
 		d.style.width = "400px";
 		d.style.height = "120px";
+		d.style.border = "dotted";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
-		if (header == "Marbles Game") {
-			var d = document.createElement("div");
-			d.setAttribute("id", "hand_label");
-			d.className = "boardlabel";
-			d.style.position = "absolute";
-			d.innerHTML = "Hand";
-			d.style.left = "900px";
-			d.style.top = "80px";
-			document.body.appendChild(d);			
-		}
+		var d = document.createElement("div");
+		d.setAttribute("id", "hand_label");
+		d.className = "boardlabel";
+		d.style.position = "absolute";
+		d.innerHTML = user_name + "'s hand";
+		d.style.left = "900px";
+		d.style.top = "80px";
+		document.body.appendChild(d);			
 	/* Draw the discard area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "discardpile");
@@ -679,9 +674,9 @@ $(document).ready(() => {
 		number_players = playerList.length;
 		if (deck.length <= 1) {
 			deck = fulldeck;
+			shuffle(deck);
 			discardpile = [];
 		} 	
-		shuffle(deck);
 		cards_left = deck.length;
 		max_deal = cards_left / number_players;
 		if ( max_deal > 5) {
@@ -1094,7 +1089,7 @@ function drag(ev) {
 
 function drop(ev) {
   ev.preventDefault();
-  var header = document.getElementsByTagName("h1")[0].innerHTML;
+  var header = document.getElementById("header").innerHTML;
   if (header == "Marbles Game") {
   	  yplayer = $("#game_yplayer").val();
 	  gplayer = $("#game_gplayer").val();

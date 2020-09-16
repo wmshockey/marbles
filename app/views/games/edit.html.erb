@@ -1,3 +1,11 @@
-<h1 id="header">Marbles Game</h1>
 
-<%= render 'form', game: @game %>
+<% if @user_name == @player %>
+		<h4 class="col-sm-2 text-primary" id="header">Marbles Game</h4>
+		<h4 class="col-sm-4 text-primary"><%= @game.name %></h4>
+		<%= render 'form', game: @game %>
+<% else %>
+	<div class = "col-sm-12 text-danger bg-danger">It's not your turn.  You cannot make a move yet.</div>
+    <div class="col-sm-1 text-primary bg-primary">
+  	  <%= link_to 'Back', games_path%>
+    </div>
+<% end %>

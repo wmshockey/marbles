@@ -1,24 +1,21 @@
 <div id="form_name", class="hidden"><%= "game" %></div>
 
-<canvas id="myCanvas" width="1200" height="800" ></canvas>
 
 <%= form_with(model: game, local: true) do |form| %>
-
 
 <div class="container">
 
 <div class="row">
-  <div class="col-sm-2" >
-    <%= form.submit "Save Move", class:"btn-lg btn-primary", id:"Save"%>
+  <div class="col-sm-3" >
+    <%= form.submit @user_name + " - click here when done your move", class:"btn-sm btn-primary", id:"Save"%>
+  </div>
+  <div class="col-sm-2">
+	<button type="button" class="btn-sm btn-primary" id="deal">Deal Cards</button>
   </div>
   <div class="col-sm-1">
 	  <%= link_to 'Back', games_path%>
   </div>
-  <div class="col-sm-4"></div>
-  <div class="col-sm-2">
-	<button type="button" class="btn-lg btn-primary" id="deal">Deal Cards</button>
-  </div>
-  <div class="col-sm-3"></div>
+
 </div>
 
   <% if game.errors.any? %>
@@ -108,4 +105,6 @@
 </div>
 
 </div>
+
+<canvas id="myCanvas" width="1200" height="700" ></canvas>
 <% end %>

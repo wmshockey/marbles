@@ -43,6 +43,10 @@ body {
     height: 200px;
 }
 
+.blink {
+  animation: blinker 1s step-start infinite;
+}
+
 .boardlabel {
 	color: white;
 }

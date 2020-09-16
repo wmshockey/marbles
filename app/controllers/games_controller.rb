@@ -10,6 +10,22 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
+    @user_name = current_user.name
+    turn = @game.turn.to_i
+    plist = []
+    if (@game.yplayer!="")
+      plist.push(@game.yplayer)
+    end
+    if (@game.gplayer!="") 
+      plist.push(@game.gplayer)
+    end
+    if (@game.rplayer!="")
+      plist.push(@game.rplayer)
+    end
+    if (@game.bplayer!="")
+      plist.push(@game.bplayer)
+    end
+    @player = plist[turn]
   end
 
   # GET /games/new
@@ -20,6 +36,22 @@ class GamesController < ApplicationController
 
   # GET /games/1/edit
   def edit
+    @user_name = current_user.name
+    turn = @game.turn.to_i
+    plist = []
+    if (@game.yplayer!="")
+      plist.push(@game.yplayer)
+    end
+    if (@game.gplayer!="") 
+      plist.push(@game.gplayer)
+    end
+    if (@game.rplayer!="")
+      plist.push(@game.rplayer)
+    end
+    if (@game.bplayer!="")
+      plist.push(@game.bplayer)
+    end
+    @player = plist[turn]
   end
 
   # POST /games
@@ -42,7 +74,6 @@ class GamesController < ApplicationController
   # PATCH/PUT /games/1
   # PATCH/PUT /games/1.json
   def update
-    @users = User.all
     respond_to do |format|
       if @game.update(game_params)
         format.html { redirect_to @game, notice: 'Game was successfully updated.' }
