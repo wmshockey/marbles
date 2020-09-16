@@ -9,16 +9,16 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-	  
-  <div class="row">
+  <body class="container">
 
-	  <div class="col-sm-2 text-primary ">Logged in as:</div>
-	  <% if user_signed_in? %>
-			  <strong><div class="col-sm-1 text-primary" id="user_name"><%= current_user.name %></div></strong>
-	  <% else %>
-	  	  <div class="col-sm-3"></div>
-	  <% end %>
+	  <div class="col-sm-4">
+		  <span class="text-primary ">Logged in as: </span>
+		  <% if user_signed_in? %>
+				  <strong><span class="text-primary" id="user_name"><%= current_user.name %></span></strong>
+		  <% else %>
+		  	  <span class=""></span>
+		  <% end %>
+  	  </div>
 	  	  
 		<div class="col-sm-3 text-info">
 			<% if user_signed_in? %>
@@ -32,8 +32,6 @@
 
 	<div class="col-sm-6 text-success"><%= notice %></div>
 	<div class="col-sm-6 text-danger"><%= alert %></div>
-	
-  </div>
 	
     <%= yield %>
 	

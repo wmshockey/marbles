@@ -72,7 +72,7 @@ CREATE TABLE `games` (
   `gbteam` varchar(255) DEFAULT NULL,
   `ryteam` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,35 +81,8 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
-INSERT INTO `games` VALUES (249,'1','2020-09-13','Started',NULL,'1','',',,,,y96,,,,,,,,,,,,,,r45,r47,r46,,,,,,,,,,,,,,,,,,,,,,,,,,,,r48,,,,,,,,,,y94,,,,,,,y95,,y93,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,','9H,2C,8H,AC,4D,5H','2020-09-13 13:03:01','2020-09-13 22:54:08','','4S,7S,3C,AS','','2D,4H,KC,6D,5C','JD,3S,6S,2S,4C,5S,9C,9S,8D,JH,AD,6H,9D,8C,10C,3H,10D,8S,JC,JS,7C,2H,AH,10H,KD,10S,5D,3D,7H,7D,6C','Warren','Lenora','','','',NULL),(251,'2','2020-09-13','Started',NULL,'0','',',,,,,,,,,,,,,,,,,,,,,,,,,r45,,,,,,,,,,,,,r46,,,,,,,,,,,,,,,,,,,,y94,,,,,,,y95,,y96,,,,,,y93,,,,,,,,r48,r47,,,,,,,,,,,,,,,','2C,2D,2H,2S,3C,3D,3H,3S,4C,4D,4H,4S,5C,5D,5H,5S,6C,6D,6H,6S,7C,7D,7H,7S,8C,8D,8H,8S,9C,9D,9H,9S,10C,10D,10H,10S,AC,AD,AH,AS,JC,JD,JH,JS,KC,KD','2020-09-13 22:56:48','2020-09-14 00:42:17','','J3,J1,QH,QC,KH','','J4,J2,QS,QD,KS','','Warren','Lenora','','','',NULL),(252,'3','2020-09-13','Started',NULL,'1','',',,,,,,r48,,,,,,,r46,,,,,,,r47,,,,,,,,,,,,,,,,,,,,,,,,,r45,,,,,,,,,,,,,,,,,,,,,,y96,,,,,,,,,,,,,,,,,,,,,,,,,,y93,y94,y95,,','J2,8D,8S,9H,QS,2C,9S,KC,JD,JS,9C,4C,KH,J1,JH,7C,10D,JC,6D,6C,J3,6H,8C,AC,5C,AS','2020-09-14 00:47:54','2020-09-14 01:00:00','','AD,9D','','3S,QC,3H,QD,5S','10H,4H,AH,7D,QH,6S,4S,KS,2H,2D,2S,5D,10C,5H,10S,7S,J4,KD','Warren','Lenora','','','',NULL);
+INSERT INTO `games` VALUES (265,'test02','2020-09-15','Started',NULL,'1','',',,,,,,,,,,,,,,,,,,,,r48,,,,,,,,,,,,,,,,,,,,,,,,,r45,r46,,,,,r47,,,,,,,,,,,,,,,,,y96,,,,,,,,,,,,,,,,,,,,,,,,,y93,y94,y95,,','4H,J4,JH,10D,10C,J1,KD,AD,9H,J3,6S,5S,4S,4D,AC,3C,7C,J2,9D,8H,3D,2D,3S,AH,4C,KC','2020-09-15 22:58:41','2020-09-16 13:43:26','','7S,5H','','2S,JS','2C,8D,6H,7D,QS,9S,6D,2H,JC,5C,9C,KH,QH,8S,KS,AS','Warren','Lenora','','','',NULL);
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `players`
---
-
-DROP TABLE IF EXISTS `players`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `players` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `handle` varchar(255) DEFAULT NULL,
-  `color` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `players`
---
-
-LOCK TABLES `players` WRITE;
-/*!40000 ALTER TABLE `players` DISABLE KEYS */;
-/*!40000 ALTER TABLE `players` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -131,8 +104,41 @@ CREATE TABLE `schema_migrations` (
 
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
-INSERT INTO `schema_migrations` VALUES ('0'),('20200517131558'),('20200523004910'),('20200525135028'),('20200525135224'),('20200525135306'),('20200525135340'),('20200525135556'),('20200527172725'),('20200528133202'),('20200528133223'),('20200528133243'),('20200528133257'),('20200528133438'),('20200608004941'),('20200608010043');
+INSERT INTO `schema_migrations` VALUES ('0'),('20200517131558'),('20200523004910'),('20200525135028'),('20200525135224'),('20200525135306'),('20200525135340'),('20200525135556'),('20200527172725'),('20200528133202'),('20200528133223'),('20200528133243'),('20200528133257'),('20200528133438'),('20200608004941'),('20200608010043'),('20200914141508'),('20200914151938'),('20200914222914');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `encrypted_password` varchar(255) NOT NULL DEFAULT '',
+  `reset_password_token` varchar(255) DEFAULT NULL,
+  `reset_password_sent_at` datetime DEFAULT NULL,
+  `remember_created_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_users_on_email` (`email`),
+  UNIQUE KEY `index_users_on_reset_password_token` (`reset_password_token`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'wmshockey@gmail.com','$2a$12$C1UrQAoXsKKmwVv72IlRAORESxHSMqOPp.qh6roT/ljrIJExobpZ6',NULL,NULL,NULL,'2020-09-14 15:26:42','2020-09-14 23:31:23','Warren'),(2,'llshockey@gmail.com','$2a$12$QCqSMPKIDsnwGEurIy8Z.uebTfC5U2KtYKfPHIo7iztQqxwp6D3Ki',NULL,NULL,NULL,'2020-09-14 23:32:14','2020-09-16 01:10:24','Lenora');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -144,4 +150,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-14  7:16:33
+-- Dump completed on 2020-09-16 12:03:46

@@ -331,7 +331,7 @@ $(document).ready(() => {
 	function drawBoard() {		
 
 /* draw marble holes and card areas on a canvas first to get positioning */
-		board_offset = 40;
+		board_offset = 50;
 		board_size = 800 - 2 * board_offset;		
 		
 		var radius = board_size * 0.5;
@@ -567,7 +567,7 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.style.left = '800px';
 		d.style.top = '100px';
-		d.style.width = "400px";
+		d.style.width = "325px";
 		d.style.height = "120px";
 		d.style.border = "dotted";
 		d.setAttribute("ondrop", "drop(event)");

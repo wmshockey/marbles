@@ -1,22 +1,18 @@
 <div id="form_name", class="hidden"><%= "game" %></div>
 
-
 <%= form_with(model: game, local: true) do |form| %>
 
 <div class="container">
-
-<div class="row">
-  <div class="col-sm-3" >
-    <%= form.submit @user_name + " - click here when done your move", class:"btn-sm btn-primary", id:"Save"%>
-  </div>
-  <div class="col-sm-2">
+  <span class="col-sm-6"></span>
+  <span class="col-sm-3" >
+    <%= form.submit @user_name + " - click here when done your move", class:"btn-sm btn-danger", id:"Save"%>
+  </span>
+  <span class="col-sm-2">
 	<button type="button" class="btn-sm btn-primary" id="deal">Deal Cards</button>
-  </div>
-  <div class="col-sm-1">
+  </span>
+  <span class="col-sm-1">
 	  <%= link_to 'Back', games_path%>
-  </div>
-
-</div>
+  </span>
 
   <% if game.errors.any? %>
     <div id="error_explanation">
@@ -29,82 +25,82 @@
     </div>
   <% end %>
 
-
-<div class="hidden">	
-	
-<div class="row border border-primary">
-  <div class="col-sm-2"></div>
-  <div class="col-sm-2"><%= form.label "Game:" %><%= form.text_field :name %></div> 
-  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
-  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
-  <div class="col-sm-4"></div>
-</div>
-
-<br>
-
-<div class="row border">
-	<span class="col-sm-2"></span>
-	<div class="col-sm-2"><%= form.label "Yellow"%></div>
-	<div class="col-sm-2"><%= form.label "Red"%></div>
-	<div class="col-sm-2"><%= form.label "Green"%></div>
-	<div class="col-sm-2"><%= form.label "Blue"%></div>
-    <span class="col-sm-2"></span>
-</div>
-
-<div class="row">
-	<div class="col-sm-2"><%= form.label "Players"%></div>
-	<div class="col-sm-2"><%= form.text_field :yplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :rplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :gplayer %></div>
-	<div class="col-sm-2"><%= form.text_field :bplayer %></div>
-    <span class="col-sm-2"></span>
-</div>
-	
-<div class="row">
-	<div class="col-sm-2"><%= form.label "Teams"%></div>
-	<div class="col-sm-4"><%= form.text_field :ryteam, size: "50"%></div>
-	<div class="col-sm-4"><%= form.text_field :gbteam, size: "50"%></div>
-    <span class="col-sm-2"></span>
-</div>
-
-<br>
-
-<div class="row">
-	<span class="col-sm-2 top"><%= form.label "Hand"%></span>
-	<span class="col-sm-2 top"><%= form.text_area :yellowhand %></span>
-	<span class="col-sm-2 top"><%= form.text_area :redhand %></span>
-	<span class="col-sm-2 top"><%= form.text_area :greenhand %></span>
-	<span class="col-sm-2 top"><%= form.text_area :bluehand %></span>
-    <span class="col-sm-2"></span>
-</div>
-
-<div class="row">
-	<div class="col-sm-2 top"><%= form.label "Deck"%></div>
-	<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
-    <span class="col-sm-2"></span>
-</div>
-
-<div class="row">
-	<div class="col-sm-2 top"><%= form.label "Board"%></div>
-	<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
-    <span class="col-sm-2"></span>
-</div>
-
-<div class="row">
-	<div class="col-sm-2 top"><%= "Discard Pile"%></div>
-	<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
-    <span class="col-sm-2"></span>
-</div>
-	
-<div class="row">
-	<div class="col-sm-2 top"><%= "Messages"%></div>
-	<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "5"%></div>
-	<span class="col-sm-2"></span>
-</div>
-
-</div>
-
-</div>
-
 <canvas id="myCanvas" width="1200" height="700" ></canvas>
+
+<div class="hidden">
+	
+	<br><br><br><br>
+	
+	<div class="row border border-primary">
+	  <div class="col-sm-2"></div>
+	  <div class="col-sm-2"><%= form.label "Game:" %><%= form.text_field :name %></div> 
+	  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
+	  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
+	  <div class="col-sm-4"></div>
+	</div>
+
+	<br>
+
+	<div class="row border">
+		<span class="col-sm-2"></span>
+		<div class="col-sm-2"><%= form.label "Yellow"%></div>
+		<div class="col-sm-2"><%= form.label "Red"%></div>
+		<div class="col-sm-2"><%= form.label "Green"%></div>
+		<div class="col-sm-2"><%= form.label "Blue"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Players"%></div>
+		<div class="col-sm-2"><%= form.text_field :yplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :rplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :gplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :bplayer %></div>
+	    <span class="col-sm-2"></span>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Teams"%></div>
+		<div class="col-sm-4"><%= form.text_field :ryteam, size: "50"%></div>
+		<div class="col-sm-4"><%= form.text_field :gbteam, size: "50"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<br>
+
+	<div class="row">
+		<span class="col-sm-2 top"><%= form.label "Hand"%></span>
+		<span class="col-sm-2 top"><%= form.text_area :yellowhand %></span>
+		<span class="col-sm-2 top"><%= form.text_area :redhand %></span>
+		<span class="col-sm-2 top"><%= form.text_area :greenhand %></span>
+		<span class="col-sm-2 top"><%= form.text_area :bluehand %></span>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 top"><%= form.label "Deck"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 top"><%= form.label "Board"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 top"><%= "Discard Pile"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2 top"><%= "Messages"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "5"%></div>
+		<span class="col-sm-2"></span>
+	</div>
+
+</div>
+
 <% end %>
