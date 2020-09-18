@@ -45,10 +45,10 @@ $(document).ready(() => {
 		else if (header == "Marbles Game") {
 	/* save the end of move board positions */
 			board_end = ($("#game_board").val()).split(",");
-			cardsDealt = false;
 			
 	/* check if move is valid and if not, reset board to start of move */
 			if (checkMove(playedCard, board_start, board_end) == false) {
+				/* Move was not valid */
 				alert("There was a problem with your move.  Take your turn over.");
 				board = board_start;
 				yellowhand = yellowhand_start;
@@ -65,14 +65,50 @@ $(document).ready(() => {
 				$("#game_yellowhand").val(yellowhand.toString());				
 				$("#game_board").val(board.toString());
 			} else {
-				/* set next persons turn */
+				/* Move is valid - page values will be saved to the database */
+				/* Make sure internal arrays and DOM values are in sync */
+				greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
+				redhand = document.getElementById("game_redhand").innerHTML.split(",");
+				bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
+				yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+				/* Set next persons turn */
 			  	number_players = playerList.length;
-				turn = parseInt($("#game_turn").val());
-				turn = turn + 1;
-				if (turn >= number_players) {
-					turn = 0;
+				turn = -1;
+				next = parseInt($("#game_turn").val());
+				next = next + 1;
+				for (i=0; i<number_players; i++) {
+					/* look at the next players hand to see if they have any cards left to play */
+					if (next >= number_players) {
+						next = 0;
+					}
+					/* Check to see if this player has any cards left to play */
+					next_color = playerList[next][1];
+					playerhand_str = "#game_" + next_color + "hand";
+					playerhand = ($(playerhand_str).val()).split(",");
+					if (playerhand[0] == "") {
+						next = next + 1;
+					} else {
+						turn = next;
+						turn_color = next_color;
+						break;
+					}					
 				}
-				$("#game_turn").val(turn.toString());								
+				if (turn != -1) {
+					/* There is a player who still has cards left to play */
+					$("#game_turn").val(turn.toString());	
+				} else {
+					/* Nobody can play - must shuffle and redeal the cards */
+					alert("Nobody can play, card deck will be shuffled and redealt.");
+					dealCards();
+					displayCards(turn_color);
+					$("#game_deck").val(deck.toString());
+					$("#game_discardpile").val(discardpile.toString());
+					$("#game_greenhand").val(greenhand.toString());
+					$("#game_redhand").val(redhand.toString());
+					$("#game_bluehand").val(bluehand.toString());
+					$("#game_yellowhand").val(yellowhand.toString());
+				}
+							
 			};			
 			
 	/* lock the discard pile by setting last discard as the discard background */
@@ -89,28 +125,6 @@ $(document).ready(() => {
 		}
   })
 
-/* 
--------------------------------------------------  
-  	Player hits the "Deal" button 
--------------------------------------------------
-*/ 
-	$('[id="deal"]').on("click", function() {
-		if (cardsDealt) {
-			alert("Cards have already been dealt.");
-		} else {
-			if (confirm("Deal cards?")) {
-				dealCards();
-				displayCards(turn_color);
-				$("#game_deck").val(deck.toString());
-				$("#game_discardpile").val(discardpile.toString());
-				$("#game_greenhand").val(greenhand.toString());
-				$("#game_redhand").val(redhand.toString());
-				$("#game_bluehand").val(bluehand.toString());
-				$("#game_yellowhand").val(yellowhand.toString());
-				cardsDealt = true;			
-			}
-		}
-	})
 
 /*
 ------------------------------------------------- 
@@ -126,7 +140,6 @@ $(document).ready(() => {
 		var redhand = [];
 		var bluehand = [];
 		var yellowhand = [];
-		var cardsDealt = false;
 		var fulldeck = ["2C","2D","2H","2S","3C","3D","3H","3S","4C","4D","4H","4S","5C","5D","5H","5S","6C","6D","6H","6S","7C","7D","7H","7S","8C","8D","8H","8S","9C","9D","9H","9S","10C","10D","10H","10S","AC","AD","AH","AS","JC","JD","JH","JS","KC","KD","KH","KS","QC","QD","QH","QS","J1","J2","J3","J4"];
 		var cardvalue = 
 		[2, 2, 2, 2, 3, 3, 3, 3, -4, -4, -4, -4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 1, 1, 1, 1, 0, 0, 0, 0, 13, 13, 13, 13, 12, 12, 12, 12, 15, 15, 15, 15];
@@ -900,6 +913,38 @@ $(document).ready(() => {
 		if(playedCard == "" && moved_count > 0) {
 			alert("A marble was moved but no card was played.")
 			return false;
+		}
+
+/* Check if no card played and no marbles moved */
+		if (playedCard == "" && moved_count == 0) {
+			if (confirm("Press the Ok button if you are confirming you can't play")) {
+				/* player can't play so clear out his/her hand and return cards to discard pile */
+				if (turn_color == "yellow") {
+					playerhand = yellowhand;
+					yellowhand = [];
+					$("#game_yellowhand").val("");					
+				} else if (turn_color == "green") {
+					playerhand = greenwhand;
+					greenhand = [];
+					$("#game_greenhand").val("");		
+				} else if (turn_color == "red") {
+					playerhand = redhand;
+					redhand = [];
+					$("#game_redhand").val("");
+				} else if (turn_color == " blue") {
+					playerhand = bluehand;
+					bluehand = [];
+					$("#game_bluehand").val("");
+				}
+				/* return players cards to the discard pile */				
+				for (i=0; i<playerhand.length; i++) {
+					discardpile.push(playerhand[i]);
+				}
+				$("#game_discardpile").val(discardpile.toString());
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 /* If more than one marble moved */
