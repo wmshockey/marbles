@@ -1,27 +1,26 @@
 
 
-	<span class="fixed_line2_left">
-		<span class="boardlabel" id="header">Show Game</span>
-		<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
-	</span>
+<span class="fixed_line2_left">
+	<span class="boardlabel" id="header">Show Game</span>
+	<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
+</span>
 
-	<span class="fixed_line3_left">
-		<% if @user_name == @player %>
-			<% @button_text = @player + " It's your turn - click here to start" %>
-			<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn-sm btn-success' %>
-		<% else %>
-			<span id="msgArea" class = "text-warning bg-warning blink">
-				<%= "Waiting for " + @player + " to make a move."%>
-			</span>
-		<% end %>
-	</span>
-	
-	<h5 class="fixed_line3_right"><%= link_to 'Back', games_path%></h5>
+<span class="fixed_line3_left">
+	<% if @user_name == @player %>
+		<% @button_text = @player + " It's your turn - click here to start" %>
+		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn-sm btn-success' %>
+	<% else %>
+		<span id="msgArea" class = "text-warning bg-warning blink">
+			<%= "Waiting for " + @player + " to make a move."%>
+		</span>
+	<% end %>
+</span>
 
+<h5 class="fixed_line3_right"><%= link_to 'Back', games_path%></h5>
 
-<canvas id="myCanvas" width="1200" height="800" ></canvas>
+<canvas id="myCanvas" width="1200" height="800" style="border:1px solid #000000;"></canvas>
 
-<body class="container">
+<body>
 
 <div class="hidden">
 	<div id="game_name"><%= @game.name %></div>
