@@ -1,13 +1,13 @@
 
+<div class="fixed_line2_left">
+	<span class="boardlabel" id="header">Marbles Game</span>
+	<strong><span class="boardlabel">: <%= @game.name %></span></strong>
+</div>
+
 <% if @user_name == @player %>
-	<span class="col-sm-6">
-		<span class="text-primary" id="header">Marbles Game</span>
-		<span class="text-primary">: <%= @game.name %></span>
-	</span>
 	<%= render 'form', game: @game %>	
 <% else %>
-	<div class = "col-sm-10 text-danger bg-danger">It's not your turn.  You cannot make a move yet.</div>
-    <div class="col-sm-2 text-danger bg-danger">
-  	  <%= link_to 'Back', games_path%>
-    </div>
+	<span class = "fixed_line2_centre text-danger bg-danger">It's not your turn.  You cannot make a move yet.</span>
+	<span class="fixed_line3_right"><%= link_to 'Back', games_path%></span>
 <% end %>
+

@@ -5,7 +5,7 @@
 
 <table>
   <thead>
-    <tr>
+    <tr class="boardlabel">
       <th class="col-sm-1">Name</th>
       <th class="col-sm-2">Start date</th>
       <th class="col-sm-1">Status</th>
@@ -16,19 +16,19 @@
 
   <tbody>
     <% @games.each do |game| %>
-      <tr>
+      <tr class=boardlabel>
 		<% players = game.yplayer+","+game.gplayer+","+game.rplayer+","+game.bplayer %>
 		<% player_array = players.split(",") %>
-		<% player_array = player_array.compact %>
+		<% player_array = player_array.reject { |c| c.empty?} %>
 		<% players = player_array.join(",") %>
         <td class="col-sm-1"><%= game.name %></td>
         <td class="col-sm-2"><%= game.start_date %></td>
         <td class="col-sm-1"><%= game.status %></td>
         <td class="col-sm-3"><%= players %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
-        <td class="col-sm-1"><%= link_to 'Show', game %></td>
-        <td class="col-sm-1"><%= link_to 'Edit', edit_game_path(game) %></td>
-        <td class="col-sm-1"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td class="col-sm-1 navbar-link"><%= link_to 'Show', game %></td>
+        <td class="col-sm-1 navbar-link"><%= link_to 'Edit', edit_game_path(game) %></td>
+        <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -36,5 +36,5 @@
 
 <br>
 
-<%= link_to 'New Game', new_game_path %>
+<%= button_to "New Game", new_game_path, method: :get %>
 </body>

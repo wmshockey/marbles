@@ -171,10 +171,20 @@ $(document).ready(() => {
 		var board = (document.getElementById("game_board").innerHTML).split(",");
 		var deck = (document.getElementById("game_deck").innerHTML).split(",");
 		var discardpile = (document.getElementById("game_discard").innerHTML).split(",");
-		var greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
-		var redhand = document.getElementById("game_redhand").innerHTML.split(",");
-		var bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
-		var yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
+		redhand = document.getElementById("game_redhand").innerHTML.split(",");
+		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
+		yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+
+/* Get the player list */
+		playerList = [];
+		yplayer = document.getElementById("game_yplayer").innerHTML;
+		gplayer = document.getElementById("game_gplayer").innerHTML;
+		rplayer = document.getElementById("game_rplayer").innerHTML;
+		bplayer = document.getElementById("game_bplayer").innerHTML;
+		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+		player = playerList[turn][0];
+		turn_color = playerList[turn][1];
 
 /* draw the board and card area */
 		drawBoard();
@@ -232,14 +242,14 @@ $(document).ready(() => {
 		var board = ($("#game_board").val()).split(","); 
 		var deck = ($("#game_deck").val()).split(",");
 		var discardpile = ($("#game_discardpile").val()).split(",");
-		var greenhand = ($("#game_greenhand").val()).split(",");
-		var redhand = ($("#game_redhand").val()).split(",");
-		var bluehand = ($("#game_bluehand").val()).split(",");
-		var yellowhand = ($("#game_yellowhand").val()).split(",");
-	  	var yplayer = $("#game_yplayer").val();
-		var gplayer = $("#game_gplayer").val();
-		var rplayer = $("#game_rplayer").val();
-		var bplayer = $("#game_bplayer").val();
+		greenhand = ($("#game_greenhand").val()).split(",");
+		redhand = ($("#game_redhand").val()).split(",");
+		bluehand = ($("#game_bluehand").val()).split(",");
+		yellowhand = ($("#game_yellowhand").val()).split(",");
+	  	yplayer = $("#game_yplayer").val();
+		gplayer = $("#game_gplayer").val();
+		rplayer = $("#game_rplayer").val();
+		bplayer = $("#game_bplayer").val();
 		
 /* get the players list */
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
@@ -320,8 +330,8 @@ $(document).ready(() => {
 		c.src = card_image;
 		c.setAttribute("draggable", "true");
 		c.setAttribute("ondragstart", "drag(event)");
-		c.style.width = "65px";
-		c.style.height = "100px";
+		c.style.width = "50px";
+		c.style.height = "75px";
 /* put the card into the DOM */
 		h = document.getElementById(spot);
 		h.appendChild(c);		
@@ -332,7 +342,9 @@ $(document).ready(() => {
 
 /* draw marble holes and card areas on a canvas first to get positioning */
 		board_offset = 50;
-		board_size = 800 - 2 * board_offset;		
+		board_size = 800 - 2 * board_offset;
+		centre_x = board_offset + board_size/2;
+		centre_y = board_offset + board_size/2;
 		
 		var radius = board_size * 0.5;
 		var c = document.getElementById("myCanvas");
@@ -456,10 +468,16 @@ $(document).ready(() => {
 	/* Make Green Starting Row */
 		hole_x = board_size / 8;
 		hole_y = board_size / 8;
+
 		for (i=21; i<=24; i++){
 			makeHole(hole_x, hole_y, "green", i);
 			hole_x = hole_x + 25;
 			hole_y = hole_y + 25;
+		}
+		if (gplayer) {
+			x = hole_x - 100;
+			y = hole_y + 50;
+			labelBoard(x, y, gplayer, "green", "playername", "gname");
 		}
 
 	/* Make Red Starting Row */
@@ -470,19 +488,35 @@ $(document).ready(() => {
 			hole_x = hole_x - 25;
 			hole_y = hole_y + 25;
 		}
+		if (rplayer) {
+			x = hole_x - 50;
+			y = hole_y - 100;
+			labelBoard(x, y, rplayer, "red", "playername", "rname");
+		}
 
 	/* Make Blue Starting Row */
 		hole_x = board_size + 2*board_offset - board_size/8;
 		hole_y = board_size + 2*board_offset - board_size/ 8;
+		if (bplayer) {
+			x = hole_x + 10;
+			y = hole_y - 140;
+			labelBoard(x, y, bplayer, "blue",  "playername", "bname");
+		}
 		for (i=69; i<=72; i++){
 			makeHole(hole_x, hole_y, "blue", i);
 			hole_x = hole_x - 25;
 			hole_y = hole_y - 25;
 		}
-	
+
+			
 	/* Make Yellow Starting Row */
 		hole_x = board_size / 8;
 		hole_y = board_size + 2*board_offset - board_size/8;
+		if (yplayer) {
+			x = hole_x +100;
+			y = hole_y;
+			labelBoard(x, y, yplayer, "yellow",  "playername", "yname");
+		}		
 		for (i=93; i<=96; i++){
 			makeHole(hole_x, hole_y, "yellow", i);
 			hole_x = hole_x + 25;
@@ -557,72 +591,99 @@ $(document).ready(() => {
 
 
 	function drawCardArea() {
+		card_width = 50;
+		card_height = 75;
 	/* Draw the card hand area */
-		xstart = 50;
-		width = 65;
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand");
 		d.setAttribute("draggable", "false");
 		d.className = "cardspot";
 		d.style.position = "absolute";
-		d.style.left = '800px';
-		d.style.top = '100px';
-		d.style.width = "325px";
-		d.style.height = "120px";
+		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
+		d.style.top = ((centre_y + 15) + (card_height*.75)).toString() + "px";
+		d.style.width = "260px";
+		d.style.height = "80px";
 		d.style.border = "dotted";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
+	/* Draw the Card hand label */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand_label");
 		d.className = "boardlabel";
 		d.style.position = "absolute";
 		d.innerHTML = user_name + "'s hand";
-		d.style.left = "900px";
-		d.style.top = "80px";
+		d.style.left = ((centre_x + 15) - (5 * card_width)/2 + 10).toString() + "px";
+		d.style.top = ((centre_y + 15) + (card_height*.75) - 20).toString() + "px";
 		document.body.appendChild(d);			
+
 	/* Draw the discard area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "discardpile");
 		d.setAttribute("draggable", "false");
 		d.className = "discardspot";
 		d.style.position = "absolute";
-		d.style.left = '870px';
-		d.style.top = '260px';
-		d.style.width = "65px";
-		d.style.height = "100px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height).toString() + "px";
+		d.style.width = "50px";
+		d.style.height = "75px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
+	/* Draw the discard area label */
 		var d = document.createElement("div");
 		d.setAttribute("id", "discard_label");
 		d.style.position = "absolute";
 		d.className = "boardlabel";
-		d.innerHTML = "Played";
-		d.style.left = "880px";
-		d.style.top = "360px";
+		d.innerHTML = "Discards";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
+	/* Draw the discard card count */
+		var d = document.createElement("div");
+		d.setAttribute("id", "discard_count");
+		d.style.position = "absolute";
+		d.className = "boardlabel";
+		if (discardpile[0]) {
+			d.innerHTML = discardpile.length.toString();
+		} else {
+			d.innerHTML = "0";
+		}
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.75)).toString() + "px";
+		document.body.appendChild(d);
+
 	/* Draw the deck area i.e. deal pile */
 		var d = document.createElement("div");
 		d.setAttribute("id", "deck");
 		d.setAttribute("draggable", "false");
 		d.className = "cardspot";
 		d.style.position = "absolute";
-		d.style.left = '1000px';
-		d.style.top = '260px';
-		d.style.width = "65px";
-		d.style.height = "100px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 150).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height).toString() + "px";
+		d.style.width = "50px";
+		d.style.height = "75px";
 		d.className = "noDrop";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
+	/* Draw the deck label */
 		var d = document.createElement("div");
 		d.setAttribute("id", "deck_label");
 		d.className = "boardlabel";
 		d.style.position = "absolute";
 		d.innerHTML = "Deck";
-		d.style.left = "1010px";
-		d.style.top = "360px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 150).toString() + "px";
+		d.style.top = "265px";
+		document.body.appendChild(d);
+	/* Draw the deck card count */
+		var d = document.createElement("div");
+		d.setAttribute("id", "deck_count");
+		d.style.position = "absolute";
+		d.className = "boardlabel";
+		d.innerHTML = deck.length.toString();
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40 + 150).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.75)).toString() + "px";
 		document.body.appendChild(d);
 	}
 	function makeCardSpot(x, y, spot) {
@@ -635,8 +696,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.style.left = x.toString() + 'px';
 		d.style.top = y.toString() + 'px';
-		d.style.width = "65px";
-		d.style.height = "100px";
+		d.style.width = "50px";
+		d.style.height = "75px";
 		if (spot == 'deck') {
 			d.className = "noDrop";
 		}
@@ -667,16 +728,40 @@ $(document).ready(() => {
 		rplayer = $("#game_rplayer").val();
 		bplayer = $("#game_bplayer").val();  
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+		/* If any cards left in players hands, add them to bottom of the discard pile */
+		if (greenhand[0]) {
+			for (i=0; i<greenhand.length; i++) {
+				discardpile.push(greenhand[i]);
+			}
+		}
+		if (redhand[0]) {
+			for (i=0; i<redhand.length; i++) {
+				discardpile.push(redhand[i]);
+			}
+		}
+		if (bluehand[0]) {
+			for (i=0; i<bluehand.length; i++) {
+				discardpile.push(bluehand[i]);
+			}
+		}
+		if (yellowhand[0]) {
+			for (i=0; i<yellowhand.length; i++) {
+				discardpile.push(yellowhand[i]);
+			}
+		}		
+		/* clear out the players hands */
 		greenhand = [];
 		yellowhand = [];
 		redhand = [];
 		bluehand = [];
+		/* If deck out of cards, empty the discard pile shuffle the full deck */
 		number_players = playerList.length;
 		if (deck.length <= 1) {
 			deck = fulldeck;
 			shuffle(deck);
 			discardpile = [];
 		} 	
+		/* deal the cards */
 		cards_left = deck.length;
 		max_deal = cards_left / number_players;
 		if ( max_deal > 5) {
@@ -1064,6 +1149,19 @@ $(document).ready(() => {
 	  	  pList.push([bplayer, "blue"]);
 	    }
 		return pList;
+	}
+
+	function labelBoard(x, y, tstring, tcolor, classname, id) {
+	/* Write a text string label to a spot on the board */
+		var d = document.createElement("div");
+		d.setAttribute("id", id);
+		d.className = classname;
+		d.style.position = "absolute";
+		d.style.color = tcolor;
+		d.innerHTML = tstring;
+		d.style.left = x.toString() + "px";
+		d.style.top = y.toString() + "px";
+		document.body.appendChild(d);			
 	}
 
 

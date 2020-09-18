@@ -51,6 +51,11 @@ body {
 	color: white;
 }
 
+.playername {
+	font-size: 24px;
+	font-weight: medium;
+}
+
 #discardpile {
 	background: url('discard_background.png');
     background-position: center;
@@ -65,8 +70,55 @@ body {
     background-size: cover;	
 }
 
-.fixed{ 
+.fixed_line1_left{ 
     position:absolute;
-    top:30px;
+    top:0px;
     left:40px;
+}
+
+.fixed_line1_centre{ 
+    position:absolute;
+    top:0px;
+    left:200px;
+}
+
+.fixed_line1_right{
+	position:absolute;
+	top: 0px;
+	left: 400px;
+}
+
+.fixed_line2_left{ 
+    position:absolute;
+    top:20px;
+    left:40px;
+}
+.fixed_line2_centre{ 
+    position:absolute;
+    top:20px;
+    left:200px;
+}
+
+.fixed_line2_right{
+	position:absolute;
+	top:  20px;
+	left: 400px;
+}
+
+.fixed_line3_left{ 
+    position:absolute;
+    top:40px;
+    left:40px;
+}
+
+.fixed_line3_centre{ 
+    position:absolute;
+    top:40px;
+    left:200px;
+}
+
+.fixed_line3_right{
+	position:absolute;
+	top: 40px;
+	left: 600px;
 }
