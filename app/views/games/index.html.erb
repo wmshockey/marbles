@@ -16,7 +16,7 @@
 
   <tbody>
     <% @games.each do |game| %>
-      <tr class=boardlabel>
+      <tr>
 		<% players = game.yplayer+","+game.gplayer+","+game.rplayer+","+game.bplayer %>
 		<% player_array = players.split(",") %>
 		<% player_array = player_array.reject { |c| c.empty?} %>

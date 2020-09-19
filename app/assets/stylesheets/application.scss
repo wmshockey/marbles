@@ -16,11 +16,8 @@
 @import "bootstrap";
 
 body {
-	background: url('wood_background.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-	margin-left: "5px";
+	background: url('bg.jpg');
+	background-repeat: repeat no-repeat;
 } 
 
 .top > * {
@@ -68,6 +65,14 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;	
+}
+
+#myCanvas {
+	background: url('wood_background.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+	margin-left: "5px";	
 }
 
 .fixed_line1_left{ 

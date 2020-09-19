@@ -365,8 +365,8 @@ $(document).ready(() => {
 		c.src = card_image;
 		c.setAttribute("draggable", "true");
 		c.setAttribute("ondragstart", "drag(event)");
-		c.style.width = "50px";
-		c.style.height = "75px";
+		c.style.width = "65px";
+		c.style.height = "100px";
 /* put the card into the DOM */
 		h = document.getElementById(spot);
 		h.appendChild(c);		
@@ -772,8 +772,8 @@ $(document).ready(() => {
 
 
 	function drawCardArea() {
-		card_width = 50;
-		card_height = 75;
+		card_width = 65;
+		card_height = 100;
 	/* Draw the card hand area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand");
@@ -781,9 +781,9 @@ $(document).ready(() => {
 		d.className = "cardspot";
 		d.style.position = "absolute";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.75)).toString() + "px";
-		d.style.width = "260px";
-		d.style.height = "80px";
+		d.style.top = ((centre_y + 15) + (card_height*.25)).toString() + "px";
+		d.style.width = "325px";
+		d.style.height = "100px";
 		d.style.border = "dotted";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
@@ -795,7 +795,7 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.innerHTML = user_name + "'s hand";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2 + 10).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.75) - 20).toString() + "px";
+		d.style.top = ((centre_y + 15) + (card_height*.25) - 20).toString() + "px";
 		document.body.appendChild(d);			
 
 	/* Draw the discard area */
@@ -804,10 +804,10 @@ $(document).ready(() => {
 		d.setAttribute("draggable", "false");
 		d.className = "discardspot";
 		d.style.position = "absolute";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height).toString() + "px";
-		d.style.width = "50px";
-		d.style.height = "75px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 33).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		d.style.width = "65px";
+		d.style.height = "100px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -817,8 +817,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.className = "boardlabel";
 		d.innerHTML = "Discards";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height-20).toString() + "px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
 	/* Draw the discard card count */
 		var d = document.createElement("div");
@@ -830,8 +830,8 @@ $(document).ready(() => {
 		} else {
 			d.innerHTML = "0";
 		}
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.75)).toString() + "px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 60).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
 		document.body.appendChild(d);
 
 	/* Draw the deck area i.e. deal pile */
@@ -840,10 +840,10 @@ $(document).ready(() => {
 		d.setAttribute("draggable", "false");
 		d.className = "cardspot";
 		d.style.position = "absolute";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 150).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.75) - card_height).toString() + "px";
-		d.style.width = "50px";
-		d.style.height = "75px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 195).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		d.style.width = "65px";
+		d.style.height = "100px";
 		d.className = "noDrop";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
@@ -854,7 +854,7 @@ $(document).ready(() => {
 		d.className = "boardlabel";
 		d.style.position = "absolute";
 		d.innerHTML = "Deck";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 150).toString() + "px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40 + 195).toString() + "px";
 		d.style.top = "265px";
 		document.body.appendChild(d);
 	/* Draw the deck card count */
@@ -863,8 +863,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.className = "boardlabel";
 		d.innerHTML = deck.length.toString();
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40 + 150).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.75)).toString() + "px";
+		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 45 + 195).toString() + "px";
+		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
 		document.body.appendChild(d);
 	}
 	
@@ -878,8 +878,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.style.left = x.toString() + 'px';
 		d.style.top = y.toString() + 'px';
-		d.style.width = "50px";
-		d.style.height = "75px";
+		d.style.width = "65px";
+		d.style.height = "100px";
 		if (spot == 'deck') {
 			d.className = "noDrop";
 		}
