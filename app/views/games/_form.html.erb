@@ -2,8 +2,8 @@
 
 <%= form_with(model: game, local: true) do |form| %>
 
-  <span class="fixed_line3_left" >
-    <%= form.submit @user_name + " - click here when done", class:"btn-sm btn-danger", id:"Save"%>
+  <span class="lower_left" >
+    <%= form.submit "Done", class:"btn btn-danger", id:"Save"%>
   </span>
   
   <span class="fixed_line3_right"><%= link_to 'Back', games_path%></span>

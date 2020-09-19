@@ -32,9 +32,19 @@ $(document).ready(() => {
 /* Initialize the deck */
 			deck = fulldeck;
 			discardpile = [];
+			
+/* Deal cards for first time */
 			shuffle(deck);
+			dealCards();
 			$("#game_deck").val(deck.toString());
+			$("#game_discardpile").val(discardpile.toString());
+			$("#game_greenhand").val(greenhand.toString());
+			$("#game_redhand").val(redhand.toString());
+			$("#game_bluehand").val(bluehand.toString());
+			$("#game_yellowhand").val(yellowhand.toString());
+
 		}
+		
 
 /* 
 -------------------------------------------------		
@@ -73,6 +83,12 @@ $(document).ready(() => {
 				yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
 				/* Set next persons turn */
 			  	number_players = playerList.length;
+				/* To be fair, the next person in line to play should play even if cards have to be redealt */
+				turn_fair = turn + 1;
+				if (turn_fair >= number_players) {
+					turn_fair = 0;
+				}
+				/* Now see if anyone can play */
 				turn = -1;
 				next = parseInt($("#game_turn").val());
 				next = next + 1;
@@ -101,6 +117,8 @@ $(document).ready(() => {
 					alert("Nobody can play, card deck will be shuffled and redealt.");
 					dealCards();
 					displayCards(turn_color);
+					turn = turn_fair;
+					$("#game_turn").val(turn.toString());
 					$("#game_deck").val(deck.toString());
 					$("#game_discardpile").val(discardpile.toString());
 					$("#game_greenhand").val(greenhand.toString());
@@ -157,6 +175,7 @@ $(document).ready(() => {
 	if (header == "New Game") {
 		$("#myCanvas").addClass("hidden");
 		$("#game_status").val("Started");
+		$("#game_turn").val("0");
 		var greenplayer = false;
 		var yellowplayer = false;
 		var redplayer = false;
@@ -199,6 +218,14 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
+/* Get the current user's color */
+		user_color = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][0] == user_name) {
+				user_color = playerList[i][1];
+			}
+		}
+
 /* draw the board and card area */
 		drawBoard();
 		drawCardArea();
@@ -209,24 +236,8 @@ $(document).ready(() => {
 		  discardElement.style.backgroundImage = discard_background;
 		  document.body.appendChild(discardElement);
 	  	}
-				
-/* Get the player list */
-		playerList = [];
-		yplayer = document.getElementById("game_yplayer").innerHTML;
-		gplayer = document.getElementById("game_gplayer").innerHTML;
-		rplayer = document.getElementById("game_rplayer").innerHTML;
-		bplayer = document.getElementById("game_bplayer").innerHTML;
-		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-		player = playerList[turn][0];
-		turn_color = playerList[turn][1];
 
 /* Display cards of person who is logged in */
-		user_color = "";
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][0] == user_name) {
-				user_color = playerList[i][1];
-			}
-		}
 		if (user_color != ""){
 			displayCards(user_color);
 			updateBoardArray();	
@@ -270,6 +281,14 @@ $(document).ready(() => {
 		var turn_color = playerList[turn][1];
 		playedCard = "";  
 
+/* Get the current users color */
+		user_color = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][0] == user_name) {
+				user_color = playerList[i][1];
+			}
+		}
+
 /* Normal Page processing */
 		drawBoard();
 		drawCardArea();
@@ -288,7 +307,6 @@ $(document).ready(() => {
 	bluehand_start = bluehand;
 	discardpile_start = discardpile;
 	deck_start = deck;
-	
 
 
 /* Control is now turned over to drag and drop functions of browser */
@@ -371,16 +389,33 @@ $(document).ready(() => {
 		var hole_x = 0.0;
 		var hole_y = 0.0;
 		var hole_color = "";
+		
+		var arcHoleNbrs = [1,25,49,73];
+		var homeHoleNbrs = [86, 14, 38, 62];
+		var startHoleNbrs = [21, 45, 69, 93];
+		var colorList = ["yellow", "green", "red", "blue"];
 
 	/* Allow drops onto the board canvas */
 		c.setAttribute("ondrop", "drop(event)");
 		c.setAttribute("ondragover", "allowDrop(event)");
 
+	/* Board Orientation: For board rotations to put current player's home at bottom of screen */
+		if (user_color == "yellow") {
+			colorIndex = 0;
+		} else if (user_color == "green") {
+			colorIndex = 1;
+		} else if (user_color == "red") {
+			colorIndex = 2;
+		} else if (user_color == "blue") {
+			colorIndex = 3;
+		}
+
 	/* Make uppper left arc 270 to 360 degrees*/
 		arc_centre_x = board_offset;
 		arc_centre_y = board_offset;
 		start_angle = 3*Math.PI/2;
-		start_nbr = 1;
+		holeIndex = colorIndex;
+		start_nbr = arcHoleNbrs[holeIndex];
 		ctx.beginPath();
 		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
 
@@ -389,7 +424,11 @@ $(document).ready(() => {
 		arc_centre_x = board_offset + board_size;
 		arc_centre_y = board_offset;
 		start_angle = Math.PI;
-		start_nbr = 25;
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		start_nbr = arcHoleNbrs[holeIndex];
 		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
 	
 	/* Make lower right arc 90 to 180 degrees*/
@@ -397,7 +436,11 @@ $(document).ready(() => {
 		arc_centre_x = board_offset + board_size;
 		arc_centre_y = board_offset + board_size;
 		start_angle = Math.PI/2;
-		start_nbr = 49;
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		start_nbr = arcHoleNbrs[holeIndex];
 		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
 	
 	/* Make lower left arc 0 to 90 degrees*/
@@ -405,70 +448,119 @@ $(document).ready(() => {
 		arc_centre_x = board_offset;
 		arc_centre_y = board_offset + board_size;
 		start_angle = 0;
-		start_nbr = 73;
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		start_nbr = arcHoleNbrs[holeIndex];
 		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
 	
 	/* Make left home holes */
+		holeIndex = colorIndex;
+		c = colorIndex + 1;;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		nbr = homeHoleNbrs[holeIndex];	
 		hole_x = board_offset;
-		hole_y = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "grey", 87);
-		hole_y = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", 88);
 		hole_y = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", 86);
+		makeHole(hole_x, hole_y, "grey", nbr);
 		hole_y = board_offset + board_size/2;
-		nbr = 89;
+		nbr++;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		hole_y = (board_offset + board_size/2) - 35;
+		nbr++;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		hole_y = board_offset + board_size/2;
+		nbr++;	
 		for (i=1; i<=4; i++){
 			hole_x = board_offset + i * 35;
-			makeHole(hole_x, hole_y, "green", nbr);
+			makeHole(hole_x, hole_y, color, nbr);
 			nbr = nbr + 1;
 		}
 
 	/* Make upper home holes */
-		hole_x = board_offset + board_size/2;
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = homeHoleNbrs[holeIndex];
 		hole_y = board_offset;
-		makeHole(hole_x, hole_y, "grey", 15);
 		hole_x = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", 14);
-		hole_x = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", 16);
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
 		hole_x = board_offset + board_size/2;
-		nbr = 17;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_x = (board_offset + board_size/2) + 35;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_x = board_offset + board_size/2;
 		for (i=1; i<=4; i++){
 			hole_y = board_offset + i * 35;
-			makeHole(hole_x, hole_y, "red", nbr);
+			makeHole(hole_x, hole_y, color, nbr);
 			nbr = nbr + 1;
 		}
 	
 	/* Make right home holes */
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = homeHoleNbrs[holeIndex];		
 		hole_x = board_offset + board_size;
-		hole_y = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "grey", 39);
 		hole_y = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", 38);
-		hole_y = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", 40);
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
 		hole_y = board_offset + board_size/2;
-		nbr = 41;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_y = (board_offset + board_size/2) + 35;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_y = board_offset + board_size/2;
 		for (i=1; i<=4; i++){
 			hole_x = (board_offset + board_size) - i * 35;
-			makeHole(hole_x, hole_y, "blue", nbr);
+			makeHole(hole_x, hole_y, color, nbr);
 			nbr = nbr + 1;
 		}
 
 	/* Make lower home holes */
-		hole_x = board_offset + board_size/2;
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = homeHoleNbrs[holeIndex];
 		hole_y = board_offset + board_size;
-		makeHole(hole_x, hole_y, "grey", 63);
 		hole_x = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", 62);
-		hole_x = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", 64);
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
 		hole_x = board_offset + board_size/2;
-		nbr = 65;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_x = (board_offset + board_size/2) - 35;
+		makeHole(hole_x, hole_y, "grey", nbr);
+		nbr++;
+		hole_x = board_offset + board_size/2;
 		for (i=1; i<=4; i++){
 			hole_y = (board_offset + board_size) - i * 35;
-			makeHole(hole_x, hole_y, "yellow", nbr);
+			makeHole(hole_x, hole_y, color, nbr);
 			nbr = nbr + 1;
 		}
 	
@@ -478,63 +570,126 @@ $(document).ready(() => {
 		makeHole(hole_x, hole_y, "black", 0);
 
 
-	/* Make Green Starting Row */
+	/* Make Left Starting Row */
+		holeIndex = colorIndex;
+		/* the color of the left starting holes is actually 1 position beyond the lower player's color */
+		c = colorIndex + 1;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];	
+		holeIndex = colorIndex;
+		nbr = startHoleNbrs[holeIndex];					
 		hole_x = board_size / 8;
 		hole_y = board_size / 8;
-
-		for (i=21; i<=24; i++){
-			makeHole(hole_x, hole_y, "green", i);
+		for (i=nbr; i<=(nbr+3); i++){
+			makeHole(hole_x, hole_y, color, i);
 			hole_x = hole_x + 25;
 			hole_y = hole_y + 25;
 		}
-		if (gplayer) {
+		player_name = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_name = playerList[i][0];
+			}
+		}
+		if (player_name != "") {
 			x = hole_x - 100;
 			y = hole_y + 50;
-			labelBoard(x, y, gplayer, "green", "playername", "gname");
+			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
 		}
-
-	/* Make Red Starting Row */
+		
+	/* Make Upper Starting Row */
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = startHoleNbrs[holeIndex];
 		hole_x = board_size + 2*board_offset - board_size/8;
 		hole_y = board_size / 8;
-		for (i=45; i<=48; i++){
-			makeHole(hole_x, hole_y, "red", i);
+		for (i=nbr; i<=(nbr+3); i++){
+			makeHole(hole_x, hole_y, color, i);
 			hole_x = hole_x - 25;
 			hole_y = hole_y + 25;
 		}
-		if (rplayer) {
-			x = hole_x - 50;
-			y = hole_y - 100;
-			labelBoard(x, y, rplayer, "red", "playername", "rname");
+		player_name = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_name = playerList[i][0];
+			}
+		}
+		if (player_name != "") {
+			x = hole_x - 60;
+			y = hole_y - 60;
+			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
 		}
 
-	/* Make Blue Starting Row */
+	/* Make Right Starting Row */
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = startHoleNbrs[holeIndex];
 		hole_x = board_size + 2*board_offset - board_size/8;
 		hole_y = board_size + 2*board_offset - board_size/ 8;
-		if (bplayer) {
-			x = hole_x + 10;
-			y = hole_y - 140;
-			labelBoard(x, y, bplayer, "blue",  "playername", "bname");
-		}
-		for (i=69; i<=72; i++){
-			makeHole(hole_x, hole_y, "blue", i);
+		for (i=nbr; i<=(nbr+3); i++){
+			makeHole(hole_x, hole_y, color, i);
 			hole_x = hole_x - 25;
 			hole_y = hole_y - 25;
 		}
-
+		player_name = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_name = playerList[i][0];
+			}
+		}
+		if (player_name != "") {
+			x = hole_x + 80;
+			y = hole_y - 50;
+			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+		}
+		
 			
-	/* Make Yellow Starting Row */
+	/* Make Lower Starting Row */
+		c++;
+		if (c > 3) {
+			c = 0;
+		}
+		color = colorList[c];
+		holeIndex++;
+		if (holeIndex > 3) {
+			holeIndex = 0;
+		}
+		nbr = startHoleNbrs[holeIndex];
 		hole_x = board_size / 8;
 		hole_y = board_size + 2*board_offset - board_size/8;
-		if (yplayer) {
-			x = hole_x +100;
-			y = hole_y;
-			labelBoard(x, y, yplayer, "yellow",  "playername", "yname");
-		}		
-		for (i=93; i<=96; i++){
-			makeHole(hole_x, hole_y, "yellow", i);
+		for (i=nbr; i<=(nbr+3); i++){
+			makeHole(hole_x, hole_y, color, i);
 			hole_x = hole_x + 25;
 			hole_y = hole_y - 25;
 		}
+		player_name = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_name = playerList[i][0];
+			}
+		}
+		if (player_name != "") {
+			x = hole_x + 20;
+			y = hole_y + 60;
+			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+		}
+		
 		
 	/* display the marbles on the board */
 		for (i=0; i<=96; i++) {

@@ -5,13 +5,13 @@
 	<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
 </span>
 
-<span class="fixed_line3_left">
+<span class="lower_left">
 	<% if @user_name == @player %>
-		<% @button_text = @player + " It's your turn - click here to start" %>
-		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn-sm btn-success' %>
+		<% @button_text = " Start Turn" %>
+		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
 	<% else %>
 		<span id="msgArea" class = "text-warning bg-warning blink">
-			<%= "Waiting for " + @player + " to make a move."%>
+			<%= "Waiting for " + @player %>
 		</span>
 	<% end %>
 </span>

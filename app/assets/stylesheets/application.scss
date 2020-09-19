@@ -47,6 +47,14 @@ body {
   animation: blinker 1s step-start infinite;
 }
 
+.button {
+  display: inline-block;
+  width: 100px;
+  padding: 6px 6px;
+  margin: 0 20px;
+  text-decoration: none;
+}
+
 .boardlabel {
 	color: white;
 }
@@ -121,4 +129,10 @@ body {
 	position:absolute;
 	top: 40px;
 	left: 600px;
+}
+
+.lower_left {
+	position: absolute;
+	top: 720px;
+	left: 180px;
 }
