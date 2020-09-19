@@ -587,16 +587,17 @@ $(document).ready(() => {
 			hole_x = hole_x + 25;
 			hole_y = hole_y + 25;
 		}
-		player_name = "";
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][1] == color) {
-				player_name = playerList[i][0];
-			}
-		}
+		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x - 100;
 			y = hole_y + 50;
 			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+		}
+		card_count = getCardCount(color);
+		if (card_count>=0) {
+			x = hole_x - 100 + 40;
+			y = hole_y + 50 + 25;
+			labelBoard(x, y, card_count, "white", "boardlabel", "leftPlayer")			
 		}
 		
 	/* Make Upper Starting Row */
@@ -617,16 +618,17 @@ $(document).ready(() => {
 			hole_x = hole_x - 25;
 			hole_y = hole_y + 25;
 		}
-		player_name = "";
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][1] == color) {
-				player_name = playerList[i][0];
-			}
-		}
+		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x - 60;
 			y = hole_y - 60;
 			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
+		}
+		card_count = getCardCount(color);
+		if (card_count>=0) {
+			x = hole_x - 60 + 40;
+			y = hole_y - 60 + 25;
+			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "upperPlayer")			
 		}
 
 	/* Make Right Starting Row */
@@ -647,16 +649,20 @@ $(document).ready(() => {
 			hole_x = hole_x - 25;
 			hole_y = hole_y - 25;
 		}
-		player_name = "";
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][1] == color) {
-				player_name = playerList[i][0];
-			}
-		}
+		/* Get players name and card count */
+		player_name = getPlayerName(color);
+		/* Draw the players name */
+		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x + 80;
 			y = hole_y - 50;
-			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+			labelBoard(x, y, player_name, color, "playername", "rightPlayer");
+		}
+		card_count = getCardCount(color);
+		if (card_count>=0) {
+			x = hole_x + 80 + 40;
+			y = hole_y - 50 + 25;
+			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "rightPlayer")			
 		}
 		
 			
@@ -678,20 +684,23 @@ $(document).ready(() => {
 			hole_x = hole_x + 25;
 			hole_y = hole_y - 25;
 		}
-		player_name = "";
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][1] == color) {
-				player_name = playerList[i][0];
-			}
-		}
+		/* Draw the players name */
+		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x + 20;
 			y = hole_y + 60;
-			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+			labelBoard(x, y, player_name, color, "playername", "lowerPlayer");
+		}
+		/* Draw the players card count */
+		card_count = getCardCount(color);
+		if (card_count>=0) {
+			x = hole_x + 20 + 40;
+			y = hole_y + 60 + 25;
+			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "lowerPlayer")
 		}
 		
 		
-	/* display the marbles on the board */
+	/* Display all the marbles on the board */
 		for (i=0; i<=96; i++) {
 			if (board[i]) {
 				marble_id = board[i];
@@ -854,6 +863,7 @@ $(document).ready(() => {
 		d.style.top = ((centre_y + 15) - (card_height*.75)).toString() + "px";
 		document.body.appendChild(d);
 	}
+	
 	function makeCardSpot(x, y, spot) {
 /*	create the div for the card spots */
 		var d = document.createElement("div");
@@ -1364,6 +1374,29 @@ $(document).ready(() => {
 		document.body.appendChild(d);			
 	}
 
+	function getPlayerName(color) {
+		player_name = "";
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_name = playerList[i][0];
+			}
+		}
+		return player_name;
+	}
+		
+	function getCardCount(color) {
+		card_count = -1;
+		if (color == "yellow") {
+			if(yellowhand[0]!="") {card_count = yellowhand.length;}
+		} else if (color == "green") {
+			if(greenhand[0]!="") {card_count = greenhand.length;}
+		} else if (color == "red") {
+			if(redhand[0]!="") {card_count = redhand.length;}
+		} else if (color == "blue") {
+			if (bluehand[0]!="") {card_count = bluehand.length;}
+		}
+		return card_count;
+	}
 
 });
 

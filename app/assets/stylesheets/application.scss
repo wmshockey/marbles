@@ -47,14 +47,6 @@ body {
   animation: blinker 1s step-start infinite;
 }
 
-.button {
-  display: inline-block;
-  width: 100px;
-  padding: 6px 6px;
-  margin: 0 20px;
-  text-decoration: none;
-}
-
 .boardlabel {
 	color: white;
 }
@@ -87,7 +79,7 @@ body {
 .fixed_line1_centre{ 
     position:absolute;
     top:0px;
-    left:400px;
+    left:350px;
 }
 
 .fixed_line1_right{
