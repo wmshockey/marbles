@@ -6,7 +6,7 @@
 <table>
   <thead>
     <tr class="boardlabel">
-      <th class="col-sm-1">Name</th>
+      <th class="col-sm-2">Name</th>
       <th class="col-sm-2">Start date</th>
       <th class="col-sm-1">Status</th>
       <th class="col-sm-3">Players</th>
@@ -21,7 +21,7 @@
 		<% player_array = players.split(",") %>
 		<% player_array = player_array.reject { |c| c.empty?} %>
 		<% players = player_array.join(",") %>
-        <td class="col-sm-1"><%= game.name %></td>
+        <td class="col-sm-2"><%= game.name %></td>
         <td class="col-sm-2"><%= game.start_date %></td>
         <td class="col-sm-1"><%= game.status %></td>
         <td class="col-sm-3"><%= players %></td>

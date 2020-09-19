@@ -11,7 +11,7 @@
 		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
 	<% else %>
 		<span id="msgArea" class = "text-warning bg-warning blink">
-			<%= "Waiting for " + @player %>
+			<%= "** Waiting for " + @player + " **"%>
 		</span>
 	<% end %>
 </span>
@@ -30,6 +30,8 @@
 	<div id="game_gplayer"><%= @game.gplayer %></div>
 	<div id="game_rplayer"><%= @game.rplayer %></div>
 	<div id="game_bplayer"><%= @game.bplayer %></div>
+	<div id="game_ryteam"><%= @game.ryteam %></div>
+	<div id="game_gbteam"><%= @game.gbteam %></div>
 	<div id="game_yellowhand"><%= @game.yellowhand %></div>
 	<div id="game_greenhand"><%= @game.greenhand %></div>
 	<div id="game_redhand"><%= @game.redhand %></div>

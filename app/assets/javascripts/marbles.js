@@ -219,6 +219,8 @@ $(document).ready(() => {
 		gplayer = document.getElementById("game_gplayer").innerHTML;
 		rplayer = document.getElementById("game_rplayer").innerHTML;
 		bplayer = document.getElementById("game_bplayer").innerHTML;
+		ryteam = document.getElementById("game_ryteam").innerHTML;
+		gbteam = document.getElementById("game_gbteam").innerHTML;
 		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
@@ -279,6 +281,8 @@ $(document).ready(() => {
 		gplayer = $("#game_gplayer").val();
 		rplayer = $("#game_rplayer").val();
 		bplayer = $("#game_bplayer").val();
+		ryteam = $("#game_ryteam").val();
+		gbteam = $("#game_gbteam").val();
 		
 /* get the players list */
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
@@ -1123,23 +1127,33 @@ $(document).ready(() => {
 					discardpile.push(playerhand[i]);
 				}
 				$("#game_discardpile").val(discardpile.toString());
-				return true;
 			} else {
 				return false;
 			}
 		}
 
-/* Check that player can only move his/her own color marbles */
-		player_color = playerList[turn][1].substring(0,1);
+/* Check that player can only move his/her own color marbles or his/her partner's marbles */
+		player_color = playerList[turn][1];
+		/* Need to check if player is on a team and if he/she can player their partners marbles as well */
+		playable_colors = getPlayableColors(player_color);
 		for (i=0; i<moved_count; i++) {
-			marble_color = moved_marbles[i][0].substring(0,1);
-			marble_dist = moved_marbles[i][1];
-			alert("Moved marble_color = " + marble_color + " marble_dist = " + marble_dist);
-			/* Check if marble moved is not players color */
-			if (marble_color != player_color) {
-				/* if marble was a kill or Jack was played */
+			marble_cc = moved_marbles[i][0].substring(0,1);
+			if (marble_cc=="r") {
+				marble_color="red";
+			} else if (marble_cc=="y") {
+				marble_color = "yellow";
+			} else if (marble_cc=="g") {
+				marble_color = "green";
+			} else if (marble_cc=="b") {
+				marble_color = "blue";
+			}
+			/* Check if marble moved is playable */
+			/* alert("player_color = " + player_color + " playable_colors = " + playable_colors + " marble_color = " + marble_color);*/
+			if (!playable_colors.includes(marble_color)) {
+				/* marble is not playable unless it was killed or moved with a Jack card */
+				marble_dist = moved_marbles[i][1];
 				if ( marble_dist!=101 && !["JH","JD","JS","JC"].includes(playedCard)) {
-					alert("A marble that doesn't belong to the player was moved.");
+					alert(player_color + " player is not allowed to move " + marble_color + " marbles.");
 					return false;
 				}
 			}
@@ -1429,6 +1443,55 @@ $(document).ready(() => {
 			if (bluehand[0]!="") {card_count = bluehand.length;}
 		}
 		return card_count;
+	}
+	
+	function getPlayableColors(player_color) {
+		/* First check if player is on a team or not */
+		if ((player_color=="yellow" || player_color=="red") && !ryteam) {
+			return [player_color];
+		}
+		if ((player_color=="green" || player_color=="blue") && !gbteam) {
+			return [player_color];
+		}
+		/* Player is on a team, Now check if all their marbles are out */
+		allOut = true;
+		if(player_color == "yellow") {
+			playable = ["yellow", "red"];
+			for ( i=93; i<=96; i++) {
+				if (board[i] != "") {
+					allOut =false;
+				}
+			}
+		}
+		if(player_color == "green") {
+			playable = ["green", "blue"];
+			for ( i=21; i<=24; i++) {
+				if (board[i] != "") {
+					allOut =false;
+				}
+			}
+		}
+		if(player_color == "red") {
+			playable = ["yellow", "red"];
+			for ( i=45; i<=48; i++) {
+				if (board[i] != "") {
+					allOut =false;
+				}
+			}
+		}
+		if(player_color == "blue") {
+			playable = ["green", "blue"];
+			for ( i=69; i<=72; i++) {
+				if (board[i] != "") {
+					allOut =false;
+				}
+			}
+		}
+		if (allOut) {
+			return playable;
+		} else {
+			return player_color;
+		}
 	}
 
 });
