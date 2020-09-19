@@ -114,8 +114,9 @@ $(document).ready(() => {
 					/* There is a player who still has cards left to play */
 					$("#game_turn").val(turn.toString());	
 				} else {
-					/* Nobody can play - must shuffle and redeal the cards */
-					alert("Nobody can play, card deck will be shuffled and redealt.");
+					/* Nobody else can play now - must shuffle and redeal the cards */
+					alert("Nobody else can play now.");
+					alert("Another hand will be dealt.");
 					dealCards();
 					displayCards(turn_color);
 					turn = turn_fair;
@@ -147,7 +148,7 @@ $(document).ready(() => {
 
 /*
 ------------------------------------------------- 
- INTIIALIZE EVERYTHING for all forms (New Game, Show Game and New Turn)
+ INTIIALIZE EVERYTHING for all pages (New Game, Show Game and New Turn)
 -------------------------------------------------
 */	
 		var board = [];
@@ -596,13 +597,16 @@ $(document).ready(() => {
 			x = hole_x - 100;
 			y = hole_y + 50;
 			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
-		}
-		card_count = getCardCount(color);
-		if (card_count>=0) {
-			x = hole_x - 100 + 40;
+			x = hole_x - 100 + 10;
 			y = hole_y + 50 + 25;
-			labelBoard(x, y, card_count, "white", "boardlabel", "leftPlayer")			
+			card_count = getCardCount(color);
+			if (card_count>=0) {
+				labelBoard(x, y, card_count, "white", "boardlabel", "leftPlayer")			
+			} else {
+				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
+			}
 		}
+
 		
 	/* Make Upper Starting Row */
 		c++;
@@ -627,13 +631,16 @@ $(document).ready(() => {
 			x = hole_x - 60;
 			y = hole_y - 60;
 			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
-		}
-		card_count = getCardCount(color);
-		if (card_count>=0) {
-			x = hole_x - 60 + 40;
+			card_count = getCardCount(color);
+			x = hole_x - 60 + 10;
 			y = hole_y - 60 + 25;
-			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "upperPlayer")			
+			if (card_count>=0) {
+				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "upperPlayer")			
+			} else {
+				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
+			}
 		}
+
 
 	/* Make Right Starting Row */
 		c++;
@@ -661,13 +668,16 @@ $(document).ready(() => {
 			x = hole_x + 80;
 			y = hole_y - 50;
 			labelBoard(x, y, player_name, color, "playername", "rightPlayer");
-		}
-		card_count = getCardCount(color);
-		if (card_count>=0) {
-			x = hole_x + 80 + 40;
+			card_count = getCardCount(color);
+			x = hole_x + 80 + 10;
 			y = hole_y - 50 + 25;
-			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "rightPlayer")			
+			if (card_count>=0) {
+				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "rightPlayer")			
+			} else {
+				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
+			}
 		}
+
 		
 			
 	/* Make Lower Starting Row */
@@ -694,13 +704,15 @@ $(document).ready(() => {
 			x = hole_x + 20;
 			y = hole_y + 60;
 			labelBoard(x, y, player_name, color, "playername", "lowerPlayer");
-		}
-		/* Draw the players card count */
-		card_count = getCardCount(color);
-		if (card_count>=0) {
-			x = hole_x + 20 + 40;
+			/* Draw the players card count */
+			card_count = getCardCount(color);
+			x = hole_x + 20 + 10;
 			y = hole_y + 60 + 25;
-			labelBoard(x, y, card_count.toString(), "white", "boardlabel", "lowerPlayer")
+			if (card_count>=0) {
+				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "lowerPlayer")
+			} else {
+				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
+			}
 		}
 		
 		
@@ -781,10 +793,10 @@ $(document).ready(() => {
 		d.className = "cardspot";
 		d.style.position = "absolute";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.25)).toString() + "px";
-		d.style.width = "325px";
-		d.style.height = "100px";
-		d.style.border = "dotted";
+		d.style.top = ((centre_y + 15) + (card_height*.20)).toString() + "px";
+		d.style.width = "340px";
+		d.style.height = "105px";
+		d.style.border = "none";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -795,7 +807,7 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.innerHTML = user_name + "'s hand";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2 + 10).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.25) - 20).toString() + "px";
+		d.style.top = ((centre_y + 15) + (card_height*.20) - 20).toString() + "px";
 		document.body.appendChild(d);			
 
 	/* Draw the discard area */
@@ -939,6 +951,7 @@ $(document).ready(() => {
 		/* If deck out of cards, empty the discard pile shuffle the full deck */
 		number_players = playerList.length;
 		if (deck.length <= 1) {
+			alert("No cards left in the deck.  Will shuffle and deal from full deck now.")
 			deck = fulldeck;
 			shuffle(deck);
 			discardpile = [];
@@ -1086,7 +1099,7 @@ $(document).ready(() => {
 
 /* Check if no card played and no marbles moved */
 		if (playedCard == "" && moved_count == 0) {
-			if (confirm("Press the Ok button if you are confirming you can't play")) {
+			if (confirm("Press the Ok button to confirm you can't play")) {
 				/* player can't play so clear out his/her hand and return cards to discard pile */
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
@@ -1115,6 +1128,22 @@ $(document).ready(() => {
 				return false;
 			}
 		}
+
+/* Check that player can only move his/her own color marbles */
+		player_color = playerList[turn][1].substring(0,1);
+		for (i=0; i<moved_count; i++) {
+			marble_color = moved_marbles[i][0].substring(0,1);
+			marble_dist = moved_marbles[i][1];
+			alert("Moved marble_color = " + marble_color + " marble_dist = " + marble_dist);
+			/* Check if marble moved is not players color */
+			if (marble_color != player_color) {
+				/* if marble was a kill or Jack was played */
+				if ( marble_dist!=101 && !["JH","JD","JS","JC"].includes(playedCard)) {
+					alert("A marble that doesn't belong to the player was moved.");
+					return false;
+				}
+			}
+		}		
 
 /* If more than one marble moved */
 		if (moved_count > 1) {
