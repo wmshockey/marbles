@@ -1079,14 +1079,14 @@ $(document).ready(() => {
 					yellowhand = [];
 					$("#game_yellowhand").val("");					
 				} else if (turn_color == "green") {
-					playerhand = greenwhand;
+					playerhand = greenhand;
 					greenhand = [];
 					$("#game_greenhand").val("");		
 				} else if (turn_color == "red") {
 					playerhand = redhand;
 					redhand = [];
 					$("#game_redhand").val("");
-				} else if (turn_color == " blue") {
+				} else if (turn_color == "blue") {
 					playerhand = bluehand;
 					bluehand = [];
 					$("#game_bluehand").val("");
