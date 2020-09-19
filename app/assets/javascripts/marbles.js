@@ -1,3 +1,4 @@
+
 $(document).ready(() => {
 
   
@@ -192,6 +193,9 @@ $(document).ready(() => {
 	
 */
 	if (header == "Show Game") {
+		setTimeout(function() {
+		  location.reload();
+		}, 10000);
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var game_name = document.getElementById("game_name").innerHTML;
