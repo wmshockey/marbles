@@ -197,15 +197,12 @@ $(document).ready(() => {
 */
 	if (header == "Show Game") {
 
+/*
 		setTimeout(function() {
-			/* get updated turn */
-			new_turn = parseInt(document.getElementById("game_turn").innerHTML);
-			if (new_turn != old_turn) {
-				location.reload();
-			}
-			old_turn = new_turn;		  
+			location.reload();		  
 		}, 10000);
-		
+*/
+				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var game_name = document.getElementById("game_name").innerHTML;

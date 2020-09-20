@@ -78,6 +78,7 @@ class GamesController < ApplicationController
       if @game.update(game_params)
         format.html { redirect_to @game, notice: 'Game was successfully updated.' }
         format.json { render :show, status: :ok, location: @game }
+        format.js {render inline: "location.reload();"}
       else
         format.html { render :edit }
         format.json { render json: @game.errors, status: :unprocessable_entity }
