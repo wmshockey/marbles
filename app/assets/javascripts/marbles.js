@@ -184,7 +184,9 @@ $(document).ready(() => {
 		var blueplayer = false;
 		playedCard = "";
 /* Initialize the board to all empty */
-		board.fill("");	
+		board.fill("");
+/* set the old turn value for first turn of the game */
+		old_turn = "99";
 	}
 
 /*
@@ -194,9 +196,16 @@ $(document).ready(() => {
 	
 */
 	if (header == "Show Game") {
+
 		setTimeout(function() {
-		  location.reload();
+			/* get updated turn */
+			new_turn = parseInt(document.getElementById("game_turn").innerHTML);
+			if (new_turn != old_turn) {
+				location.reload();
+			}
+			old_turn = new_turn;		  
 		}, 10000);
+		
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var game_name = document.getElementById("game_name").innerHTML;
@@ -1017,31 +1026,35 @@ $(document).ready(() => {
 /* check for movement of any marbles */
 /* get the card value of the played card to determine how far player can move a marble */
 		var outCards = ["KH","KS","KD","KC","AH","AS","AD","AC","J1","J2","J3","J4"];
+		var red_home_holes = [17, 18, 19, 20];
+		var blue_home_holes = [41, 42, 43, 44];
+		var yellow_home_holes = [65, 66, 67, 68];
+		var green_home_holes = [89, 90, 91, 92];
+		var red_start_holes = [45, 46, 47, 48];
+		var blue_start_holes = [69, 70, 71, 72];
+		var yellow_start_holes = [93, 94, 95, 96];
+		var green_start_holes = [21, 22, 23, 24];
+		var startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
+		var homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
 		var card_index = fulldeck.indexOf(playedCard);
 		var card_value = cardvalue[card_index];
-		var moved_marbles = [];
-		var moved_count = 0;
-		var distance = 0;
-		var total_distance = 0;
-		var marbles_killed = 0;
-		
-/* first check to see if game has lost any marbles */
+
 		moved_marbles = [];
 		number_players = playerList.length;
-		marbles_in_play = number_players * 4;
+		marbles_in_play = 4 * number_players;
+		moved_count = 0;
 		marble_count = 0;
 		distance = 0;
 		total_distance = 0;
+		marbles_killed = 0;
+				
+/* Count number of marbles on the board */
 		for (p=0; p<=96; p++) {
 			if(board_end[p] != "") {
 				marble_count++;
 			}
 		}
-		if (marble_count != marbles_in_play) {
-			alert("Some marbles have been moved off board!  Marble count is " + marble_count);
-			return false;
-		}				
-		
+
 /* get the start hole and end hole for all marbles in play */
 		for ( m= 0; m < marbleids.length; m++) {
 /* set the start_hole and end_hole for any marbles that may not be in play this game */
@@ -1059,20 +1072,13 @@ $(document).ready(() => {
 					end_hole = p;
 				}
 			}
-/* If marble not found in either the start hole or the end hole it is error condition. */
-			if( (start_hole==99) && (end_hole!=99)) {
-				alert("A marble appears on board out of no where.");
-				return false;
-			} else if ( (start_hole!=99) && (end_hole==99)) {
-				alert("A marble has disappeard from the board.");
-				return false;
-			}
 
 /* Calculate distance marble moved for all marbles currently in play */
 			if (start_hole!=99 && end_hole!=99) {
 				distance = calcDistance(start_hole, end_hole);
 				if (distance != 0) {
 					moved_marbles.push([mid, distance, start_hole, end_hole]);
+					/* if marble killed or moved out of start row then don't include in total distance */
 					if (distance < 100) {
 						total_distance = total_distance + distance;
 					}
@@ -1088,7 +1094,31 @@ $(document).ready(() => {
 				marbles_killed++;
 			}
 		}
-			
+
+/* Check to see if any marbles came out of a start hole */
+		start_hole_involved = false;
+		for (i=0; i<moved_count; i++) {
+			start_hole = moved_marbles[i][2];
+			if ( startHoles.includes(start_hole)) {
+				start_hole_involved = true;
+			}
+		}
+
+/* Check that total number of marbles on board is always 4 x number_of_players */
+		if (marble_count != marbles_in_play) {
+			alert("Some marbles have been moved off board!  Marble count is " + marble_count);
+			return false;
+		}				
+
+/* If marble not found in either the start hole or the end hole it is error condition. */
+		if( (start_hole==99) && (end_hole!=99)) {
+			alert("A marble appears on board out of no where.");
+			return false;
+		} else if ( (start_hole!=99) && (end_hole==99)) {
+			alert("A marble has disappeard from the board.");
+			return false;
+		}
+		
 /* Check if a card was played but no marbles were moved */
 		if (playedCard != "" && moved_count ==0){
 			alert("A card was played but no marbles were moved.");
@@ -1132,10 +1162,11 @@ $(document).ready(() => {
 			}
 		}
 
-/* Check that player can only move his/her own color marbles or his/her partner's marbles */
+/* Check that all marbles moved are playable */
 		player_color = playerList[turn][1];
 		/* Need to check if player is on a team and if he/she can player their partners marbles as well */
 		playable_colors = getPlayableColors(player_color);
+
 		for (i=0; i<moved_count; i++) {
 			marble_cc = moved_marbles[i][0].substring(0,1);
 			if (marble_cc=="r") {
@@ -1147,8 +1178,8 @@ $(document).ready(() => {
 			} else if (marble_cc=="b") {
 				marble_color = "blue";
 			}
-			/* Check if marble moved is playable */
-			/* alert("player_color = " + player_color + " playable_colors = " + playable_colors + " marble_color = " + marble_color);*/
+			/* Check if marble moved is playable 
+			alert("player_color = " + player_color + " playable_colors = " + playable_colors + " marble_color = " + marble_color); */
 			if (!playable_colors.includes(marble_color)) {
 				/* marble is not playable unless it was killed or moved with a Jack card */
 				marble_dist = moved_marbles[i][1];
@@ -1159,44 +1190,188 @@ $(document).ready(() => {
 			}
 		}		
 
-/* If more than one marble moved */
-		if (moved_count > 1) {
-
-			/* If a Jack was played then 2 marbles must have been moved */
-			if( ["JH","JD","JS","JC"].includes(playedCard)) {
-				total_distance = 0;
-				if (moved_count != 2) {
-					alert("A Jack was played but two marbles were not moved.");
-					return false;
-				}
-				/* start_hole of first marble must become end_hole of second marble and vice versa */
-				start_hole_1 = moved_marbles[0][2];
-				end_hole_1   = moved_marbles[0][3];
-				start_hole_2 = moved_marbles[1][2];
-				end_hole_2   = moved_marbles[1][3];
-				if ( (start_hole_1 != end_hole_2) || (start_hole_2 != end_hole_1) ) {
-					alert("Jack played but marble positions were not properly swapped.");
-					return false;
-				}
-			
-			/* If a 7 card was played */
-			} else if (["7H","7D","7S","7C"].includes(playedCard)) {
-				if (total_distance != 7) {
-					alert("A 7 card was played but total marble moves was not 7");
-					return false;
-				}
-				
-			/* If more than one marble moved but a 7 or a Jack card or kill move was not played */
-			} else {
-				if ( marbles_killed != 1) {
-					alert("More than one marble moved but no Jack or 7 card or kill played.");
-					return false;
-				}
+/* Check that no marbles came out of a home row anywhere */
+		for (i=0; i<moved_count; i++) {
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			if (homeHoles.includes(start_hole) && !homeHoles.includes(end_hole)) {
+				alert("A marble cannot be moved out of its home row");
+				return false;
 			}
-
 		}
 		
-/* If just one marble moved */
+/* Check that no marbles backed into a home row with a 4 card */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0];
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			if ((card_value == -4) && homeHoles.includes(end_hole)) {
+				alert("A marble cannot be backed into a home row with a 4 card ");
+				return false;
+			}
+		}
+		
+/* Check that no marbles went into the wrong home row */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0].substring(0,1);
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			if ( red_home_holes.includes(end_hole) && mid!="r") {
+				alert("A non-red marble went into the red home row.");
+				return false;
+			}
+			if ( blue_home_holes.includes(end_hole) && mid!="b") {
+				alert("A non-blue marble went into the blue home row.");
+				return false;			
+			}
+			if ( yellow_home_holes.includes(end_hole) && mid!="y") {
+				alert("A non-yellow marble went into the yellow home row.");
+				return false;
+			}
+			if ( green_home_holes.includes(end_hole) && mid!="g") {
+				alert("A non-green marble went into the green home row.");
+				return false;			
+			}		
+		}
+		
+/* Check that each killed marble went into their correct starting row */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0].substring(0,1);
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			if (moved_marbles[i][1] == 101) {
+				if (mid == "r") {
+					if( !red_start_holes.includes(end_hole)) {
+						alert("A killed red marble went into the wrong starting row.");
+						return false;
+					}
+				}
+				if (mid == "b") {
+					if (!blue_start_holes.includes(end_hole)) {
+						alert("A killed blue marble went into the wrong starting row.");
+						return false;
+					}
+				}
+				if (mid == "y") {
+					if (!yellow_start_holes.includes(end_hole)) {
+						alert("A killed yellow marble went into the wrong starting row.");
+						return false;
+					}
+				}
+				if (mid == "g") {
+					if (!green_start_holes.includes(end_hole)) {
+						alert("A killed green marble went into the wrong starting row.");
+						return false;
+					}
+				}
+			}
+		}
+
+/* Check that if marble comes out of its start row it goes into correct position on active board. */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0].substring(0,1);
+			dist = moved_marbles[i][1];
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			/* If marble came out of start hole, make sure an out card was played  */
+			if ( startHoles.includes(start_hole) && !outCards.includes(playedCard) ) {
+				alert("A marble came out of start row but no out card was played.");
+				return false;
+			}
+			/* If marble came out of start hole, make sure it was only marble doing that */
+			if ( startHoles.includes(start_hole) ) {
+				if (moved_count>=2 && marbles_killed!=1) {
+					alert("More than one marble moved when coming out of a start row.");
+					return false;
+				}
+			}							
+			if ( red_start_holes.includes(start_hole) && end_hole!=25) {
+				alert("A red marble came out of start row into wrong hole on board.");
+				return false;
+			}
+			if (blue_start_holes.includes(start_hole) && end_hole!=49) {
+				alert("A blue marble came out of start row into wrong hole on board.");
+				return false;
+			}
+			if (yellow_start_holes.includes(start_hole) && end_hole!=73) {
+				alert("A yellow marble came out of start row into wrong hole on board.");
+				return false;
+			}
+			if (green_start_holes.includes(start_hole) && end_hole!=1) {
+				alert("A green marble came out of start row into wrong hole on board.");
+				return false;
+			}
+		}
+
+/* If Jack card played then 2 marbles must have been involved */
+		if( ["JH","JD","JS","JC"].includes(playedCard) ) {
+			if (moved_count != 2) {
+				alert("A Jack was played but two marbles were not moved.");
+				return false;
+			}
+			/* start_hole of first marble must become end_hole of second marble and vice versa */
+			mid_1 = moved_marbles[0][0].substring(0,1);
+			mid_2 = moved_marbles[1][0].substring(0,1);
+			start_hole_1 = moved_marbles[0][2];
+			end_hole_1   = moved_marbles[0][3];
+			start_hole_2 = moved_marbles[1][2];
+			end_hole_2   = moved_marbles[1][3];
+			/* Check to make sure two marbles of same color were not swapped */
+			if (mid_1 == mid_2) {
+				alert("Two marbles of the same color were played when Jack card played.");
+				return false;
+			}
+			/* Check to make sure the two marbles involved were not in start row or home row positions */
+			if (startHoles.includes(start_hole_1) || startHoles.includes(start_hole_2) ) {
+				alert("Cannot use Jack to move marbles in start rows.");
+				return false;
+			}
+			if ( homeHoles.includes(start_hole_1) || homeHoles.includes(start_hole_2) ) {
+				alert("Cannot use Jack to move marbles in home rows.");
+				return false;
+			}
+			if ( (start_hole_1 != end_hole_2) || (start_hole_2 != end_hole_1) ) {
+				alert("Jack played but marble positions were not properly swapped.");
+				return false;
+			}
+		}
+
+/* If more than one marble moved, but no Jack, 7 or kills played, then move is invalid. */
+		if (moved_count > 1) {
+			if ( !["JH", "JD", "JC", "JS"].includes(playedCard) ) {
+				if ( !["7H", "7D", "7C", "7S"].includes(playedCard)) {
+					if (marbles_killed==0) {
+						alert("More than one marble moved but no Jack or 7 card or kill played.");
+						return false;
+					}
+				}
+			}
+		}
+
+/* Check to make sure no marble jumped any other marble */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0].substring(0,1);
+			dist = moved_marbles[i][1];
+			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
+			/* if no Jacks, start holes, centre hole or kills involved, then it is just a straight board move */
+			if ( !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved && dist<100 && end_hole!=0 && start_hole!=0){
+				if (checkForJumps(start_hole, end_hole)) {
+					alert("A marble is trying to jump over another marble.");
+					return false;
+				}
+			}			
+		}
+
+/* Finally check that if no Jack played or marble coming out of start row, then total distance moved must match card played. */
+		if ( playedCard && !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved ){
+			if (total_distance != card_value){
+				alert("Number of positions marbles moved does not match the card played.");
+				return false;
+			}						
+		}
+		
+/* Checks for when just one marble moved */
 		if (moved_count == 1){
 			
 			var marble = moved_marbles[0][0];
@@ -1208,21 +1383,6 @@ $(document).ready(() => {
 			/* If marble came out of starting row, an outcard must have been played */
 			if ( (distance == 100) && !outCards.includes(playedCard)) {
 				alert("A marble was brought out of start row but no outcard was played.");
-				return false;
-			}
-			
-		/* If marble came out of a start row, it must be placed in first starting position */
-			if ( marble_color == "y" && [93,94,95,96].includes(start_hole) && end_hole!= 73) {
-				alert("Marble came out of yellow start row into wrong hole on board.");
-				return false;
-			} else if (marble_color == "g" && [21,22,23,24].includes(start_hole) && end_hole!=1) {
-				alert("Marble came out of green start row into wrong hole on board.");
-				return false;
-			} else if (marble_color == "r" && [45,46,47,48].includes(start_hole) && end_hole!=25) {
-				alert("Marble came out of red start row into wrong hole on board.");
-				return false;
-			} else if (marble_color == "b" && [69,70,71,72].includes(start_hole) && end_hole!=49) {
-				alert("Marble came out of blue start row into wrong hole on board.");
 				return false;
 			}
 			
@@ -1259,7 +1419,6 @@ $(document).ready(() => {
 			}
 			
 		}
-
 		return true;
 		
 	}
@@ -1490,9 +1649,54 @@ $(document).ready(() => {
 		if (allOut) {
 			return playable;
 		} else {
-			return player_color;
+			return [player_color];
 		}
 	}
+	
+	function checkForJumps(start_hole, end_hole) {
+		var hole_numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88"];
+		alert("checkForJumps: start_hole=" + start_hole + " end_hole= " + end_hole);
+		start_hole_str = start_hole.toString();
+		end_hole_str = end_hole.toString();
+		if(hole_numbers.includes(start_hole_str) && hole_numbers.includes(end_hole_str)) {
+			start_hole_index = hole_numbers.indexOf(start_hole_str) + 1;
+			end_hole_index = hole_numbers.indexOf(end_hole_str);
+			alert("checkForJumps: start_hole_index = " + start_hole_index + " end_hole_index = " + end_hole_index);
+			/* Check if move has wrapped around the end of the board array */
+			if ( end_hole_index < start_hole_index ) {
+				i = start_hole_index
+				do {
+					hole = parseInt(hole_numbers[i]);
+					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
+					if (board[hole] != "") {
+						return true;
+					}
+					i = i + 1;
+				} while (i < hole_numbers.length);
+				i = 0;
+				do {
+					hole = parseInt(hole_numbers[i]);
+					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
+					if (board[hole] != "") {
+						return true;
+					}
+					i = i + 1;
+				} while (i < end_hole_index);
+			} else {
+				i = start_hole_index;
+				do {
+					hole = parseInt(hole_numbers[i]);
+					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
+					if (board[hole] != "") {
+						return true;
+					}
+					i = i + 1;
+				} while (i < end_hole_index);
+			}			
+		}
+		return false;		
+	}
+	
 
 });
 
