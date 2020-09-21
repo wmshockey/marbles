@@ -197,11 +197,10 @@ $(document).ready(() => {
 */
 	if (header == "Show Game") {
 
-/*
+/* sets timer so that Show pages refresh every 10 seconds
 		setTimeout(function() {
 			location.reload();		  
-		}, 10000);
-*/
+		}, 10000);  */
 				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
@@ -799,7 +798,8 @@ $(document).ready(() => {
 	/* Draw the card hand area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand");
-		d.setAttribute("draggable", "false");
+		d.setAttribute("draggable", "true");
+		d.setAttribute("ondragstart", "drag(event)");
 		d.className = "cardspot";
 		d.style.position = "absolute";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
@@ -810,6 +810,7 @@ $(document).ready(() => {
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
+		
 	/* Draw the Card hand label */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand_label");
@@ -1033,8 +1034,6 @@ $(document).ready(() => {
 		var green_start_holes = [21, 22, 23, 24];
 		var startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
 		var homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
-		var card_index = fulldeck.indexOf(playedCard);
-		var card_value = cardvalue[card_index];
 
 		moved_marbles = [];
 		number_players = playerList.length;
@@ -1044,6 +1043,8 @@ $(document).ready(() => {
 		distance = 0;
 		total_distance = 0;
 		marbles_killed = 0;
+		card_index = fulldeck.indexOf(playedCard);
+		card_value = cardvalue[card_index];
 				
 /* Count number of marbles on the board */
 		for (p=0; p<=96; p++) {
@@ -1092,12 +1093,17 @@ $(document).ready(() => {
 			}
 		}
 
-/* Check to see if any marbles came out of a start hole */
+/* Check to see if any marbles came out of a start hole or into home holes*/
 		start_hole_involved = false;
+		home_hole_involved = false;
 		for (i=0; i<moved_count; i++) {
 			start_hole = moved_marbles[i][2];
+			end_hole = moved_marbles[i][3];
 			if ( startHoles.includes(start_hole)) {
 				start_hole_involved = true;
+			}
+			if ( homeHoles.includes(start_hole) || homeHoles.includes(end_hole)) {
+				home_hole_involved = true;
 			}
 		}
 
@@ -1157,6 +1163,14 @@ $(document).ready(() => {
 			} else {
 				return false;
 			}
+		}
+
+/* Check that if no Jack played or marble coming out of start row, then total distance moved must match card played. */
+		if ( playedCard && !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved ){
+			if (total_distance != card_value){
+				alert("Number of positions marbles moved does not match the card played.");
+				return false;
+			}						
 		}
 
 /* Check that all marbles moved are playable */
@@ -1231,6 +1245,7 @@ $(document).ready(() => {
 			}		
 		}
 		
+
 /* Check that each killed marble went into their correct starting row */
 		for (i=0; i<moved_count; i++) {
 			mid = moved_marbles[i][0].substring(0,1);
@@ -1338,12 +1353,13 @@ $(document).ready(() => {
 			if ( !["JH", "JD", "JC", "JS"].includes(playedCard) ) {
 				if ( !["7H", "7D", "7C", "7S"].includes(playedCard)) {
 					if (marbles_killed==0) {
-						alert("More than one marble moved but no Jack or 7 card or kill played.");
+						alert("More than one marble moved but card played does not allow that.");
 						return false;
 					}
 				}
 			}
 		}
+
 
 /* Check to make sure no marble jumped any other marble */
 		for (i=0; i<moved_count; i++) {
@@ -1352,22 +1368,17 @@ $(document).ready(() => {
 			start_hole = moved_marbles[i][2];
 			end_hole = moved_marbles[i][3];
 			/* if no Jacks, start holes, centre hole or kills involved, then it is just a straight board move */
-			if ( !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved && dist<100 && end_hole!=0 && start_hole!=0){
-				if (checkForJumps(start_hole, end_hole)) {
-					alert("A marble is trying to jump over another marble.");
-					return false;
+			if ( !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved && !home_hole_involved) {
+				if ( dist<100 && end_hole!=0 && start_hole!=0) {
+					if (checkForJumps(start_hole, end_hole)) {
+						alert("A marble is trying to jump over another marble.");
+						return false;
+					}
 				}
-			}			
+			}
 		}
 
-/* Finally check that if no Jack played or marble coming out of start row, then total distance moved must match card played. */
-		if ( playedCard && !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved ){
-			if (total_distance != card_value){
-				alert("Number of positions marbles moved does not match the card played.");
-				return false;
-			}						
-		}
-		
+
 /* Checks for when just one marble moved */
 		if (moved_count == 1){
 			
@@ -1416,6 +1427,7 @@ $(document).ready(() => {
 			}
 			
 		}
+		alert("finished checkMove OK");
 		return true;
 		
 	}
@@ -1651,20 +1663,25 @@ $(document).ready(() => {
 	}
 	
 	function checkForJumps(start_hole, end_hole) {
+		var tmp = 0;
 		var hole_numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88"];
-		alert("checkForJumps: start_hole=" + start_hole + " end_hole= " + end_hole);
 		start_hole_str = start_hole.toString();
 		end_hole_str = end_hole.toString();
 		if(hole_numbers.includes(start_hole_str) && hole_numbers.includes(end_hole_str)) {
-			start_hole_index = hole_numbers.indexOf(start_hole_str) + 1;
+			start_hole_index = hole_numbers.indexOf(start_hole_str);
 			end_hole_index = hole_numbers.indexOf(end_hole_str);
-			alert("checkForJumps: start_hole_index = " + start_hole_index + " end_hole_index = " + end_hole_index);
+			/* If a marble moved backwards, swap the start and end positionss */
+			if (dist<0) {
+				tmp = end_hole_index;
+				end_hole_index = start_hole_index;
+				start_hole_index = tmp;
+			}
+			start_hole_index = start_hole_index + 1;
 			/* Check if move has wrapped around the end of the board array */
 			if ( end_hole_index < start_hole_index ) {
 				i = start_hole_index
 				do {
 					hole = parseInt(hole_numbers[i]);
-					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
 					if (board[hole] != "") {
 						return true;
 					}
@@ -1673,7 +1690,6 @@ $(document).ready(() => {
 				i = 0;
 				do {
 					hole = parseInt(hole_numbers[i]);
-					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
 					if (board[hole] != "") {
 						return true;
 					}
@@ -1683,7 +1699,6 @@ $(document).ready(() => {
 				i = start_hole_index;
 				do {
 					hole = parseInt(hole_numbers[i]);
-					alert("checkForJumps: hole = " + hole + " board[hole] = " + board[hole]);
 					if (board[hole] != "") {
 						return true;
 					}
@@ -1836,6 +1851,16 @@ function performDrop(player_color, data, ev) {
 	
 /* player is dragging marble from hole to somewhere on the open board */
 	if ((draggingObj == "marble") && (draggingTo == "board")) {
+		dm = document.getElementById(data);
+		dm.style.position = "fixed";
+		dm.style.left = (ev.clientX - x_offset) + "px";
+		dm.style.top = (ev.clientY - y_offset) + "px";
+		document.body.appendChild(dm);
+		drop_ok = true;
+	}
+
+/* player is dragging his/her hand to somewhere on the board */
+	if ((draggingObj=="hand") && (draggingTo=="board")) {
 		dm = document.getElementById(data);
 		dm.style.position = "fixed";
 		dm.style.left = (ev.clientX - x_offset) + "px";
