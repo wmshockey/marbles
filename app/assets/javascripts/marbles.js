@@ -25,7 +25,7 @@ $(document).ready(() => {
 /* Randomly set who gets to play first  */
 		  	number_players = playerList.length;
 			turn = (Math.floor(Math.random() * number_players));
-			alert(playerList[turn][0] + " gets to play first.");
+			alert(playerList[turn][0] + "-" + playerList[turn][1] + " gets to play first.");
 			$("#game_turn").val(turn.toString());
 			
 /* Initialize the Board */
@@ -233,12 +233,22 @@ $(document).ready(() => {
 		turn_color = playerList[turn][1];
 
 /* Get the current user's color */
-		user_color = "";
+		user_color_list = [];
 		for (i=0; i<playerList.length; i++) {
 			if (playerList[i][0] == user_name) {
-				user_color = playerList[i][1];
+				user_color_list.push(playerList[i][1]);
 			}
 		}
+/* Set the users color. It will be set to the current turn color if the user is playing that color.
+	Otherwise it will be set to the next color that user happens to be playing */
+		i = turn;
+		while ( !user_color_list.includes(playerList[i][1]) ) {
+			i++;
+			if (i >= playerList.length) {
+				i = 0;
+			}
+		}
+		user_color = playerList[i][1]; 
 
 /* draw the board and card area */
 		drawBoard();
@@ -297,13 +307,23 @@ $(document).ready(() => {
 		var turn_color = playerList[turn][1];
 		playedCard = "";  
 
-/* Get the current users color */
-		user_color = "";
+/* Get the current user's color */
+		user_color_list = [];
 		for (i=0; i<playerList.length; i++) {
 			if (playerList[i][0] == user_name) {
-				user_color = playerList[i][1];
+				user_color_list.push(playerList[i][1]);
 			}
 		}
+/* Set the users color. It will be set to the current turn color if the user is playing that color.
+	Otherwise it will be set to the next color that user happens to be playing */
+		i = turn;
+		while ( !user_color_list.includes(playerList[i][1]) ) {
+			i++;
+			if (i >= playerList.length) {
+				i = 0;
+			}
+		}
+		user_color = playerList[i][1]; 
 
 /* Normal Page processing */
 		drawBoard();
@@ -1177,7 +1197,7 @@ $(document).ready(() => {
 
 /* Check that all marbles moved are playable */
 		player_color = playerList[turn][1];
-		/* Need to check if player is on a team and if he/she can player their partners marbles as well */
+		/* Need to check if player is on a team and if he/she can play their partners marbles as well */
 		playable_colors = getPlayableColors(player_color);
 
 		for (i=0; i<moved_count; i++) {
@@ -1429,7 +1449,7 @@ $(document).ready(() => {
 			}
 			
 		}
-		alert("finished checkMove OK");
+/*		alert("finished checkMove OK"); */
 		return true;
 		
 	}
