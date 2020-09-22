@@ -1704,7 +1704,6 @@ $(document).ready(() => {
 		end_hole_index = end_hole_index - 1;
 		for (i=start_hole_index; i<=end_hole_index; i++) {
 			hole = parseInt(hole_numbers[i]);
-			alert("checkForJumps: checking hole " + hole);
 			if ( board[hole] != "") {
 				return true;
 				break;
