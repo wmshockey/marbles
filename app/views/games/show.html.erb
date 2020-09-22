@@ -10,13 +10,11 @@
 		<% @button_text = " Start Turn" %>
 		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
 	<% else %>
-		<span id="msgArea" class = "text-warning bg-warning blink">
+		<span id="msgArea" class = "text-warning bg-warning">
 			<%= "** Waiting for " + @player + " **"%>
 		</span>
 	<% end %>
 </span>
-
-<h5 class="fixed_line3_right"><%= link_to 'Back', games_path%></h5>
 
 <canvas id="myCanvas" width="820" height="800" style="border:4px solid #000000;"></canvas>
 

@@ -22,9 +22,11 @@ $(document).ready(() => {
 */
 	    if (header == "New Game") {
 
-/* Set who gets to play first  */
+/* Randomly set who gets to play first  */
 		  	number_players = playerList.length;
-			$("#game_turn").val("0");
+			turn = (Math.floor(Math.random() * number_players));
+			alert(playerList[turn][0] + " gets to play first.");
+			$("#game_turn").val(turn.toString());
 			
 /* Initialize the Board */
 		    initializeBoard();		 
@@ -803,7 +805,7 @@ $(document).ready(() => {
 		d.className = "cardspot";
 		d.style.position = "absolute";
 		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.20)).toString() + "px";
+		d.style.top = ((centre_y + 15) + (card_height*.20)).toString() + "px"; 
 		d.style.width = "340px";
 		d.style.height = "105px";
 		d.style.border = "none";
@@ -1664,51 +1666,52 @@ $(document).ready(() => {
 	
 	function checkForJumps(start_hole, end_hole) {
 		var tmp = 0;
-		var hole_numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88"];
+		var start_hole_str;
+		var end_hole_str;
+		var hole_numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88"];
 		start_hole_str = start_hole.toString();
 		end_hole_str = end_hole.toString();
-		if(hole_numbers.includes(start_hole_str) && hole_numbers.includes(end_hole_str)) {
-			start_hole_index = hole_numbers.indexOf(start_hole_str);
-			end_hole_index = hole_numbers.indexOf(end_hole_str);
-			/* If a marble moved backwards, swap the start and end positionss */
-			if (dist<0) {
-				tmp = end_hole_index;
-				end_hole_index = start_hole_index;
-				start_hole_index = tmp;
-			}
-			start_hole_index = start_hole_index + 1;
-			/* Check if move has wrapped around the end of the board array */
-			if ( end_hole_index < start_hole_index ) {
-				i = start_hole_index
-				do {
-					hole = parseInt(hole_numbers[i]);
-					if (board[hole] != "") {
-						return true;
-					}
-					i = i + 1;
-				} while (i < hole_numbers.length);
-				i = 0;
-				do {
-					hole = parseInt(hole_numbers[i]);
-					if (board[hole] != "") {
-						return true;
-					}
-					i = i + 1;
-				} while (i < end_hole_index);
-			} else {
-				i = start_hole_index;
-				do {
-					hole = parseInt(hole_numbers[i]);
-					if (board[hole] != "") {
-						return true;
-					}
-					i = i + 1;
-				} while (i < end_hole_index);
-			}			
+
+		/* If the marble is moving backwards with a 4 card move, swap the start and end holes */
+		if (dist == -4) {
+			tmp = end_hole_str;
+			end_hole_str = start_hole_str;
+			start_hole_str = tmp;
 		}
-		return false;		
-	}
-	
+
+		if (hole_numbers.includes(start_hole_str) && hole_numbers.includes(end_hole_str)) {
+			/* First search to find first occurance of start_hole_str */
+			for (i=0; i<hole_numbers.length; i++) {
+				if ( start_hole_str == hole_numbers[i]) {
+					start_hole_index = i;
+					break;
+				}
+			}
+			/* Next search from position of start hole to where it finds the end hole number */
+			for (i=start_hole_index; i<hole_numbers.length; i++) {
+				if ( end_hole_str == hole_numbers[i]) {
+					end_hole_index = i;
+					break;
+				}
+			}
+		} else {
+			alert("Fatal Error: Cannot find the hole where marble resides.");
+			return true;
+		}
+
+		/* Now check the holes BETWEEN the start and end index positions */
+		start_hole_index = start_hole_index + 1;
+		end_hole_index = end_hole_index - 1;
+		for (i=start_hole_index; i<=end_hole_index; i++) {
+			hole = parseInt(hole_numbers[i]);
+			alert("checkForJumps: checking hole " + hole);
+			if ( board[hole] != "") {
+				return true;
+				break;
+			}
+		}
+		return false;
+	}	
 
 });
 

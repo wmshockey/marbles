@@ -5,8 +5,6 @@
   <span class="lower_left" >
     <%= form.submit "End Turn", class:"btn btn-danger", id:"Save"%>
   </span>
-  
-  <span class="fixed_line3_right"><%= link_to 'Back', games_path%></span>
 
   <% if game.errors.any? %>
     <div id="error_explanation">

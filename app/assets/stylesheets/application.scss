@@ -53,6 +53,15 @@ body {
 	font-weight: medium;
 }
 
+.navbar-nav li{
+  padding-right:30px;
+  list-style-type: none;
+}
+
+.navbar-nav li a{
+	color: yellow;
+}
+
 #discardpile {
 	background: url('discard_background.png');
     background-position: center;
@@ -84,7 +93,7 @@ body {
 .fixed_line1_centre{ 
     position:absolute;
     top:0px;
-    left:350px;
+    left:300px;
 }
 
 .fixed_line1_right{
