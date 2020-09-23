@@ -36,6 +36,10 @@ $(document).ready(() => {
 			deck = fulldeck;
 			discardpile = [];
 			
+/* Initialize the screen positions of players hands, discard pile and deck */
+			screencoords = ["253", "435", "253", "435", "253", "435", "253", "435"];
+			$("#game_screen").val(screencoords);
+			
 /* Deal cards for first time */
 			shuffle(deck);
 			dealCards();
@@ -77,6 +81,7 @@ $(document).ready(() => {
 				$("#game_bluehand").val(bluehand.toString());
 				$("#game_yellowhand").val(yellowhand.toString());				
 				$("#game_board").val(board.toString());
+				$("#game_screen").val(screencoords).toString();
 			} else {
 				/* Move is valid - page values will be saved to the database */
 				/* Make sure internal arrays and DOM values are in sync */
@@ -84,6 +89,14 @@ $(document).ready(() => {
 				redhand = document.getElementById("game_redhand").innerHTML.split(",");
 				bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
 				yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+
+				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
+				hand_div = document.getElementById("hand");
+				x_coord = hand_div.offsetLeft;
+				y_coord = hand_div.offsetTop;
+				saveScreenCoords(x_coord, y_coord, user_color);
+				$("#game_screen").val(screencoords).toString();
+
 				/* Set next persons turn */
 			  	number_players = playerList.length;
 				/* To be fair, the next person in line to play should play even if cards have to be redealt */
@@ -187,8 +200,10 @@ $(document).ready(() => {
 		playedCard = "";
 /* Initialize the board to all empty */
 		board.fill("");
-/* set the old turn value for first turn of the game */
-		old_turn = "99";
+
+/* Intiailize the screen coordinates for the players hands, discard pile and deck */
+		screencoords = ["253", "435", "253", "435", "253", "435", "253", "435"];
+		$("#game_screen").val(screencoords.toString());
 	}
 
 /*
@@ -219,6 +234,7 @@ $(document).ready(() => {
 		redhand = document.getElementById("game_redhand").innerHTML.split(",");
 		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
 		yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+		screencoords = document.getElementById("game_screen").innerHTML.split(",");
 
 /* Get the player list */
 		playerList = [];
@@ -253,6 +269,7 @@ $(document).ready(() => {
 /* draw the board and card area */
 		drawBoard();
 		drawCardArea();
+
 /* show the card on top of the discard pile */
 		if (discardpile[0]) {
 	  	  discard_background = "url(/cards/" + discardpile[0] + ".png)";
@@ -266,7 +283,21 @@ $(document).ready(() => {
 			displayCards(user_color);
 			updateBoardArray();	
 		}
-		
+
+/* Set all elements on board to be non-draggable since this is Show mode only */
+		p = document.getElementsByTagName("div");
+		for (i = 0; i < p.length; i++) {
+			p[i].setAttribute("draggable", "false");
+		}
+		p = document.getElementsByTagName("IMG");
+		for (i = 0; i < p.length; i++) {
+			p[i].setAttribute("draggable", "false");
+		}
+		p = document.getElementsByClassName("card");
+		for (i = 0; i < p.length; i++) {
+			p[i].setAttribute("draggable", "false");
+		}
+
 	}
 	
 		
@@ -294,6 +325,7 @@ $(document).ready(() => {
 		redhand = ($("#game_redhand").val()).split(",");
 		bluehand = ($("#game_bluehand").val()).split(",");
 		yellowhand = ($("#game_yellowhand").val()).split(",");
+		screencoords = ($("#game_screen").val()).split(",");
 	  	yplayer = $("#game_yplayer").val();
 		gplayer = $("#game_gplayer").val();
 		rplayer = $("#game_rplayer").val();
@@ -307,23 +339,8 @@ $(document).ready(() => {
 		var turn_color = playerList[turn][1];
 		playedCard = "";  
 
-/* Get the current user's color */
-		user_color_list = [];
-		for (i=0; i<playerList.length; i++) {
-			if (playerList[i][0] == user_name) {
-				user_color_list.push(playerList[i][1]);
-			}
-		}
-/* Set the users color. It will be set to the current turn color if the user is playing that color.
-	Otherwise it will be set to the next color that user happens to be playing */
-		i = turn;
-		while ( !user_color_list.includes(playerList[i][1]) ) {
-			i++;
-			if (i >= playerList.length) {
-				i = 0;
-			}
-		}
-		user_color = playerList[i][1]; 
+/* This is edit mode so the user color is same as the turn color */
+		user_color = turn_color; 
 
 /* Normal Page processing */
 		drawBoard();
@@ -817,6 +834,7 @@ $(document).ready(() => {
 	function drawCardArea() {
 		card_width = 65;
 		card_height = 100;
+		coords = [];
 	/* Draw the card hand area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand");
@@ -824,23 +842,14 @@ $(document).ready(() => {
 		d.setAttribute("ondragstart", "drag(event)");
 		d.className = "cardspot";
 		d.style.position = "absolute";
-		d.style.left = ((centre_x + 15) - (5 * card_width)/2).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.20)).toString() + "px"; 
+		coords = getScreenCoords(user_color);
+		d.style.left = coords[0] + "px";
+		d.style.top = coords[1] + "px";
 		d.style.width = "340px";
 		d.style.height = "105px";
 		d.style.border = "none";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
-		document.body.appendChild(d);
-		
-	/* Draw the Card hand label */
-		var d = document.createElement("div");
-		d.setAttribute("id", "hand_label");
-		d.className = "boardlabel";
-		d.style.position = "absolute";
-		d.innerHTML = user_name + "'s hand";
-		d.style.left = ((centre_x + 15) - (5 * card_width)/2 + 10).toString() + "px";
-		d.style.top = ((centre_y + 15) + (card_height*.20) - 20).toString() + "px";
 		document.body.appendChild(d);			
 
 	/* Draw the discard area */
@@ -1621,6 +1630,28 @@ $(document).ready(() => {
 		return player_name;
 	}
 		
+	function getScreenCoords(user_color) {
+		if (user_color == "green") {
+			x = screencoords[0];
+			y = screencoords[1];
+			return [x, y];
+		} else if (user_color == "red") {
+			x = screencoords[2];
+			y = screencoords[3];
+			return [x, y];
+		} else if (user_color == "blue") {
+			x = screencoords[4];
+			y = screencoords[5];
+			return [x, y];
+		} else if (user_color == "yellow") {
+			x = screencoords[6];
+			y = screencoords[7];
+			return [x, y];
+		} else {
+			return ["253", "436"];		
+		}
+	}
+
 	function getCardCount(color) {
 		card_count = -1;
 		if (color == "yellow") {
@@ -1801,6 +1832,13 @@ function performDrop(player_color, data, ev) {
   	    drop_ok = true;			
 	 }	  
 
+/* player is moving his hand to another place on the board */
+	 if ( (draggingObj == "hand") && (draggingTo == "board")) {
+		 h = document.getElementById(data);
+		 ev.target.appendChild(h);
+		 drop_ok = true;
+	 }
+
  /* player is moving a card from discardpile back to cards (his hand) */
      if ((draggingObj == "card") && (draggingFrom == "discardpile") && ( (draggingTo == "hand") || (draggingTo == "card") )) {
      	var playerhand = ($(playerfield).val()).split(",");
@@ -1965,5 +2003,19 @@ function getPlayerList() {
 	return pList;	
 }
 
-
+function saveScreenCoords(x, y, user_color) {
+	if (user_color == "green") {
+		screencoords[0] = x.toString();
+		screencoords[1] = y.toString();
+	} else if (user_color == "red") {
+		screencoords[2] = x.toString();
+		screencoords[3] = y.toString();
+	} else if (user_color == "blue") {
+		screencoords[4] = x.toString();
+		screencoords[5] = y.toString();
+	} else if (user_color == "yellow") {
+		screencoords[6] = x.toString();
+		screencoords[7] = y.toString();
+	}
+}
 

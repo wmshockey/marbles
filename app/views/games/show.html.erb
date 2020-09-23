@@ -16,11 +16,11 @@
 	<% end %>
 </span>
 
-<canvas id="myCanvas" width="820" height="800" style="border:4px solid #000000;"></canvas>
+<canvas id="myCanvas" width="1920" height="1080" style="border:4px solid #000000;"></canvas>
 
 <body>
 
-<div class="hidden">
+<div>
 	<div id="game_name"><%= @game.name %></div>
 	<div id="game_start_date"><%= @game.start_date %></div>
 	<div id="game_status"><%= @game.status %></div>
@@ -39,6 +39,7 @@
 	<div id="game_deck"><%= @game.deck%></div>
 	<div id="game_discard"><%= @game.discardpile %></div>
 	<div id="game_comment"><%= @game.comment %></div>
+	<div id="game_screen"><%= @game.screen %></div>
 </div>
 
 </body>
