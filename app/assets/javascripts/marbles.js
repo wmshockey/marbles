@@ -231,7 +231,7 @@ $(document).ready(() => {
 		var board = (document.getElementById("game_board").innerHTML).split(",");
 		var deck = (document.getElementById("game_deck").innerHTML).split(",");
 		/* If deck is empty, make sure it is truly empty */
-		if (deck[0] = "") {
+		if (deck[0] == "") {
 			deck = [];
 		}
 		discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
@@ -944,7 +944,12 @@ $(document).ready(() => {
 		var d = document.createElement("div");
 		d.setAttribute("id", "deck_count");
 		d.style.position = "absolute";
-		d.className = "boardlabel";
+		d.className = "boardlabel";		
+		if (deck[0]) {
+			d.innerHTML = deck.length.toString();
+		} else {
+			d.innerHTML = "0";
+		}		
 		d.innerHTML = deck.length.toString();
 		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 45 + 195).toString() + "px";
 		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
@@ -1489,7 +1494,7 @@ $(document).ready(() => {
 			
 			/* If marble moved out of centre hole with a 4 card, there are only 4 valid holes it could go to */
 			if( card_value == -4) {
-				if (start_hole == 0 && ![4, 28, 52, 77].includes(end_hole)) {
+				if (start_hole == 0 && ![4, 28, 52, 76].includes(end_hole)) {
 					alert("A 4 card played with marble coming out of centre hole but marble was moved to wrong hole.");
 					return false;
 				}

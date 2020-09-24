@@ -26,7 +26,6 @@
         <td class="col-sm-3"><%= players %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Show', game %></td>
-        <td class="col-sm-1 navbar-link"><%= link_to 'Edit', edit_game_path(game) %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -36,4 +35,10 @@
 <br>
 
 <%= button_to "New Game", new_game_path, method: :get %>
+
+<br><br><br>
+
+<%= image_tag "/marble_game_screenshot.png", alt: "Marbles Game Screenshot", :class => "board_screenshot" %>
+
+
 </body>

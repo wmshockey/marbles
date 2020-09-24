@@ -1,48 +1,54 @@
 
 
-<span class="fixed_line2_left">
-	<span class="boardlabel" id="header">Show Game</span>
-	<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
-</span>
+<% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name%>
 
-<span class="lower_left">
-	<% if @user_name == @player %>
-		<% @button_text = " Start Turn" %>
-		<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
-	<% else %>
-		<span id="msgArea" class = "text-warning bg-warning">
-			<%= "** Waiting for " + @player + " **"%>
-		</span>
-	<% end %>
-</span>
+	<span class="fixed_line2_left">
+		<span class="boardlabel" id="header">Show Game</span>
+		<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
+	</span>
 
-<canvas id="myCanvas" width="1920" height="1080" style="border:4px solid #000000;"></canvas>
+	<span class="lower_left">
+		<% if @user_name == @player %>
+			<% @button_text = " Start Turn" %>
+			<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
+		<% else %>
+			<span id="msgArea" class = "text-warning bg-warning">
+				<%= "** Waiting for " + @player + " **"%>
+			</span>
+		<% end %>
+	</span>
 
-<body>
+	<canvas id="myCanvas" width="1920" height="1080" style="border:4px solid #000000;"></canvas>
 
-<div class="hidden">
-	<div id="game_name"><%= @game.name %></div>
-	<div id="game_start_date"><%= @game.start_date %></div>
-	<div id="game_status"><%= @game.status %></div>
-	<div id="game_yplayer"><%= @game.yplayer %></div>
-	<div id="game_gplayer"><%= @game.gplayer %></div>
-	<div id="game_rplayer"><%= @game.rplayer %></div>
-	<div id="game_bplayer"><%= @game.bplayer %></div>
-	<div id="game_ryteam"><%= @game.ryteam %></div>
-	<div id="game_gbteam"><%= @game.gbteam %></div>
-	<div id="game_yellowhand"><%= @game.yellowhand %></div>
-	<div id="game_greenhand"><%= @game.greenhand %></div>
-	<div id="game_redhand"><%= @game.redhand %></div>
-	<div id="game_bluehand"><%= @game.bluehand %></div>
-	<div id="game_turn"><%= @game.turn %></div>
-	<div id="game_board"><%= @game.board %></div>
-	<div id="game_deck"><%= @game.deck%></div>
-	<div id="game_discardpile"><%= @game.discardpile %></div>
-	<div id="game_comment"><%= @game.comment %></div>
-	<div id="game_screen"><%= @game.screen %></div>
-</div>
+	<body>
 
-</body>
+	<div class="hidden">
+		<div id="game_name"><%= @game.name %></div>
+		<div id="game_start_date"><%= @game.start_date %></div>
+		<div id="game_status"><%= @game.status %></div>
+		<div id="game_yplayer"><%= @game.yplayer %></div>
+		<div id="game_gplayer"><%= @game.gplayer %></div>
+		<div id="game_rplayer"><%= @game.rplayer %></div>
+		<div id="game_bplayer"><%= @game.bplayer %></div>
+		<div id="game_ryteam"><%= @game.ryteam %></div>
+		<div id="game_gbteam"><%= @game.gbteam %></div>
+		<div id="game_yellowhand"><%= @game.yellowhand %></div>
+		<div id="game_greenhand"><%= @game.greenhand %></div>
+		<div id="game_redhand"><%= @game.redhand %></div>
+		<div id="game_bluehand"><%= @game.bluehand %></div>
+		<div id="game_turn"><%= @game.turn %></div>
+		<div id="game_board"><%= @game.board %></div>
+		<div id="game_deck"><%= @game.deck%></div>
+		<div id="game_discardpile"><%= @game.discardpile %></div>
+		<div id="game_comment"><%= @game.comment %></div>
+		<div id="game_screen"><%= @game.screen %></div>
+	</div>
 
+	</body>
 
+<% else %>
 
+	<span class="fixed_line2_left">You are not a player on this game.  Please use the Back button to return to the list of games.</span>
+	
+<% end %>
+	
