@@ -67,6 +67,7 @@ $(document).ready(() => {
 			if (checkMove(playedCard, board_start, board_end) == false) {
 				/* Move was not valid */
 				alert("There was a problem with your move.  Take your turn over.");
+				/* Restore board and hands to point before the last move */
 				board = board_start;
 				yellowhand = yellowhand_start;
 				greenhand = greenhand_start;
@@ -89,6 +90,7 @@ $(document).ready(() => {
 				redhand = document.getElementById("game_redhand").innerHTML.split(",");
 				bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
 				yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+				discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
 
 				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
 				hand_div = document.getElementById("hand");
@@ -143,20 +145,19 @@ $(document).ready(() => {
 					$("#game_bluehand").val(bluehand.toString());
 					$("#game_yellowhand").val(yellowhand.toString());
 				}
-							
+					
 			};			
 			
 	/* lock the discard pile by setting last discard as the discard background */
 			var discardElement = document.getElementById("discardpile");
 			if ( discardElement.hasChildNodes) {
-				console.log(discardElement.childNodes[0]);
 				var discard = discardElement.childNodes[0];
 				discard_url = discard.getAttribute("src");
 				discardElement.removeChild(discardElement.childNodes[0]);
 			  	discard_background = "url(" + discard_url + ")";
 			  	$("#discardpile").css('backgroundImage', discard_background);
 			}
-			
+						
 		}
   })
 
@@ -214,10 +215,10 @@ $(document).ready(() => {
 */
 	if (header == "Show Game") {
 
-/* sets timer so that Show pages refresh every 10 seconds
+/* sets timer so that Show pages refresh every 10 seconds */
 		setTimeout(function() {
 			location.reload();		  
-		}, 10000);  */
+		}, 10000); 
 				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
@@ -229,7 +230,16 @@ $(document).ready(() => {
 /* convert strings in page to arrays */	
 		var board = (document.getElementById("game_board").innerHTML).split(",");
 		var deck = (document.getElementById("game_deck").innerHTML).split(",");
-		var discardpile = (document.getElementById("game_discard").innerHTML).split(",");
+		/* If deck is empty, make sure it is truly empty */
+		if (deck[0] = "") {
+			deck = [];
+		}
+		discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
+		/* If discardpile is empty, make sure it is truly empty */
+		if (discardpile[0] == "") {
+			discardpile = [];
+		}
+/* Get the card hands for each player and the screen coordinates for their hands */
 		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
 		redhand = document.getElementById("game_redhand").innerHTML.split(",");
 		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
@@ -271,18 +281,21 @@ $(document).ready(() => {
 		drawCardArea();
 
 /* show the card on top of the discard pile */
-		if (discardpile[0]) {
+		if (discardpile.length != 0) {
 	  	  discard_background = "url(/cards/" + discardpile[0] + ".png)";
-		  discardElement = document.getElementById("discardpile");
-		  discardElement.style.backgroundImage = discard_background;
-		  document.body.appendChild(discardElement);
-	  	}
-
+	  	} else {
+	  	  discard_background = "discard_background.png";
+	  	}	  
+		discardElement = document.getElementById("discardpile");
+		discardElement.style.backgroundImage = discard_background;
+		document.body.appendChild(discardElement);
+	  	 
 /* Display cards of person who is logged in */
 		if (user_color != ""){
 			displayCards(user_color);
 			updateBoardArray();	
 		}
+
 
 /* Set all elements on board to be non-draggable since this is Show mode only */
 		p = document.getElementsByTagName("div");
@@ -320,7 +333,15 @@ $(document).ready(() => {
 /* convert strings in form to arrays */	
 		var board = ($("#game_board").val()).split(","); 
 		var deck = ($("#game_deck").val()).split(",");
+		/* If deck is empty, make sure it is truly empty */
+		if (deck[0] == "") {
+			deck = [];
+		}
 		var discardpile = ($("#game_discardpile").val()).split(",");
+		/* If discardpile is empty, make sure it is truly empty */
+		if (discardpile[0] == "") {
+			discardpile = [];
+		}
 		greenhand = ($("#game_greenhand").val()).split(",");
 		redhand = ($("#game_redhand").val()).split(",");
 		bluehand = ($("#game_bluehand").val()).split(",");
@@ -349,6 +370,14 @@ $(document).ready(() => {
 /* Display cards of person whose turn it is */
 		displayCards(turn_color);
 		updateBoardArray();
+		
+/* Save everything to database at this point in case it was updated during the move */
+		$("#deck").val(deck.toString());
+		$("#game_discardpile").val(discardpile.toString());
+		$("#greenhand").val(greenhand.toString());
+		$("#redhand").val(redhand.toString());
+		$("#bluehand").val(bluehand.toString());
+		$("#yellowhand").val(yellowhand.toString());
 				
 	}
 	
@@ -965,6 +994,7 @@ $(document).ready(() => {
 		bplayer = $("#game_bplayer").val();  
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		/* If any cards left in players hands, add them to bottom of the discard pile */
+
 		if (greenhand[0]) {
 			for (i=0; i<greenhand.length; i++) {
 				discardpile.push(greenhand[i]);
@@ -984,13 +1014,17 @@ $(document).ready(() => {
 			for (i=0; i<yellowhand.length; i++) {
 				discardpile.push(yellowhand[i]);
 			}
-		}		
+		}
+		
 		/* clear out the players hands */
+
 		greenhand = [];
 		yellowhand = [];
 		redhand = [];
 		bluehand = [];
-		/* If deck out of cards, empty the discard pile shuffle the full deck */
+
+
+		/* If deck out of cards, empty the discard pile and shuffle the full deck */
 		number_players = playerList.length;
 		if (deck.length <= 1) {
 			alert("No cards left in the deck.  Will shuffle and deal from full deck now.")
@@ -1172,24 +1206,34 @@ $(document).ready(() => {
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
 					yellowhand = [];
-					$("#game_yellowhand").val("");					
+					$("#game_yellowhand").val(yellowhand);					
 				} else if (turn_color == "green") {
 					playerhand = greenhand;
 					greenhand = [];
-					$("#game_greenhand").val("");		
+					$("#game_greenhand").val(greenhand);		
 				} else if (turn_color == "red") {
 					playerhand = redhand;
 					redhand = [];
-					$("#game_redhand").val("");
+					$("#game_redhand").val(redhand);
 				} else if (turn_color == "blue") {
 					playerhand = bluehand;
 					bluehand = [];
-					$("#game_bluehand").val("");
+					$("#game_bluehand").val(bluehand);
 				}
 				/* return players cards to the discard pile */				
 				for (i=0; i<playerhand.length; i++) {
 					discardpile.push(playerhand[i]);
 				}
+				td = [];
+				/* filter to remove any null elemnts in discardpile */
+				j = 0;
+				for (i=0; i<discardpile.length; i++) {
+					if (discardpile[i] != "") {
+						td[j] = discardpile[i];
+						j = j + 1;
+					}
+				}
+				discardpile = td;				
 				$("#game_discardpile").val(discardpile.toString());
 			} else {
 				return false;
@@ -1398,9 +1442,9 @@ $(document).ready(() => {
 			dist = moved_marbles[i][1];
 			start_hole = moved_marbles[i][2];
 			end_hole = moved_marbles[i][3];
-			/* if no Jacks, start holes, centre hole or kills involved, then it is just a straight board move */
+			/* if no Jacks, start holes, centre hole or 7 card involved, then it is just a straight board move */
 			if ( !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved && !home_hole_involved) {
-				if ( dist<100 && end_hole!=0 && start_hole!=0) {
+				if ( dist<100 && end_hole!=0 && start_hole!=0 && card_value!=7) {
 					if (checkForJumps(start_hole, end_hole)) {
 						alert("A marble is trying to jump over another marble.");
 						return false;
@@ -1443,6 +1487,14 @@ $(document).ready(() => {
 				return false;
 			}
 			
+			/* If marble moved out of centre hole with a 4 card, there are only 4 valid holes it could go to */
+			if( card_value == -4) {
+				if (start_hole == 0 && ![4, 28, 52, 77].includes(end_hole)) {
+					alert("A 4 card played with marble coming out of centre hole but marble was moved to wrong hole.");
+					return false;
+				}
+			}
+
 			/* If marble moved backwards but not -4 positions */
 			if ( (distance<0) && (distance!=-4)) {
 				alert("A marble was moved backwards an invalid number of positions");
@@ -1490,6 +1542,10 @@ $(document).ready(() => {
 			return -((start_hole - 49) + (40 - end_hole) + 1);
 		} else if ([73,74,75].includes(start_hole) && [61,62,63,64].includes(end_hole)) {
 			return -((start_hole - 73) + (64 - end_hole) + 1);
+		} else if (start_hole==0 && [4, 28, 52, 76].includes(end_hole)) {
+			return -4;
+		} else if ([10, 34, 58, 82].includes(start_hole) && end_hole==0) {
+			return -4;
 	/* move is from active board position to active board position */
 		} else if ( start_hole>=1 && start_hole<=16 && end_hole>=1 && end_hole<=16 ) {
 			return end_hole - start_hole;
@@ -1884,29 +1940,53 @@ function performDrop(player_color, data, ev) {
 /*  player is moving a marble from hole to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
-		m.removeAttribute("style");
-		m.style.width = "35px";
-		m.style.height = "35px";
-	    ev.target.appendChild(m);
-  	    drop_ok = true;
+		/* Don't allow manually moving a marble into a start row */
+		target_hole = ev.target.id;
+		target_hole_nbr = parseInt(target_hole.substring(4,6));
+		if ( [21, 22, 23, 24, 45, 46, 47, 48, 69, 70, 71, 72, 93, 94, 95, 96].includes(target_hole_nbr)) {
+			alert("Invalid play.  Manually moving a marble to a start row is not allowed.  (Killed marbles are placed into their start row automatically).");
+			drop_ok = true;
+		} else {
+			m.removeAttribute("style");
+			m.style.width = "35px";
+			m.style.height = "35px";
+		    ev.target.appendChild(m);
+	  	    drop_ok = true;
+		}
     }
 	
 /* player is moving a marble from a hole to hole on top of another marble */
 	if ((draggingObj == "marble") && (draggingTo == "marble")) {
 		killed_marble = ev.target.id;
 		killer_marble = data;
-		/* get hole where killed marble currently resides */
-		targetElement = document.getElementById(killed_marble).parentElement;
-		/* send killed_marble back to its' home */
-		hole_nbr = killed_marble.substring(1,3);
-		home_hole_id = "hole" + hole_nbr;
-		homeElement = document.getElementById(home_hole_id);
-		killedMarbleElement = document.getElementById(killed_marble);
-		homeElement.appendChild(killedMarbleElement);
-		/* put the killer marble into the target hole */
-		killerMarbleElement = document.getElementById(killer_marble);
-		targetElement.appendChild(killerMarbleElement);
-		drop_ok = true;
+		/* If a Jack is played, swap the two marbles involved. */
+		if (["JH", "JD", "JC", "JS"].includes(playedCard)) {
+			killedMarbleElement = document.getElementById(killed_marble);
+			killerMarbleElement = document.getElementById(killer_marble);
+			/* get hole where target marble currently resides */
+			targetElement = document.getElementById(killed_marble).parentElement;
+			/* get hole where players marble currently resides */
+			playerElement = document.getElementById(killer_marble).parentElement;
+			/* place the target marble in the players original hole */
+			playerElement.appendChild(killedMarbleElement);
+			/* place the players marble in the target marbles hole */
+			targetElement.appendChild(killerMarbleElement);
+			drop_ok = true;
+		} else {
+		/* This is a straight kill move */
+			/* get hole where killed marble currently resides */
+			targetElement = document.getElementById(killed_marble).parentElement;
+			/* send killed_marble back to its' home */
+			hole_nbr = killed_marble.substring(1,3);
+			home_hole_id = "hole" + hole_nbr;
+			homeElement = document.getElementById(home_hole_id);
+			killedMarbleElement = document.getElementById(killed_marble);
+			homeElement.appendChild(killedMarbleElement);
+			/* put the killer marble into the target hole */
+			killerMarbleElement = document.getElementById(killer_marble);
+			targetElement.appendChild(killerMarbleElement);
+			drop_ok = true;			
+		}
 	}
 	
 /* player is dragging marble from hole to somewhere on the open board */
