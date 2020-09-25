@@ -6,23 +6,27 @@
 
 	<h4 class="col-sm-12"><%= link_to 'Show All Games', '/games'%></h4>
 	
-	<h3>Current Standings</h3>
-	<% winners = @games.map {|g| g.winner}.uniq %>
+	<h3>Current Team Standings</h3>
+	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
+	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
+	<% teams = ryteams.concat(gbteams).uniq.sort! %>
 	<div class="col-sm-12">Total games played so far: <%= @games.count()%></div>
 	
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
-				<th>Player/Team</th>
+				<th>Team</th>
+				<th>Games Played</td>
 				<th>Wins</th>
 			</tr>
 		</thead>
 		
 		<tbody>
-			<% winners.each do |w| %>
+			<% teams.each do |t| %>
 				<tr>
-					<td ><%= w%></td>
-					<td ><%= (@games.select {|g| g.winner == w}).count() %></td>
+					<td><%= t%></td>
+					<td><%= (@games.select {|g| g.ryteam == t || g.gbteam == t}).count()%></td>
+					<td><%= (@games.select {|g| g.winner == t}).count()%></td>
 				</tr>
 			<% end %>
 		</tbody>

@@ -240,17 +240,13 @@ $(document).ready(() => {
 	
 */
 	if (header == "Show Game") {
-
-/* sets timer so that Show pages refresh every 10 seconds */
-		setTimeout(function() {
-			location.reload();		  
-		}, 10000);
 				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var game_name = document.getElementById("game_name").innerHTML;
 		var game_status = document.getElementById("game_status").innerHTML;
 		var turn = parseInt(document.getElementById("game_turn").innerHTML);
+		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
 		var comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML;
 /* convert strings in page to arrays */	
@@ -283,6 +279,15 @@ $(document).ready(() => {
 		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
+
+/* sets timer so that Show pages refresh every 10 seconds */
+		if (refresh_rate < 2) {
+			refresh_rate = 10;			
+		}	
+		setTimeout(function() {
+			location.reload();		  
+		}, refresh_rate*1000);
+
 
 /* Get the current user's color */
 		user_color_list = [];
