@@ -31,6 +31,8 @@ $(document).ready(() => {
 /* Initialize the Board */
 		    initializeBoard();		 
 			$("#game_board").val(board.toString());
+			$("#game_status").val("Started");
+			$("#game_winner").val("");
 			
 /* Initialize the deck */
 			deck = fulldeck;
@@ -49,7 +51,6 @@ $(document).ready(() => {
 			$("#game_redhand").val(redhand.toString());
 			$("#game_bluehand").val(bluehand.toString());
 			$("#game_yellowhand").val(yellowhand.toString());
-
 		}
 		
 
@@ -99,72 +100,85 @@ $(document).ready(() => {
 				saveScreenCoords(x_coord, y_coord, user_color);
 				$("#game_screen").val(screencoords).toString();
 
-				/* Set next persons turn */
-			  	number_players = playerList.length;
-				/* To be fair, the next person in line to play should play even if cards have to be redealt */
-				turn_fair = turn + 1;
-				if (turn_fair >= number_players) {
-					turn_fair = 0;
-				}
-				/* Now see if anyone can play */
-				turn = -1;
-				next = parseInt($("#game_turn").val());
-				next = next + 1;
-				for (i=0; i<number_players; i++) {
-					/* look at the next players hand to see if they have any cards left to play */
-					if (next >= number_players) {
-						next = 0;
-					}
-					/* Check to see if this player has any cards left to play */
-					next_color = playerList[next][1];
-					playerhand_str = "#game_" + next_color + "hand";
-					playerhand = ($(playerhand_str).val()).split(",");
-					if (playerhand[0] == "") {
-						next = next + 1;
+				/* Check for game over if all the players playable colors are in their home rows */
+				if (gameOver()) {
+					if (ryteam && playable_colors.includes("red")) {
+						winner = ryteam;
+					} else if (gbteam && playable_colors.includes("green")) {
+						winner = gbteam;
 					} else {
-						turn = next;
-						turn_color = next_color;
-						break;
-					}					
-				}
-				if (turn != -1) {
-					/* There is a player who still has cards left to play */
-					$("#game_turn").val(turn.toString());	
+						winner = getPlayerName(playable_colors[0]);
+					}
+					alert("GAME OVER!!  Congratulations to " + winner + " for winning the game!");
+					$("#game_status").val("Finished");
+					$("#game_winner").val(winner);				
 				} else {
-					/* Nobody else can play now - must shuffle and redeal the cards */
-					alert("Nobody else can play now.");
-					alert("Another hand will be dealt.");
-					dealCards();
-					displayCards(turn_color);
-					turn = turn_fair;
-					$("#game_turn").val(turn.toString());
-					$("#game_deck").val(deck.toString());
-					$("#game_discardpile").val(discardpile.toString());
-					$("#game_greenhand").val(greenhand.toString());
-					$("#game_redhand").val(redhand.toString());
-					$("#game_bluehand").val(bluehand.toString());
-					$("#game_yellowhand").val(yellowhand.toString());
-				}
-					
-			};			
+					/* Set next persons turn */
+				  	number_players = playerList.length;
+					/* To be fair, the next person in line to play should play even if cards have to be redealt */
+					turn_fair = turn + 1;
+					if (turn_fair >= number_players) {
+						turn_fair = 0;
+					}
+					/* Now see if anyone can play */
+					turn = -1;
+					next = parseInt($("#game_turn").val());
+					next = next + 1;
+					for (i=0; i<number_players; i++) {
+						/* look at the next players hand to see if they have any cards left to play */
+						if (next >= number_players) {
+							next = 0;
+						}
+						/* Check to see if this player has any cards left to play */
+						next_color = playerList[next][1];
+						playerhand_str = "#game_" + next_color + "hand";
+						playerhand = ($(playerhand_str).val()).split(",");
+						if (playerhand[0] == "") {
+							next = next + 1;
+						} else {
+							turn = next;
+							turn_color = next_color;
+							break;
+						}					
+					}
+					if (turn != -1) {
+						/* There is a player who still has cards left to play */
+						$("#game_turn").val(turn.toString());	
+					} else {
+						/* Nobody else can play now - must shuffle and redeal the cards */
+						alert("Nobody else can play now.");
+						alert("Another hand will be dealt.");
+						dealCards();
+						displayCards(turn_color);
+						turn = turn_fair;
+						$("#game_turn").val(turn.toString());
+						$("#game_deck").val(deck.toString());
+						$("#game_discardpile").val(discardpile.toString());
+						$("#game_greenhand").val(greenhand.toString());
+						$("#game_redhand").val(redhand.toString());
+						$("#game_bluehand").val(bluehand.toString());
+						$("#game_yellowhand").val(yellowhand.toString());
+					}						
+				}					
+			}			
 			
 	/* lock the discard pile by setting last discard as the discard background */
-			var discardElement = document.getElementById("discardpile");
-			if ( discardElement.hasChildNodes) {
-				var discard = discardElement.childNodes[0];
-				discard_url = discard.getAttribute("src");
+			discardElement = document.getElementById("discardpile");
+			if ( discardElement.childNodes[0]) {
+				discard = discardElement.childNodes[0];
+				discard_url = discard.getAttribute('src');
 				discardElement.removeChild(discardElement.childNodes[0]);
 			  	discard_background = "url(" + discard_url + ")";
 			  	$("#discardpile").css('backgroundImage', discard_background);
 			}
-						
+									
 		}
   })
 
 
 /*
 ------------------------------------------------- 
- INTIIALIZE EVERYTHING for all pages (New Game, Show Game and New Turn)
+ INTIIALIZE Constants for all pages (New Game, Show Game and New Turn)
 -------------------------------------------------
 */	
 		var board = [];
@@ -181,6 +195,18 @@ $(document).ready(() => {
 		[2, 2, 2, 2, 3, 3, 3, 3, -4, -4, -4, -4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 1, 1, 1, 1, 0, 0, 0, 0, 13, 13, 13, 13, 12, 12, 12, 12, 15, 15, 15, 15];
 		var marbleids = 
 		["g21", "g22", "g23", "g24", "r45", "r46", "r47", "r48", "b69", "b70", "b71", "b72", "y93", "y94", "y95", "y96"];
+		var outCards = ["KH","KS","KD","KC","AH","AS","AD","AC","J1","J2","J3","J4"];
+		var red_home_holes = [17, 18, 19, 20];
+		var blue_home_holes = [41, 42, 43, 44];
+		var yellow_home_holes = [65, 66, 67, 68];
+		var green_home_holes = [89, 90, 91, 92];
+		var red_start_holes = [45, 46, 47, 48];
+		var blue_start_holes = [69, 70, 71, 72];
+		var yellow_start_holes = [93, 94, 95, 96];
+		var green_start_holes = [21, 22, 23, 24];
+		var startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
+		var homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
+		
 		var headerElement = document.getElementById("header");
 		var header = headerElement.innerHTML;
 
@@ -216,9 +242,9 @@ $(document).ready(() => {
 	if (header == "Show Game") {
 
 /* sets timer so that Show pages refresh every 10 seconds */
-		setTimeout(function() {
+/*		setTimeout(function() {
 			location.reload();		  
-		}, 10000); 
+		}, 10000); */
 				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
@@ -389,7 +415,6 @@ $(document).ready(() => {
 	bluehand_start = bluehand;
 	discardpile_start = discardpile;
 	deck_start = deck;
-
 
 /* Control is now turned over to drag and drop functions of browser */
 
@@ -1091,20 +1116,9 @@ $(document).ready(() => {
 
 	
 	function checkMove(playedCard, board_start, board_end) {
+		return true;
 /* check for movement of any marbles */
 /* get the card value of the played card to determine how far player can move a marble */
-		var outCards = ["KH","KS","KD","KC","AH","AS","AD","AC","J1","J2","J3","J4"];
-		var red_home_holes = [17, 18, 19, 20];
-		var blue_home_holes = [41, 42, 43, 44];
-		var yellow_home_holes = [65, 66, 67, 68];
-		var green_home_holes = [89, 90, 91, 92];
-		var red_start_holes = [45, 46, 47, 48];
-		var blue_start_holes = [69, 70, 71, 72];
-		var yellow_start_holes = [93, 94, 95, 96];
-		var green_start_holes = [21, 22, 23, 24];
-		var startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
-		var homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
-
 		moved_marbles = [];
 		number_players = playerList.length;
 		marbles_in_play = 4 * number_players;
@@ -1822,7 +1836,51 @@ $(document).ready(() => {
 			}
 		}
 		return false;
-	}	
+	}
+	
+	function gameOver() {
+		playable_colors = getPlayableColors(user_color);
+		game_over = true;
+		for (i=0; i<playable_colors.length; i++) {
+			color = playable_colors[i];
+			/* Look to see if all home holes of this color have marbles in them */
+			if (color == "green") {
+				for (h=0; h<4; h++) {
+					hole = green_home_holes[h];
+					if (board[hole] == "") {
+						game_over = false;
+					}
+				}	
+			} else if (color == "red") {
+				for (h=0; h<4; h++) {
+					hole = red_home_holes[h];
+					if (board[hole] == "") {
+						game_over = false;
+					}
+				}
+			} else if (color == "blue") {
+				for (h=0; h<4; h++) {
+					hole = blue_home_holes[h];
+					if (board[hole] == "") {
+						game_over = false;
+					}
+				}
+			} else if (color == "yellow") {
+				for (h=0; h<4; h++) {
+					hole = yellow_home_holes[h];
+					if (board[hole] == "") {
+						game_over = false;
+					}
+				}
+			}
+		}
+		if (game_over) {
+			return true;
+		} else {
+			return false;
+		}					
+	}
+
 
 });
 

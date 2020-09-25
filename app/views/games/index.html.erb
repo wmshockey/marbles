@@ -2,13 +2,14 @@
 
 <h1 id="header">Games</h1>
 
-<table>
+<table class="table table-bordered table-striped>
   <thead>
     <tr class="boardlabel">
       <th class="col-sm-2">Name</th>
       <th class="col-sm-2">Start date</th>
       <th class="col-sm-1">Status</th>
-      <th class="col-sm-3">Players</th>
+      <th class="col-sm-2">Players</th>
+	  <th class="col-sm-1">Winner</th>
       <th class="col-sm-1">Turn</th>
     </tr>
   </thead>
@@ -23,7 +24,8 @@
         <td class="col-sm-2"><%= game.name %></td>
         <td class="col-sm-2"><%= game.start_date %></td>
         <td class="col-sm-1"><%= game.status %></td>
-        <td class="col-sm-3"><%= players %></td>
+        <td class="col-sm-2"><%= players %></td>
+		<td class="col-sm-1"><%= game.winner %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Show', game %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -35,10 +37,6 @@
 <br>
 
 <%= button_to "New Game", new_game_path, method: :get %>
-
-<br><br><br>
-
-<%= image_tag "/marble_game_screenshot.png", alt: "Marbles Game Screenshot", :class => "board_screenshot" %>
 
 
 </body>
