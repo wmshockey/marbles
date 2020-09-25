@@ -242,9 +242,9 @@ $(document).ready(() => {
 	if (header == "Show Game") {
 
 /* sets timer so that Show pages refresh every 10 seconds */
-/*		setTimeout(function() {
+		setTimeout(function() {
 			location.reload();		  
-		}, 10000); */
+		}, 10000);
 				
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
