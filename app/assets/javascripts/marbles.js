@@ -1093,6 +1093,7 @@ $(document).ready(() => {
 		$("#redhand").val(redhand.toString());
 		$("#bluehand").val(bluehand.toString());
 		$("#yellowhand").val(yellowhand.toString());
+		
 	}
 	
 
