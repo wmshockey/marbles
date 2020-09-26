@@ -7,16 +7,22 @@
 		<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
 	</span>
 
-	<span class="lower_left">
-		<% if @user_name == @player %>
-			<% @button_text = " Start Turn" %>
-			<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
-		<% else %>
-			<span id="msgArea" class = "text-warning bg-warning">
-				<%= "** Waiting for " + @player + " **"%>
-			</span>
-		<% end %>
-	</span>
+	<% if @game.status == "Finished"%>
+		<span id="msgArea" class = "fixed_line2_centre text-success bg-success">
+			<%= "** Congratulations to " + @game.winner + " for winning the game **"%>
+		</span>
+	<% else %>
+		<span class="lower_left">
+			<% if @user_name == @player %>
+				<% @button_text = " Start Turn" %>
+				<%= button_to @button_text, edit_game_path(@game), method: :get, class:'btn btn-success' %>
+			<% else %>
+				<span id="msgArea" class = "text-warning bg-warning">
+					<%= "** Waiting for " + @player + " **"%>
+				</span>
+			<% end %>
+		</span>
+	<% end %>
 
 	<canvas id="myCanvas" width="1920" height="1080" style="border:4px solid #000000;"></canvas>
 

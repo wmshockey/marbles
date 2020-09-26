@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :modify, :destroy]
 
   # GET /games
   # GET /games.json
@@ -53,6 +53,27 @@ class GamesController < ApplicationController
     end
     @player = plist[turn]
   end
+
+  # GET /games/1/modify
+  def modify
+    @user_name = current_user.name
+    turn = @game.turn.to_i
+    plist = []
+    if (@game.yplayer!="")
+      plist.push(@game.yplayer)
+    end
+    if (@game.gplayer!="") 
+      plist.push(@game.gplayer)
+    end
+    if (@game.rplayer!="")
+      plist.push(@game.rplayer)
+    end
+    if (@game.bplayer!="")
+      plist.push(@game.bplayer)
+    end
+    @player = plist[turn]
+  end
+
 
   # POST /games
   # POST /games.json

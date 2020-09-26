@@ -28,6 +28,7 @@
 		<td class="col-sm-1"><%= game.winner %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Show', game %></td>
+		<td class="col-sm-1"><%= link_to 'Debug', modify_game_path(game) %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

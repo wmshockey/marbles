@@ -1121,7 +1121,8 @@ $(document).ready(() => {
 
 	
 	function checkMove(playedCard, board_start, board_end) {
-		return true;
+/* Uncomment the line below to turn move checking off for testing purposes */
+/*		return true; */
 /* check for movement of any marbles */
 /* get the card value of the played card to determine how far player can move a marble */
 		moved_marbles = [];
@@ -2018,6 +2019,8 @@ function performDrop(player_color, data, ev) {
 			m.removeAttribute("style");
 			m.style.width = "35px";
 			m.style.height = "35px";
+			m.setAttribute("animation", "blink 1s");
+			m.setAttribute("animation-iteration-count", 10);
 		    ev.target.appendChild(m);
 	  	    drop_ok = true;
 		}

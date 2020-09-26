@@ -1,4 +1,5 @@
 <body class="container">
+
 	<div class= "row">
 		<h1>Welcome to the Online Game of Marbles</h1>
 		<p>Developed by Phastware 2020</p>
@@ -16,6 +17,7 @@
 		<thead>
 			<tr>
 				<th>Team</th>
+				<th>Players</th>
 				<th>Games Played</td>
 				<th>Wins</th>
 			</tr>
@@ -23,11 +25,22 @@
 		
 		<tbody>
 			<% teams.each do |t| %>
-				<tr>
-					<td><%= t%></td>
-					<td><%= (@games.select {|g| g.ryteam == t || g.gbteam == t}).count()%></td>
-					<td><%= (@games.select {|g| g.winner == t}).count()%></td>
-				</tr>
+				<% if t != "" %>
+					<tr>
+						<td><%= t%></td>
+						<% @team_games = (@games.select {|g| g.ryteam == t || g.gbteam == t}) %>
+						<% if @team_games[0].ryteam == t %>
+							<% @player1 = @team_games[0].rplayer %>
+							<% @player2 = @team_games[0].yplayer %>
+						<% else %>
+							<% @player1 = @team_games[0].gplayer %>
+							<% @player2 = @team_games[0].bplayer %>
+						<% end %>
+						<td><%= @player1%>, <%= @player2%></td>
+						<td><%= @team_games.count()%></td>
+						<td><%= (@games.select {|g| g.winner == t}).count()%></td>
+					</tr>
+				<% end %>
 			<% end %>
 		</tbody>
 	</table>

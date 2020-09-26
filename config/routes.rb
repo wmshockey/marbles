@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :games
+  resources :games do 
+    member do 
+      get 'modify'
+    end
+  end
+  
   devise_for :users
   get 'welcome/index'
   get 'welcome/rules' 
