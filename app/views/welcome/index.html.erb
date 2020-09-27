@@ -1,13 +1,17 @@
 <body class="container">
 
+	<div class="row">
+		<%= image_tag "marbles_logo.png", alt: "Marbles Game Logo", class: "marbles_logo"%>
+	</div>
+	
 	<div class= "row">
 		<h1>Welcome to the Online Game of Marbles</h1>
 		<p>Developed by Warren Shockey 2020</p>
 	</div>
 
 	<h4 class="col-sm-12"><%= link_to 'Show All Games', '/games'%></h4>
-	
-	<h3>Current Team Standings</h3>
+	<br><br>
+	<h4>Current Team Standings</h4>
 	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
 	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
 	<% teams = ryteams.concat(gbteams).uniq.sort! %>

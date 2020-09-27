@@ -62,11 +62,11 @@ Rails.application.configure do
   # Config for Devise
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = {host: 'wshockey.ca'}
+  config.action_mailer.default_url_options = {host: 'marblemind.ca'}
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      user_name:      'wshockey@telus.net',
-      password:       'Spitfire2831',
+      user_name:      'marblemind01@gmail.com',
+      password:       'Bonny2831',
       domain:         'smtp.google.com',
       address:       'smtp.gmail.com',
       port:          '587',

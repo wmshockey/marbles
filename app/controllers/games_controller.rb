@@ -12,20 +12,15 @@ class GamesController < ApplicationController
   def show
     @user_name = current_user.name
     turn = @game.turn.to_i
-    plist = []
-    if (@game.yplayer!="")
-      plist.push(@game.yplayer)
+    get_plist
+    if (@plist.include?(@user_name))
+      @player = @plist[turn]
+    else
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: 'You are not a player in this game.' }
+        format.json { head :no_content }
+      end
     end
-    if (@game.gplayer!="") 
-      plist.push(@game.gplayer)
-    end
-    if (@game.rplayer!="")
-      plist.push(@game.rplayer)
-    end
-    if (@game.bplayer!="")
-      plist.push(@game.bplayer)
-    end
-    @player = plist[turn]
   end
 
   # GET /games/new
@@ -38,40 +33,22 @@ class GamesController < ApplicationController
   def edit
     @user_name = current_user.name
     turn = @game.turn.to_i
-    plist = []
-    if (@game.yplayer!="")
-      plist.push(@game.yplayer)
+    get_plist
+    @player = @plist[turn]
+    if @user_name != @player
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: 'Wait your turn' }
+        format.json { head :no_content }
+      end
     end
-    if (@game.gplayer!="") 
-      plist.push(@game.gplayer)
-    end
-    if (@game.rplayer!="")
-      plist.push(@game.rplayer)
-    end
-    if (@game.bplayer!="")
-      plist.push(@game.bplayer)
-    end
-    @player = plist[turn]
   end
 
   # GET /games/1/modify
   def modify
     @user_name = current_user.name
     turn = @game.turn.to_i
-    plist = []
-    if (@game.yplayer!="")
-      plist.push(@game.yplayer)
-    end
-    if (@game.gplayer!="") 
-      plist.push(@game.gplayer)
-    end
-    if (@game.rplayer!="")
-      plist.push(@game.rplayer)
-    end
-    if (@game.bplayer!="")
-      plist.push(@game.bplayer)
-    end
-    @player = plist[turn]
+    get_plist
+    @player = @plist[turn]
   end
 
 
@@ -109,10 +86,19 @@ class GamesController < ApplicationController
   # DELETE /games/1
   # DELETE /games/1.json
   def destroy
-    @game.destroy
-    respond_to do |format|
-      format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
-      format.json { head :no_content }
+    @user_name = current_user.name
+    get_plist
+    if (@plist.include?(@user_name))
+      @game.destroy
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: 'Cannot delete.  You are not a player in this game.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -120,6 +106,22 @@ class GamesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_game
       @game = Game.find(params[:id])
+    end
+ 
+    def get_plist 
+      @plist = []
+      if (@game.yplayer!="")
+        @plist.push(@game.yplayer)
+      end
+      if (@game.gplayer!="") 
+        @plist.push(@game.gplayer)
+      end
+      if (@game.rplayer!="")
+        @plist.push(@game.rplayer)
+      end
+      if (@game.bplayer!="")
+        @plist.push(@game.bplayer)
+      end
     end
 
     # Only allow a list of trusted parameters through.
