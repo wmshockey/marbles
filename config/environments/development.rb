@@ -41,7 +41,7 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
-  # Highlight code that triggered database queries in logs.
+  # Highlight code that triggered database querießs in logs.
   config.active_record.verbose_query_logs = true
 
   # Debug mode disables concatenation and preprocessing of assets.
@@ -60,5 +60,17 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   
   # Config for Devise
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = {host: 'wshockey.ca'}
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      user_name:      'wshockey@telus.net',
+      password:       'Spitfire2831',
+      domain:         'smtp.google.com',
+      address:       'smtp.gmail.com',
+      port:          '587',
+      authentication: :plain,
+      enable_starttls_auto: true
+    }
 end
