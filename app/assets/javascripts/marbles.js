@@ -1468,13 +1468,24 @@ $(document).ready(() => {
 			dist = moved_marbles[i][1];
 			start_hole = moved_marbles[i][2];
 			end_hole = moved_marbles[i][3];
-			/* if no Jacks, start holes, centre hole or 7 card involved, then it is just a straight board move */
+			/* if no Jacks, start holes, home holes or centre hole involved, then it is just a straight board move */
 			if ( !["JH","JD","JS","JC"].includes(playedCard) && !start_hole_involved && !home_hole_involved) {
-				if ( dist<100 && end_hole!=0 && start_hole!=0 && card_value!=7) {
-					if (checkForJumps(start_hole, end_hole)) {
+				if ( dist<100 && end_hole!=0 && start_hole!=0 ) {
+					marbles_jumped = checkForJumps(start_hole, end_hole);
+					if ( card_value == 7 ) {
+						if (marbles_jumped != 1 && marbles_killed != 1) {
+							if (marbles_jumped > marbles_killed) {
+								alert("When killing marbles using a 7 card, you have to land on each killed marble in order, not jump over them.");
+								return false;	
+							}
+						} else {
+							alert("When killing marbles using a 7 card, you have to land on each killed marble in order, not jump over them.");
+							return false;	
+						}						
+					} else {
 						alert("A marble is trying to jump over another marble.");
 						return false;
-					}
+					}					
 				}
 			}
 		}
@@ -1799,6 +1810,7 @@ $(document).ready(() => {
 	
 	function checkForJumps(start_hole, end_hole) {
 		var tmp = 0;
+		var marbles_jumped = 0;
 		var start_hole_str;
 		var end_hole_str;
 		var hole_numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88"];
@@ -1833,16 +1845,16 @@ $(document).ready(() => {
 		}
 
 		/* Now check the holes BETWEEN the start and end index positions */
+		marbles_jumped = 0;
 		start_hole_index = start_hole_index + 1;
 		end_hole_index = end_hole_index - 1;
 		for (i=start_hole_index; i<=end_hole_index; i++) {
 			hole = parseInt(hole_numbers[i]);
 			if ( board[hole] != "") {
-				return true;
-				break;
+				marbles_jumped++;
 			}
 		}
-		return false;
+		return marbles_jumped;
 	}
 	
 	function gameOver() {
