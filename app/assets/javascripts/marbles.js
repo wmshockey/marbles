@@ -353,6 +353,8 @@ $(document).ready(() => {
 */
 
 	if (header == "Marbles Game") {	
+/* Pull content from page into internal storage */
+		
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var game_name = $("#game_name").val();
@@ -402,7 +404,7 @@ $(document).ready(() => {
 		displayCards(turn_color);
 		updateBoardArray();
 		
-/* Save everything to database at this point in case it was updated during the move */
+/* Save everything back out to the page at this point in case it was updated during the move */
 		$("#deck").val(deck.toString());
 		$("#game_discardpile").val(discardpile.toString());
 		$("#greenhand").val(greenhand.toString());
@@ -1482,10 +1484,7 @@ $(document).ready(() => {
 							alert("When killing marbles using a 7 card, you have to land on each killed marble in order, not jump over them.");
 							return false;	
 						}						
-					} else {
-						alert("A marble is trying to jump over another marble.");
-						return false;
-					}					
+					} 					
 				}
 			}
 		}
