@@ -1,13 +1,118 @@
+<div class="col-sm-12 hidden" id="form_name"><%= "game" %></div>
+<br>
+<%= form_with(model: @game, local: true) do |form| %>
 
-<div class="fixed_line2_left">
-	<span class="boardlabel" id="header">Marbles Game</span>
-	<strong><span class="boardlabel">: <%= @game.name %></span></strong>
-</div>
+  <% if @game.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
+      <ul>
+      <% @game.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<% if @user_name == @player %>
-	<%= render 'form', game: @game %>	
-<% else %>
-	<span class = "fixed_line2_centre text-danger bg-danger">It's not your turn.  You cannot make a move yet.</span>
-	<span class="fixed_line3_right"><%= link_to 'Back', games_path%></span>
+<body class="container">
+	
+	<div class="row border border-primary">
+	  <div class="col-sm-2"></div>
+	  <div class="col-sm-2"><%= form.label "Game:" %><%= form.text_field :name %></div> 
+	  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
+	  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
+	  <div class="col-sm-4"></div>
+	</div>
+
+	<br>
+
+	<div class="row border">
+		<span class="col-sm-2"></span>
+		<div class="col-sm-2"><%= form.label "Yellow"%></div>
+		<div class="col-sm-2"><%= form.label "Red"%></div>
+		<div class="col-sm-2"><%= form.label "Green"%></div>
+		<div class="col-sm-2"><%= form.label "Blue"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Players"%></div>
+		<div class="col-sm-2"><%= form.text_field :yplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :rplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :gplayer %></div>
+		<div class="col-sm-2"><%= form.text_field :bplayer %></div>
+	    <span class="col-sm-2"></span>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Teams"%></div>
+		<div class="col-sm-4"><%= form.text_field :ryteam, size: "50"%></div>
+		<div class="col-sm-4"><%= form.text_field :gbteam, size: "50"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2 top"><%= form.label "Refresh rate (sec)"%> </div>
+		<div class="col-sm-2 top"><%= form.number_field :refresh %></div>
+		<div class="col-sm-2 top"><%= form.label "Winner" %> </div>
+		<div class="col-sm-2 top"><%= form.text_field :winner %></div>
+		<div class="col-sm-6"></div>
+	</div>
+	
+	<div class="hidden">
+
+		<div class="row">
+			<span class="col-sm-2 top"><%= form.label "Hand"%></span>
+			<span class="col-sm-2 top"><%= form.text_field :yellowhand %></span>
+			<span class="col-sm-2 top"><%= form.text_field :redhand %></span>
+			<span class="col-sm-2 top"><%= form.text_field :greenhand %></span>
+			<span class="col-sm-2 top"><%= form.text_field :bluehand %></span>
+		    <span class="col-sm-2"></span>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Deck"%></div>
+			<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
+		    <span class="col-sm-2"></span>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Board"%></div>
+			<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
+		    <span class="col-sm-2"></span>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Discard Pile"%></div>
+			<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
+		    <span class="col-sm-2"></span>
+		</div>
+	
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Messages"%></div>
+			<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "5"%></div>
+			<span class="col-sm-2"></span>
+		</div>
+	
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Screen Coordinates"%> </div>
+			<div class="col-sm-10 top"><%= form.text_area :screen, cols: "104", rows: "1"%></div>
+		</div>
+	
+		<div class="row">
+			<div class="col-sm-2 top"><%= form.label "Marbles Moved"%> </div>
+			<div class="col-sm-10 top"><%= form.text_area :moved, cols: "104", rows: "1"%></div>
+		</div>
+		
+	</div>
+	
+	<br><br>
+	
+    <div class="row" >
+      <%= form.submit "Save", class:"btn btn-danger", id:"Save"%>
+    </div>
+	
+
+</body>
 <% end %>
+
 

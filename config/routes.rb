@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   resources :games do 
     member do 
-      get 'modify'
+      get 'play'
+      get 'debug'
     end
   end
   

@@ -1,9 +1,11 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :modify, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :destroy]
 
   # GET /games
   # GET /games.json
   def index
+    @user_name = current_user.name
+    @user_email = current_user.email
     @games = Game.all
   end
 
@@ -17,7 +19,7 @@ class GamesController < ApplicationController
       @player = @plist[turn]
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: 'You are not a player in this game.' }
+        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end
@@ -29,27 +31,43 @@ class GamesController < ApplicationController
     @users = User.all
   end
 
-  # GET /games/1/edit
-  def edit
+  # GET /games/1/play
+  def play
     @user_name = current_user.name
     turn = @game.turn.to_i
     get_plist
-    @player = @plist[turn]
-    if @user_name != @player
+    if (@plist.include?(@user_name))
+      @player = @plist[turn]
+    else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: 'Wait your turn' }
+        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end
   end
 
-  # GET /games/1/modify
-  def modify
+  # GET /games/1/edit
+  def edit
+    @user_name = current_user.name
+    turn = @game.turn.to_i
+    get_plist
+    if (@plist.include?(@user_name))
+      @player = @plist[turn]
+    else
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
+  # Get /game/1/debug
+  def debug
     @user_name = current_user.name
     turn = @game.turn.to_i
     get_plist
     @player = @plist[turn]
-  end
+  end  
 
 
   # POST /games
@@ -60,7 +78,7 @@ class GamesController < ApplicationController
     @game.start_date = DateTime.now.strftime('%Y-%m-%dT%H:%M')
     respond_to do |format|
       if @game.save
-        format.html { redirect_to @game, notice: 'Game was successfully created.' }
+        format.html { redirect_to @game, notice: '** Game was successfully created. **' }
         format.json { render :show, status: :created, location: @game }
       else
         format.html { render :new }
@@ -74,7 +92,7 @@ class GamesController < ApplicationController
   def update
     respond_to do |format|
       if @game.update(game_params)
-        format.html { redirect_to @game, notice: 'Game was successfully updated.' }
+        format.html { redirect_to @game, notice: '** Game was successfully updated. **' }
         format.json { render :show, status: :ok, location: @game }
       else
         format.html { render :edit }
@@ -85,21 +103,21 @@ class GamesController < ApplicationController
 
   # DELETE /games/1
   # DELETE /games/1.json
-  def destroy
+  def destroy    
     @user_name = current_user.name
     get_plist
     if (@plist.include?(@user_name))
       @game.destroy
       respond_to do |format|
-        format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
+        format.html { redirect_to games_url, notice: '** Game was successfully destroyed. **' }
         format.json { head :no_content }
       end
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: 'Cannot delete.  You are not a player in this game.' }
+        format.html { redirect_to games_url, notice: '** Cannot delete.  You are not a player in this game. **' }
         format.json { head :no_content }
       end
-    end
+    end 
   end
 
   private
