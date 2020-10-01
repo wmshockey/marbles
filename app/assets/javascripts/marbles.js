@@ -33,6 +33,7 @@ $(document).ready(() => {
 			$("#game_board").val(board.toString());
 			$("#game_status").val("Started");
 			$("#game_winner").val("");
+			$("#game_moved").val("");
 			
 /* Initialize the deck */
 			deck = fulldeck;
@@ -103,6 +104,13 @@ $(document).ready(() => {
 				y_coord = hand_div.offsetTop;
 				saveScreenCoords(x_coord, y_coord, user_color);
 				$("#game_screen").val(screencoords).toString();
+
+				/* Need to save the list of marbles that moved this turn for optional display */
+				moved_marble_ids = "";
+				for (i=0; i<moved_marbles.length; i++) {
+					moved_marble_ids = moved_marbles[i][0].toString() + "," + moved_marble_ids;
+				}
+				$("#game_moved").val(moved_marble_ids);
 
 				/* Check for game over if all the players playable colors are in their home rows */
 				if (gameOver()) {
@@ -265,6 +273,7 @@ $(document).ready(() => {
 		if (discardpile[0] == "") {
 			discardpile = [];
 		}
+		moved = document.getElementById("game_moved").innerHTML.split(",");
 /* Get the card hands for each player and the screen coordinates for their hands */
 		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
 		redhand = document.getElementById("game_redhand").innerHTML.split(",");
@@ -331,6 +340,8 @@ $(document).ready(() => {
 			updateBoardArray();	
 		}
 
+/* Put arrow beside the marbles that moved last turn */
+		drawArrows();
 
 /* Set all elements on board to be non-draggable since this is Show mode only */
 		p = document.getElementsByTagName("div");
@@ -531,8 +542,12 @@ $(document).ready(() => {
 	/* Draw board border */
 /*		ctx.strokeRect(0, 0, 800, 800); */
 		ctx.beginPath();
-		ctx.rect(0, 0, 800, 800);
-		ctx.nofill;
+		ctx.lineWidth = "6";
+		ctx.strokeStyle = "#663300";
+		ctx.moveTo(0,800);
+		ctx.lineTo(800,800);
+		ctx.moveTo(800,800);
+		ctx.lineTo(800,0);
 		ctx.stroke();
 
 	/* Make uppper left arc 270 to 360 degrees*/
@@ -877,9 +892,9 @@ $(document).ready(() => {
 			d.style.height = "30px";
 			d.setAttribute("ondrop", "drop(event)");
 			d.setAttribute("ondragover", "allowDrop(event)");
-/*	select background image for the hole */
+			/*	select background image for the hole */
 			var hole_image = "empty_hole";
-/* color the holes */
+			/* color the holes */
 			if ([7, 31, 55, 79].includes(nbr) || color == "black") {
 				hole_image = "black_hole.png";				
 			} else if (color =="green" || nbr == 1){
@@ -897,7 +912,7 @@ $(document).ready(() => {
 			}
 			hole_image = "url(/" + hole_image + ")";
 			d.style.backgroundImage = hole_image;
-/* place the hole on the board */
+			/* place the hole on the board */
 			document.body.appendChild(d);
 		
 	}
@@ -918,7 +933,7 @@ $(document).ready(() => {
 		d.style.left = coords[0] + "px";
 		d.style.top = coords[1] + "px";
 		d.style.width = "340px";
-		d.style.height = "105px";
+		d.style.height = "120px";
 		d.style.border = "none";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
@@ -1034,6 +1049,26 @@ $(document).ready(() => {
 		d.appendChild(m);
 	}
 
+
+	function drawArrows() {
+		/* get position of each moved marble and put an arrow on it */
+		for (i=0; i<moved.length; i++) {
+			mid = moved[i];
+			if (mid) {
+				marble_element = document.getElementById(mid);
+				x = marble_element.parentElement.offsetLeft;
+				y = marble_element.parentElement.offsetTop;
+				arrow_element = document.createElement("div");
+				arrow_element.setAttribute("id", "arrow");
+				arrow_element.style.position = "absolute";
+				arrow_element.style.width = "50px";
+				arrow_element.style.height = "50px";
+				arrow_element.style.left = (x-50).toString() + "px";
+				arrow_element.style.top = (y-10).toString() + "px";
+				document.body.appendChild(arrow_element);								
+			}
+		}		
+	}
 			
 	function dealCards() {
 	  	yplayer = $("#game_yplayer").val();

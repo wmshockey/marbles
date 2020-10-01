@@ -83,6 +83,15 @@ li {
 	color: yellow;
 }
 
+.frame {
+  width: 300px;
+  height: 250px;
+  border: 3px solid #ccc;
+  background: #eee;
+  margin: auto;
+  padding: 15px 10px;
+}
+
 #discardpile {
 	background: url('discard_background.png');
     background-position: center;
@@ -110,6 +119,12 @@ li {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;	
+}
+
+#arrow {
+	background: url('arrow.png');
+	background-repeat: no-repeat;
+	background-position: right top;
 }
 
 .fixed_line1_left{ 
