@@ -25,6 +25,10 @@ li {
 	margin-bottom: 1.4em;
 }
 
+.bullets {
+	list-style-image: url('marble_bullet.png');
+}
+
 .top > * {
   vertical-align: top;
 }
