@@ -15,7 +15,7 @@
 		<span class="lower_left">
 			<% if @user_name == @player %>
 				<% @button_text = " Start Turn" %>
-				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success' %>
+				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success blinking' %>
 			<% else %>
 				<span id="msgArea" class = "text-warning bg-warning">
 					<%= "** Waiting for " + @player + " **"%>
@@ -29,6 +29,7 @@
 	<body>
 
 	<div class="hidden">
+		<div id="game_id"><%= @game.id %></div>
 		<div id="game_name"><%= @game.name %></div>
 		<div id="game_start_date"><%= @game.start_date %></div>
 		<div id="game_status"><%= @game.status %></div>

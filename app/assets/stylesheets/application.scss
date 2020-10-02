@@ -131,6 +131,25 @@ li {
 	background-position: right top;
 }
 
+.blinking {
+  animation-name:animate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  opacity: 1;
+}
+
+@keyframes animate {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
 .fixed_line1_left{ 
     position:absolute;
     top:0px;

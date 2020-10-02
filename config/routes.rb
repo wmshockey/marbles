@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     member do 
       get 'play'
       get 'debug'
+      get 'query'
     end
   end
   

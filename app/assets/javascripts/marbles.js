@@ -261,6 +261,7 @@ $(document).ready(() => {
 		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
 		var comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML;
+		id = document.getElementById("game_id").innerHTML;
 /* convert strings in page to arrays */	
 		var board = (document.getElementById("game_board").innerHTML).split(",");
 		var deck = (document.getElementById("game_deck").innerHTML).split(",");
@@ -293,14 +294,26 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
-/* sets timer so that Show pages refresh every 10 seconds */
-		if (refresh_rate < 2) {
-			refresh_rate = 10;			
+/* If not your turn, set the interval timer to check every few seconds to see whose turn it is */
+		if (player != user_name) {
+			if (refresh_rate < 2) {
+				refresh_rate = 2;			
+			}
+			old_turn = turn;
+			setInterval(function() {			
+		  	    $.ajax({
+				  url: "/games/"+id+"/query",
+		  		  dataType: 'json',
+		  	      success: function(data) {
+		  			  var new_turn = data.turn;
+		  			  if ( new_turn != old_turn) {
+		  				location.reload();
+						old_turn = new_turn;
+		  			  }
+		  	      }
+		  	  });					
+			}, refresh_rate*1000);						
 		}
-		setTimeout(function() {
-			location.reload();		  
-		}, refresh_rate*1000);
-
 
 /* Get the current user's color */
 		user_color_list = [];

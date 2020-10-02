@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :destroy]
 
   # GET /games
   # GET /games.json
@@ -24,6 +24,13 @@ class GamesController < ApplicationController
       end
     end
   end
+
+  # GET /games/1/query
+  # GET /games/1.json
+  def query
+    @user_name = current_user.name
+  end
+
 
   # GET /games/new
   def new
@@ -144,6 +151,6 @@ class GamesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def game_params
-      params.require(:game).permit(:name, :start_date, :status, :yplayer, :gplayer, :rplayer, :bplayer, :ryteam, :gbteam, :turn, :comment, :board, :deck, :discardpile, :greenhand, :redhand, :bluehand, :yellowhand, :screen, :winner, :refresh, :moved)
+      params.require(:game).permit(:name, :id, :start_date, :status, :yplayer, :gplayer, :rplayer, :bplayer, :ryteam, :gbteam, :turn, :comment, :board, :deck, :discardpile, :greenhand, :redhand, :bluehand, :yellowhand, :screen, :winner, :refresh, :moved)
     end
 end
