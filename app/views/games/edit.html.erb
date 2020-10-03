@@ -19,18 +19,18 @@
 	  <div class="col-sm-2"></div>
 	  <div class="col-sm-2"><%= form.label "Game:" %><%= form.text_field :name %></div> 
 	  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
-	  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
+	  <div class="col-sm-2"><%= form.label :turn %><%= ": " + @plist[@game.turn.to_i] %></div>
 	  <div class="col-sm-4"></div>
 	</div>
 
 	<br>
 
-	<div class="row border">
+	<div class="row border text-left">
 		<span class="col-sm-2"></span>
-		<div class="col-sm-2"><%= form.label "Yellow"%></div>
-		<div class="col-sm-2"><%= form.label "Red"%></div>
-		<div class="col-sm-2"><%= form.label "Green"%></div>
-		<div class="col-sm-2"><%= form.label "Blue"%></div>
+		<div class="col-sm-2", style="color:yellow; text-align:left"><%= form.label "Yellow"%></div>
+		<div class="col-sm-2", style="color:red; text-align:left"><%= form.label "Red"%></div>
+		<div class="col-sm-2", style="color:green; text-align:left"><%= form.label "Green"%></div>
+		<div class="col-sm-2", style="color:blue; text-align:left"><%= form.label "Blue"%></div>
 	    <span class="col-sm-2"></span>
 	</div>
 
@@ -53,7 +53,7 @@
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Refresh rate (sec)"%> </div>
 		<div class="col-sm-2 top"><%= form.number_field :refresh %></div>
-		<div class="col-sm-2 top"><%= form.label "Winner" %> </div>
+		<div class="col-sm-2 top", style="text-align:right"><%= form.label "Winner:" %> </div>
 		<div class="col-sm-2 top"><%= form.text_field :winner %></div>
 		<div class="col-sm-6"></div>
 	</div>

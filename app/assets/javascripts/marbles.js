@@ -294,26 +294,27 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
-/* If not your turn, set the interval timer to check every few seconds to see whose turn it is */
-		if (player != user_name) {
-			if (refresh_rate < 2) {
-				refresh_rate = 2;			
-			}
-			old_turn = turn;
-			setInterval(function() {			
-		  	    $.ajax({
-				  url: "/games/"+id+"/query",
-		  		  dataType: 'json',
-		  	      success: function(data) {
-		  			  var new_turn = data.turn;
-		  			  if ( new_turn != old_turn) {
-		  				location.reload();
-						old_turn = new_turn;
-		  			  }
-		  	      }
-		  	  });					
-			}, refresh_rate*1000);						
+/* Check every few seconds to see whose turn it is.  Frequency of checks set by refresh_rate. */
+		if (refresh_rate < 2) {
+			refresh_rate = 2;			
 		}
+		setInterval(function() {			
+	  	    $.ajax({
+			  url: "/games/"+id+"/query",
+	  		  dataType: 'json',
+	  	      success: function(data) {
+				  var old_turn = document.getElementById("game_turn").innerHTML;
+	  			  var new_turn = data.turn;
+	  			  if ( new_turn != old_turn) {
+	  				location.reload();
+					old_turn = new_turn;
+	  			  }
+	  	      },
+		      error: function (jqXHR, textStatus, errorThrown) {
+		        alert('error: ' + textStatus + ': ' + errorThrown);
+		      }
+	  	  });					
+		}, refresh_rate*1000);						
 
 /* Get the current user's color */
 		user_color_list = [];
@@ -1985,8 +1986,6 @@ function performDrop(player_color, data, ev) {
 			m.removeAttribute("style");
 			m.style.width = "35px";
 			m.style.height = "35px";
-			m.setAttribute("animation", "blink 1s");
-			m.setAttribute("animation-iteration-count", 10);
 		    ev.target.appendChild(m);
 	  	    drop_ok = true;
 		}
@@ -2138,7 +2137,12 @@ function saveScreenCoords(x, y, user_color) {
 
 
 /*---------------------PATHS-----------------------*/
-
+/* From each marbles position it is possible to take one of 4 possibilities:
+	1. Around the outside of the board path
+	2. Around and into home row path
+	3. Around and into centre hole path
+	4. Backwards 4 path
+*/
 
 function get_paths() {
 	paths = [];	
@@ -2214,12 +2218,12 @@ function get_paths() {
 
 	paths[56]=[11,12,13,14,15,16,25,26,27,28,29,30,31,32,33,34];
 	paths[57]=[11,12,13,14,15,17,18,19,20];
-	paths[58]=[11];
+	paths[58]=[11,12,13,14,15,16,25,26,27,28,29,30,31,0];
 	paths[59]=[11,10,9,8,7];
 
 	paths[60]=[12,13,14,15,16,25,26,27,28,29,30,31,32,33,34,35];
 	paths[61]=[12,13,14,15,17,18,19,20];
-	paths[62]=[12];
+	paths[62]=[12,13,14,15,16,25,26,27,28,29,30,31,0];
 	paths[63]=[12,11,10,9,8];
 
 	paths[64]=[13,14,15,16,25,26,27,28,29,30,31,32,33,34,35,36];

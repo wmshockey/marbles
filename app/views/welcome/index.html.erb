@@ -17,7 +17,7 @@
 	<% teams = ryteams.concat(gbteams).uniq.sort! %>
 	<div class="col-sm-12">Total games played so far: <%= @games.count()%></div>
 	
-	<table class="table table-bordered table-striped">
+	<table class="table table-bordered">
 		<thead>
 			<tr>
 				<th>Team</th>
@@ -34,13 +34,16 @@
 						<td><%= t%></td>
 						<% @team_games = (@games.select {|g| g.ryteam == t || g.gbteam == t}) %>
 						<% if @team_games[0].ryteam == t %>
-							<% @player1 = @team_games[0].rplayer %>
-							<% @player2 = @team_games[0].yplayer %>
+							<td>
+								<div style="display:inline-block; color:red"><%= @team_games[0].rplayer %></div>
+								<div style="display:inline-block; color:yellow"><%= @team_games[0].yplayer %></div>
+							</td>
 						<% else %>
-							<% @player1 = @team_games[0].gplayer %>
-							<% @player2 = @team_games[0].bplayer %>
+							<td>
+								<div style="display:inline-block; color:green"><%= @team_games[0].gplayer %></div>
+								<div style="display:inline-block; color:blue"><%= @team_games[0].bplayer %></div>
+							</td>
 						<% end %>
-						<td><%= @player1%>, <%= @player2%></td>
 						<td><%= @team_games.count()%></td>
 						<td><%= (@games.select {|g| g.winner == t}).count()%></td>
 					</tr>

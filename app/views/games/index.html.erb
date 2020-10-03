@@ -6,14 +6,13 @@
 
 <h1 id="header">Games</h1>
 
-<table class="table table-bordered table-striped>
+<table class="table table-bordered table-dark">
   <thead>
     <tr class="boardlabel">
       <th class="col-sm-2">Name</th>
       <th class="col-sm-2">Start date</th>
       <th class="col-sm-1">Status</th>
-      <th class="col-sm-2">Players</th>
-	  <th class="col-sm-2">Teams</th>
+      <th class="col-sm-2">Teams/Players</th>
 	  <th class="col-sm-1">Winner</th>
       <th class="col-sm-1">Turn</th>
     </tr>
@@ -29,12 +28,24 @@
         <td class="col-sm-2"><%= game.name %></td>
         <td class="col-sm-2"><%= game.start_date %></td>
         <td class="col-sm-1"><%= game.status %></td>
-        <td class="col-sm-2"><%= players %></td>
-		<% if game.ryteam!="" || game.gbteam!="" %>
-			<td class="col-sm-2"><%= game.ryteam + ", " + game.gbteam %></td>
+        <td class="col-sm-4">
+		<% if game.ryteam!="" %>
+			<div style="display:inline-block"><%= game.ryteam %></div>
+			<div style="display:inline-block; color:red"><%= "(" + game.rplayer%></div>
+			<div style="display:inline-block; color:yellow"><%= game.yplayer + ")"%></div>
 		<% else %>
-			<td class="col-sm-2"> - </td>
-		<% end %>
+			<div style="display:inline-block; color:red"><%= game.rplayer%></div>
+			<div style="display:inline-block; color:yellow"><%= game.yplayer%></div>
+		<% end %>		
+		<% if game.gbteam!="" %>
+			<br>
+			<div style="display:inline-block"><%= game.gbteam %></div>
+			<div style="display:inline-block; color:green"><%= "(" + game.gplayer%></div>
+			<div style="display:inline-block; color:blue"><%= game.bplayer + ")"%></div>
+		<% else %>
+			<div style="display:inline-block; color:green"><%= game.gplayer%></div>
+			<div style="display:inline-block; color:blue"><%= game.bplayer%></div>
+		<% end %>				
 		<td class="col-sm-1"><%= game.winner %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Play', game_path(game) %></td>

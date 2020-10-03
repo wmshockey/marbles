@@ -25,6 +25,11 @@ li {
 	margin-bottom: 1.4em;
 }
 
+.table{
+ background: #C0C0C0 !important;
+  color: black !important;
+}
+
 .bullets {
 	list-style-image: url('marble_bullet.png');
 }
@@ -47,10 +52,6 @@ li {
 	display: inline-block;
     width: 100px;
     height: 200px;
-}
-
-.blink {
-  animation: blinker 1s step-start infinite;
 }
 
 .boardlabel {

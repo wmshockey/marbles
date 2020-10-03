@@ -28,7 +28,7 @@ class GamesController < ApplicationController
   # GET /games/1/query
   # GET /games/1.json
   def query
-    @user_name = current_user.name
+    render json: @game
   end
 
 
