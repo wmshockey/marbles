@@ -55,10 +55,9 @@
 <br><br>
 <div class="row">
 	<div class="col-sm-2 top"><%= form.label "Page Refresh Rate (sec)"%> </div>
-	<div class="col-sm-10 top"><%= form.number_field :refresh, value:"5" %></div>
+	<div class="col-sm-1 top"><%= form.number_field :refresh, {min: 2, max: 60, value: 5} %></div>
+	<div class="col-sm-9">(Frequency of page refresh checks.  5 seconds is usually fast enough.)</div>
 </div>
-
-<%= image_tag "/marble_game_screenshot.png", alt: "Marbles Game Screenshot", :class => "board_screenshot", :style => "float: right" %>
 
 <br>
 <div class="row">

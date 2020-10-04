@@ -19,7 +19,7 @@
   </thead>
 
   <tbody>
-    <% @games.each do |game| %>
+    <% @games.order(start_date: :desc).each do |game| %>
       <tr>
 		<% players = game.yplayer+","+game.gplayer+","+game.rplayer+","+game.bplayer %>
 		<% player_array = players.split(",") %>
@@ -29,23 +29,24 @@
         <td class="col-sm-2"><%= game.start_date %></td>
         <td class="col-sm-1"><%= game.status %></td>
         <td class="col-sm-4">
-		<% if game.ryteam!="" %>
-			<div style="display:inline-block"><%= game.ryteam %></div>
-			<div style="display:inline-block; color:red"><%= "(" + game.rplayer%></div>
-			<div style="display:inline-block; color:yellow"><%= game.yplayer + ")"%></div>
-		<% else %>
-			<div style="display:inline-block; color:red"><%= game.rplayer%></div>
-			<div style="display:inline-block; color:yellow"><%= game.yplayer%></div>
-		<% end %>		
-		<% if game.gbteam!="" %>
-			<br>
-			<div style="display:inline-block"><%= game.gbteam %></div>
-			<div style="display:inline-block; color:green"><%= "(" + game.gplayer%></div>
-			<div style="display:inline-block; color:blue"><%= game.bplayer + ")"%></div>
-		<% else %>
-			<div style="display:inline-block; color:green"><%= game.gplayer%></div>
-			<div style="display:inline-block; color:blue"><%= game.bplayer%></div>
-		<% end %>				
+			<% if game.ryteam!="" %>
+				<div style="display:inline-block"><%= game.ryteam %></div>
+				<div style="display:inline-block; color:red"><%= "(" + game.rplayer%></div>
+				<div style="display:inline-block; color:yellow"><%= game.yplayer + ")"%></div>
+			<% else %>
+				<div style="display:inline-block; color:red"><%= game.rplayer%></div>
+				<div style="display:inline-block; color:yellow"><%= game.yplayer%></div>
+			<% end %>		
+			<% if game.gbteam!="" %>
+				<br>
+				<div style="display:inline-block"><%= game.gbteam %></div>
+				<div style="display:inline-block; color:green"><%= "(" + game.gplayer%></div>
+				<div style="display:inline-block; color:blue"><%= game.bplayer + ")"%></div>
+			<% else %>
+				<div style="display:inline-block; color:green"><%= game.gplayer%></div>
+				<div style="display:inline-block; color:blue"><%= game.bplayer%></div>
+			<% end %>
+		</td>			
 		<td class="col-sm-1"><%= game.winner %></td>
         <td class="col-sm-1"><%= player_array[(game.turn).to_i] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Play', game_path(game) %></td>
