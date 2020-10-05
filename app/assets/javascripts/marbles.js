@@ -1,5 +1,4 @@
 
-
 $(document).ready(() => {
   
 /* Listen for player hitting the Save button */
@@ -91,13 +90,6 @@ $(document).ready(() => {
 				$("#game_screen").val(screencoords).toString();
 			} else {
 				/* Move is valid - page values will be saved to the database */
-				/* Make sure internal arrays and DOM values are in sync */
-				greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
-				redhand = document.getElementById("game_redhand").innerHTML.split(",");
-				bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
-				yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
-				discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
-
 				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
 				hand_div = document.getElementById("hand");
 				x_coord = hand_div.offsetLeft;
@@ -105,14 +97,18 @@ $(document).ready(() => {
 				saveScreenCoords(x_coord, y_coord, user_color);
 				$("#game_screen").val(screencoords).toString();
 
-				/* Need to save the list of marbles that moved this turn for optional display */
+				/* Need to save the list of marbles that moved this turn for display with green arrows */
 				moved_marble_ids = "";
-				for (i=0; i<moved_marbles.length; i++) {
-					moved_marble_ids = moved_marbles[i][0].toString() + "," + moved_marble_ids;
+				if (moved_marbles) {
+					for (i=0; i<moved_marbles.length; i++) {
+						moved_marble_ids = moved_marbles[i][0].toString() + "," + moved_marble_ids;
+					}										
 				}
 				$("#game_moved").val(moved_marble_ids);
 
 				/* Check for game over if all the players playable colors are in their home rows */
+				board_str = $("#game_board").val();
+				board = board_str.split(",");
 				if (gameOver()) {
 					if (ryteam && playable_colors.includes("red")) {
 						winner = ryteam;
@@ -1185,7 +1181,8 @@ $(document).ready(() => {
 	
 	function checkMove(playedCard, board_start, board_end) {
 /* Uncomment the line below to turn move checking off for testing purposes */
-		/* return true; */
+		/*moved_marbles = [];
+		return true; */
 
 /* check for movement of any marbles */
 		moved_marbles = [];
@@ -1228,10 +1225,12 @@ $(document).ready(() => {
 			}
 			/* find the path taken for any marbles that moved */
 			if (start_hole != end_hole) {
-				moved_count++;				
+				moved_count++;
+				i = 0;			
 				marble_path_index = -1;
-				for (i=0; i<paths.length; i++) {
+				while (marble_path_index==-1 && i<paths.length) {
 					if (paths[i][0] == start_hole) {
+						/* Found the path now must calculate distance along it */
 						for (j=0; j<paths[i].length; j++) {
 							if (paths[i][j] == end_hole) {
 								marble_path_index = i;
@@ -1243,10 +1242,18 @@ $(document).ready(() => {
 								/* set distance to 0 if marble moved out of start row */
 								if (startHoles.includes(start_hole)) {
 									distance = 0;
+											}
+								/* Note that it is possible when coming out of the 0 centre hole
+								that you can get to holes, 5, 29, 53 or 77 by two different paths.  One path is going negative from the centre
+								hole and another path going positive around the other direction with a Joker 15 card.  In this case, select the path
+								that results in a valid distance */
+								if ([-1,-2,-3, 14].includes(distance)) {
+									marble_path_index = -1;
 								}
 							}
 						}
-					}
+					}					
+					i++;	
 				}
 				/* set distance to zero if no path found or marble moved into start row (was killed) */
 				if (marble_path_index==-1 || startHoles.includes(end_hole)) {
@@ -1872,7 +1879,11 @@ function drag(ev) {
 	var data = ev.dataTransfer.getData("text");
 	x_offset = ev.clientX - $("#" + data).offset().left;
 	y_offset = ev.clientY - $("#" + data).offset().top;
-	draggingFrom = ev.target.parentElement.id;
+	if (ev.target.parentElement.nodeName == "BODY") {
+		draggingFrom = "board";
+	} else {
+		draggingFrom = ev.target.parentElement.id;		
+	}
 }
 
 function drop(ev) {
@@ -1901,7 +1912,7 @@ function performDrop(player_color, data, ev) {
     draggingObj = dragObjectType(data);
     draggingTo = dragObjectType(ev.target.id);
 	var playerfield = "#game_" + player_color + "hand";
-/*	alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
+	/* alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
@@ -1973,6 +1984,17 @@ function performDrop(player_color, data, ev) {
 		 drop_ok = true;
 	 }
 
+ /* player is dragging his/her hand to somewhere on the board */
+ 	if ((draggingObj=="hand") && (draggingTo=="board")) {
+ 		dm = document.getElementById(data);
+ 		dm.style.position = "fixed";
+ 		dm.style.left = (ev.clientX - x_offset) + "px";
+ 		dm.style.top = (ev.clientY - y_offset) + "px";
+ 		document.body.appendChild(dm);
+ 		drop_ok = true;
+ 	}
+
+
 /*  player is moving a marble from hole to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
@@ -1980,7 +2002,7 @@ function performDrop(player_color, data, ev) {
 		target_hole = ev.target.id;
 		target_hole_nbr = parseInt(target_hole.substring(4,6));
 		if ( [21, 22, 23, 24, 45, 46, 47, 48, 69, 70, 71, 72, 93, 94, 95, 96].includes(target_hole_nbr)) {
-			alert("Invalid play.  Manually moving a marble to a start row is not allowed.  (Killed marbles are placed into their start row automatically).");
+			alert("Invalid play.  Manually moving a marble to a start row is not allowed.");
 			drop_ok = true;
 		} else {
 			m.removeAttribute("style");
@@ -1990,9 +2012,9 @@ function performDrop(player_color, data, ev) {
 	  	    drop_ok = true;
 		}
     }
-	
+
 /* player is moving a marble from a hole to hole on top of another marble */
-	if ((draggingObj == "marble") && (draggingTo == "marble")) {
+	if ((draggingObj == "marble") && (draggingFrom!="board") && (draggingTo == "marble")) {
 		killed_marble = ev.target.id;
 		killer_marble = data;
 		/* If a Jack is played, swap the two marbles involved. */
@@ -2026,8 +2048,11 @@ function performDrop(player_color, data, ev) {
 	}
 	
 /* player is dragging marble from hole to somewhere on the open board */
-	if ((draggingObj == "marble") && (draggingTo == "board")) {
-		dm = document.getElementById(data);
+	if ((draggingObj == "marble") && (draggingFrom!="board") && (draggingTo == "board")) {
+		moving_marble = data;
+		/* save the original hole info in case the marble is being moved with a Jack */
+		originalElement = document.getElementById(draggingFrom);
+		dm = document.getElementById(moving_marble);
 		dm.style.position = "fixed";
 		dm.style.left = (ev.clientX - x_offset) + "px";
 		dm.style.top = (ev.clientY - y_offset) + "px";
@@ -2035,15 +2060,55 @@ function performDrop(player_color, data, ev) {
 		drop_ok = true;
 	}
 
-/* player is dragging his/her hand to somewhere on the board */
-	if ((draggingObj=="hand") && (draggingTo=="board")) {
-		dm = document.getElementById(data);
+/* player is dragging marble from somewhere on the board to somewhere else on the board?? */
+	if ((draggingObj == "marble") && (draggingFrom=="board") && (draggingTo == "board")) {
+		moving_marble = data;
+		dm = document.getElementById(moving_marble);
 		dm.style.position = "fixed";
 		dm.style.left = (ev.clientX - x_offset) + "px";
 		dm.style.top = (ev.clientY - y_offset) + "px";
 		document.body.appendChild(dm);
 		drop_ok = true;
 	}
+
+/* player is moving marble from somewhere on the board to a hole on top of another marble. */
+	if ((draggingObj == "marble") && (draggingFrom=="board") && (draggingTo == "marble")) {
+		killed_marble = ev.target.id;
+		killer_marble = data;
+		killerMarbleElement = document.getElementById(killer_marble);
+		/* In moving marbles in off the open board, you have to remove their left and top attributes first */
+		killerMarbleElement.style.left = "";
+		killerMarbleElement.style.top = "";
+		/* If a Jack is played, swap the two marbles involved. */
+		if (["JH", "JD", "JC", "JS"].includes(playedCard)) {
+			killedMarbleElement = document.getElementById(killed_marble);
+			/* get hole where target marble currently resides */
+			targetElement = document.getElementById(killed_marble).parentElement;
+			/* get hole where players marble originally resided */
+			playerElement = originalElement;
+			/* place the target marble in the players original hole */
+			playerElement.appendChild(killedMarbleElement);
+			/* place the players marble in the target marbles hole */
+			targetElement.appendChild(killerMarbleElement);
+			drop_ok = true;
+		} else {
+		/* This is a straight kill move */
+			/* get hole where killed marble currently resides */
+			targetElement = document.getElementById(killed_marble).parentElement;
+			/* send killed_marble back to its' home */
+			hole_nbr = killed_marble.substring(1,3);
+			home_hole_id = "hole" + hole_nbr;
+			homeElement = document.getElementById(home_hole_id);
+			killedMarbleElement = document.getElementById(killed_marble);
+			homeElement.appendChild(killedMarbleElement);
+			/* put the killer marble into the target hole */
+			killerMarbleElement = document.getElementById(killer_marble);
+			targetElement.appendChild(killerMarbleElement);
+			drop_ok = true;			
+		}
+		
+	}
+
 	
 /* player is dragging marble to their card hand */
 	if ((draggingObj == "marble") && ((draggingTo == "card") || (draggingTo == "hand") || (draggingTo == "discard"))) {
