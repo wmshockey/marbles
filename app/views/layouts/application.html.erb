@@ -11,14 +11,14 @@
 
   <body>
 
-	  <div class="fixed_line1_left">
+	  <div class="line1">
 		  <span class="boardlabel">Logged in as: </span>
 		  <% if user_signed_in? %>
 				  <strong><span class="boardlabel" id="user_name"><%= current_user.name %></span></strong>
 		  <% end %>
 	  </div>
 
-	  <div class="fixed_line1_centre navbar">
+	  <div id="navArea" class="navbar">
 			<% if user_signed_in? %>
 				<ul class="navbar-nav">
 				  <li class="nav-item"><%= link_to "Home", '/', :class => 'nav-link', :style => "color:red"%></li>
@@ -38,8 +38,8 @@
 			<% end %>
   	  </div>
 	  
-	<div class="fixed_line2_right text-success bg-success"><%= notice %></div>
-	<div class="fixed_line2_right text-danger bg-danger"><%= alert %></div>
+	<div id="msgArea" class="text-success bg-success"><%= notice %></div>
+	<div id="msgArea" class="text-danger bg-danger"><%= alert %></div>
 	<br>
 	
     <%= yield %>

@@ -2,17 +2,17 @@
 
 <% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name%>
 
-	<span class="fixed_line2_left">
+	<span class="line2">
 		<span class="boardlabel" id="header">Show Game</span>
 		<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
 	</span>
 
 	<% if @game.status == "Finished"%>
-		<span id="msgArea" class = "fixed_line2_centre text-success bg-success">
-			<%= "** Congratulations to " + @game.winner + " for winning the game **"%>
+		<span id="msgArea" class = "text-success bg-success">
+			<%= "** Congratulations to " + @game.winner + " for winning the game!! **"%>
 		</span>
 	<% else %>
-		<span class="lower_left">
+		<span id="btnArea">
 			<% if @user_name == @player %>
 				<% @button_text = " Start Turn" %>
 				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success blinking' %>
@@ -51,12 +51,13 @@
 		<div id="game_comment"><%= @game.comment %></div>
 		<div id="game_screen"><%= @game.screen %></div>
 		<div id="game_moved"><%= @game.moved %></div>
+		<div id="game_plays"><%= @game.plays %></div>
 	</div>
 
 	</body>
 
 <% else %>
 
-	<span class="fixed_line2_left">You are not a player on this game.  Please use the Back button to return to the list of games.</span>
+	<span class="msgArea">You are not a player on this game.  Please use the Back button to return to the list of games.</span>
 	
 <% end %>

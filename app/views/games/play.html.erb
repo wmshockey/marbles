@@ -1,5 +1,5 @@
 
-<div class="fixed_line2_left">
+<div class="line2">
 	<span class="boardlabel" id="header">Marbles Game</span>
 	<strong><span class="boardlabel">: <%= @game.name %></span></strong>
 </div>
@@ -7,7 +7,7 @@
 <% if @user_name == @player %>
 	<%= render 'form', game: @game %>	
 <% else %>
-	<span class = "fixed_line2_centre text-danger bg-danger">It's not your turn.  You cannot make a move yet.</span>
-	<span class="fixed_line3_right"><%= link_to 'Back', games_path%></span>
+	<span id="msgArea" class = "text-danger bg-danger">It's not your turn.</span>
+	<span> <%= link_to 'Back', games_path%></span>
 <% end %>
 

@@ -2,7 +2,7 @@
 
 <%= form_with(model: game, local: true) do |form| %>
 
-  <span class="lower_left" >
+  <span id="btnArea">
     <%= form.submit "End Turn", class:"btn btn-danger", id:"Save"%>
   </span>
 
@@ -112,6 +112,11 @@
 	<div class="row">
 		<div class="col-sm-2 top"><%= "Winner"%> </div>
 		<div class="col-sm-10 top"><%= form.text_area :winner, cols: "104", rows: "1"%></div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2 top"><%= "Plays Made"%> </div>
+		<div class="col-sm-10 top"><%= form.number_field :plays %></div>
 	</div>
 
 <% end %>

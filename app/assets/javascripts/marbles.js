@@ -33,6 +33,7 @@ $(document).ready(() => {
 			$("#game_status").val("Started");
 			$("#game_winner").val("");
 			$("#game_moved").val("");
+			$("#game_plays").val("0");
 			
 /* Initialize the deck */
 			deck = fulldeck;
@@ -105,6 +106,11 @@ $(document).ready(() => {
 					}										
 				}
 				$("#game_moved").val(moved_marble_ids);
+
+				/* Increment the number of plays made */
+				plays = parseInt($("#game_plays").val());
+				plays++;
+				$("#game_plays").val(plays.toString());
 
 				/* Check for game over if all the players playable colors are in their home rows */
 				board_str = $("#game_board").val();
@@ -228,6 +234,7 @@ $(document).ready(() => {
 		$("#myCanvas").addClass("hidden");
 		$("#game_status").val("Started");
 		$("#game_turn").val("0");
+		$("#game_plays").val("0");
 		var greenplayer = false;
 		var yellowplayer = false;
 		var redplayer = false;
@@ -255,6 +262,7 @@ $(document).ready(() => {
 		var game_status = document.getElementById("game_status").innerHTML;
 		var turn = parseInt(document.getElementById("game_turn").innerHTML);
 		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
+		var plays = parseInt(document.getElementById('game_plays').innerHTML);
 		var comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML;
 		id = document.getElementById("game_id").innerHTML;
@@ -290,7 +298,7 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
-/* Check every few seconds to see whose turn it is.  Frequency of checks set by refresh_rate. */
+/* Check every few seconds to see if player has made a move (plays count incremented).  Frequency of checks set by refresh_rate. */
 		if (refresh_rate < 2) {
 			refresh_rate = 2;			
 		}
@@ -299,11 +307,11 @@ $(document).ready(() => {
 			  url: "/games/"+id+"/query",
 	  		  dataType: 'json',
 	  	      success: function(data) {
-				  var old_turn = document.getElementById("game_turn").innerHTML;
-	  			  var new_turn = data.turn;
-	  			  if ( new_turn != old_turn) {
+				  var old_plays = document.getElementById("game_plays").innerHTML;
+	  			  var new_plays = data.plays;
+	  			  if ( new_plays != old_plays) {
 	  				location.reload();
-					old_turn = new_turn;
+					old_plays = new_plays;
 	  			  }
 	  	      },
 		      error: function (jqXHR, textStatus, errorThrown) {
@@ -2001,7 +2009,7 @@ function performDrop(player_color, data, ev) {
 		/* Don't allow manually moving a marble into a start row */
 		target_hole = ev.target.id;
 		target_hole_nbr = parseInt(target_hole.substring(4,6));
-		if ( [21, 22, 23, 24, 45, 46, 47, 48, 69, 70, 71, 72, 93, 94, 95, 96].includes(target_hole_nbr)) {
+		if ( startHoles.includes(target_hole_nbr)) {
 			alert("Invalid play.  Manually moving a marble to a start row is not allowed.");
 			drop_ok = true;
 		} else {

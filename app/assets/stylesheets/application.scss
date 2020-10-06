@@ -127,6 +127,24 @@ li {
 	background-position: right top;
 }
 
+#navArea {
+    position:absolute;
+    top:0px;
+    left:300px;
+}
+
+#msgArea {
+	position:absolute;
+	top:20px;
+	left:400px;
+}
+
+#btnArea {
+	position: absolute;
+	top: 720px;
+	left: 160px;	
+}
+
 .blinking {
   animation-name:animate;
   animation-duration: 2s;
@@ -146,61 +164,16 @@ li {
   }
 }
 
-.fixed_line1_left{ 
+
+.line1 { 
     position:absolute;
     top:0px;
     left:40px;
 }
 
-.fixed_line1_centre{ 
+.line2 { 
     position:absolute;
-    top:0px;
-    left:300px;
-}
-
-.fixed_line1_right{
-	position:absolute;
-	top: 0px;
-	left: 600px;
-}
-
-.fixed_line2_left{ 
-    position:absolute;
-    top:20px;
-    left:40px;
-}
-.fixed_line2_centre{ 
-    position:absolute;
-    top:20px;
-    left:400px;
-}
-
-.fixed_line2_right{
-	position:absolute;
-	top:  20px;
-	left: 600px;
-}
-
-.fixed_line3_left{ 
-    position:absolute;
-    top:40px;
+    top:25px;
     left:40px;
 }
 
-.fixed_line3_centre{ 
-    position:absolute;
-    top:40px;
-    left:400px;
-}
-
-.fixed_line3_right{
-	position:absolute;
-	top: 40px;
-	left: 600px;
-}
-
-.lower_left {
-	position: absolute;
-	top: 720px;
-	left: 160px;
-}
