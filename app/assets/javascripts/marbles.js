@@ -1919,7 +1919,7 @@ function performDrop(player_color, data, ev) {
     draggingObj = dragObjectType(data);
     draggingTo = dragObjectType(ev.target.id);
 	var playerfield = "#game_" + player_color + "hand";
-	alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo);
+	/* alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
