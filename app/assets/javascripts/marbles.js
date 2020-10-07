@@ -40,7 +40,7 @@ $(document).ready(() => {
 			discardpile = [];
 			
 /* Initialize the screen positions of players hands, discard pile and deck */
-			screencoords = ["253", "435", "253", "435", "253", "435", "253", "435"];
+			screencoords = ["365", "435", "365", "435", "365", "435", "365", "435"];
 			$("#game_screen").val(screencoords);
 			
 /* Deal cards for first time */
@@ -84,9 +84,9 @@ $(document).ready(() => {
 				$("#game_deck").val(deck.toString());
 				$("#game_discardpile").val(discardpile.toString());
 				$("#game_greenhand").val(greenhand.toString());
-				$("#game_redhand").val(redhand.toString());
-				$("#game_bluehand").val(bluehand.toString());
-				$("#game_yellowhand").val(yellowhand.toString());				
+				$("#game_redhand").val(redhand.toString());					
+				$("#game_bluehand").val(bluehand.toString());					
+				$("#game_yellowhand").val(yellowhand.toString());					
 				$("#game_board").val(board.toString());
 				$("#game_screen").val(screencoords).toString();
 			} else {
@@ -167,7 +167,9 @@ $(document).ready(() => {
 						turn = turn_fair;
 						$("#game_turn").val(turn.toString());
 						$("#game_deck").val(deck.toString());
-						$("#game_discardpile").val(discardpile.toString());
+						if (discardpile.length > 0) {
+							$("#game_discardpile").val(discardpile.toString());							
+						}
 						$("#game_greenhand").val(greenhand.toString());
 						$("#game_redhand").val(redhand.toString());
 						$("#game_bluehand").val(bluehand.toString());
@@ -240,15 +242,16 @@ $(document).ready(() => {
 		var redplayer = false;
 		var blueplayer = false;
 		playedCard = "";
+		discardpile = [];
 /* Initialize the board to all empty */
 		board.fill("");
 
 /* Intiailize the screen coordinates for the players hands, discard pile and deck */
-		screencoords = ["253", "435", "253", "435", "253", "435", "253", "435"];
+		screencoords = ["365", "435", "365", "435", "365", "435", "365", "435"];
 		$("#game_screen").val(screencoords.toString());
 	}
 
-/*
+/*	
 ----------------------------------------------------	
 	SHOW GAME STARTS HERE (SHOW MODE) between turns
 ----------------------------------------------------	
@@ -950,9 +953,9 @@ $(document).ready(() => {
 		coords = getScreenCoords(user_color);
 		d.style.left = coords[0] + "px";
 		d.style.top = coords[1] + "px";
-		d.style.width = "340px";
+		d.style.width = "100px";
 		d.style.height = "120px";
-		d.style.border = "none";
+		d.style.border = "dashed 1px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);			
@@ -1003,7 +1006,6 @@ $(document).ready(() => {
 		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
 		d.style.width = "65px";
 		d.style.height = "100px";
-		d.className = "noDrop";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -1044,9 +1046,6 @@ $(document).ready(() => {
 		d.style.top = y.toString() + 'px';
 		d.style.width = "65px";
 		d.style.height = "100px";
-		if (spot == 'deck') {
-			d.className = "noDrop";
-		}
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 /* place the card spot on the board */
@@ -1648,7 +1647,7 @@ $(document).ready(() => {
 					if (mid) {
 						/* Don't say its a jump if the marble being jumped is also one being moved in this turn e.g. with 7 card*/
 						if (!marbles_in_play.includes(mid)) {
-							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each killed marble in order.");
+							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each marble being killed");
 							return false;
 						}
 					}
@@ -1759,7 +1758,7 @@ $(document).ready(() => {
 			y = screencoords[7];
 			return [x, y];
 		} else {
-			return ["253", "436"];		
+			return ["400", "436"];		
 		}
 	}
 
@@ -1920,7 +1919,7 @@ function performDrop(player_color, data, ev) {
     draggingObj = dragObjectType(data);
     draggingTo = dragObjectType(ev.target.id);
 	var playerfield = "#game_" + player_color + "hand";
-	/* alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
+	alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo);
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
@@ -1943,12 +1942,6 @@ function performDrop(player_color, data, ev) {
   	    drop_ok = true;			
 	 }	  
 
-/* player is moving his hand to another place on the board */
-	 if ( (draggingObj == "hand") && (draggingTo == "board")) {
-		 h = document.getElementById(data);
-		 ev.target.appendChild(h);
-		 drop_ok = true;
-	 }
 
  /* player is moving a card from discardpile back to cards (his hand) */
      if ((draggingObj == "card") && (draggingFrom == "discardpile") && ( (draggingTo == "hand") || (draggingTo == "card") )) {
@@ -1961,11 +1954,9 @@ function performDrop(player_color, data, ev) {
  		playerhand.unshift(removed_card);
  	  	playerhand = playerhand.filter(item => item);
  	    $(playerfield).val(playerhand.toString(","));
-		if ( draggingTo == "card" ) {
-			ev.target.parentElement.appendChild(document.getElementById(data));
-		} else if (draggingTo = "hand") {
-			ev.target.appendChild(document.getElementById(data));
-		}
+		c = document.getElementById(data);
+		h = document.getElementById("hand");
+		h.appendChild(c);
 		playedCard = "";  		
    	  	drop_ok = true;
      }
@@ -1992,8 +1983,9 @@ function performDrop(player_color, data, ev) {
 		 drop_ok = true;
 	 }
 
+
  /* player is dragging his/her hand to somewhere on the board */
- 	if ((draggingObj=="hand") && (draggingTo=="board")) {
+ 	if ((draggingObj=="hand") && (draggingTo=="board" || draggingTo=="hand" || draggingTo=="card")) {
  		dm = document.getElementById(data);
  		dm.style.position = "fixed";
  		dm.style.left = (ev.clientX - x_offset) + "px";
@@ -2002,8 +1994,7 @@ function performDrop(player_color, data, ev) {
  		drop_ok = true;
  	}
 
-
-/*  player is moving a marble from hole to an empty hole */
+/*  player is moving a marble to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
 		/* Don't allow manually moving a marble into a start row */
@@ -2079,6 +2070,7 @@ function performDrop(player_color, data, ev) {
 		drop_ok = true;
 	}
 
+
 /* player is moving marble from somewhere on the board to a hole on top of another marble. */
 	if ((draggingObj == "marble") && (draggingFrom=="board") && (draggingTo == "marble")) {
 		killed_marble = ev.target.id;
@@ -2118,8 +2110,8 @@ function performDrop(player_color, data, ev) {
 	}
 
 	
-/* player is dragging marble to their card hand */
-	if ((draggingObj == "marble") && ((draggingTo == "card") || (draggingTo == "hand") || (draggingTo == "discard"))) {
+/* player is dragging marble to their card hand, to discard pile or onto the draw deck */
+	if ((draggingObj == "marble") && ((draggingTo == "card") || (draggingTo == "hand") || (draggingTo == "discard") || draggingTo == "deck")) {
 		alert("Invalid Play.  A marble can only be placed on a valid hole spot on the board.");
 		drop_ok = true;
 	}
