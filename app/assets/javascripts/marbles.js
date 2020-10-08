@@ -212,14 +212,14 @@ $(document).ready(() => {
 		var marbleids = 
 		["g21", "g22", "g23", "g24", "r45", "r46", "r47", "r48", "b69", "b70", "b71", "b72", "y93", "y94", "y95", "y96"];
 		var outCards = ["KH","KS","KD","KC","AH","AS","AD","AC","J1","J2","J3","J4"];
-		var red_home_holes = [17, 18, 19, 20];
-		var blue_home_holes = [41, 42, 43, 44];
-		var yellow_home_holes = [65, 66, 67, 68];
-		var green_home_holes = [89, 90, 91, 92];
-		var red_start_holes = [45, 46, 47, 48];
-		var blue_start_holes = [69, 70, 71, 72];
-		var yellow_start_holes = [93, 94, 95, 96];
-		var green_start_holes = [21, 22, 23, 24];
+		red_home_holes = [17, 18, 19, 20];
+		blue_home_holes = [41, 42, 43, 44];
+		yellow_home_holes = [65, 66, 67, 68];
+		green_home_holes = [89, 90, 91, 92];
+		red_start_holes = [45, 46, 47, 48];
+		blue_start_holes = [69, 70, 71, 72];
+		yellow_start_holes = [93, 94, 95, 96];
+		green_start_holes = [21, 22, 23, 24];
 		startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
 		homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
 		
@@ -1213,7 +1213,7 @@ $(document).ready(() => {
 			}
 		}
 
-		/* Get the specifics of each marble moved this turn e.g. start hole and end hole etc. */
+		/* Get the specifics of each marble moved this turn e.g. start hole, end hole, path taken etc. */
 		for ( m= 0; m < marbleids.length; m++) {
 			/* set the start_hole and end_hole for any marbles that may not be in play this game */
 			start_hole = 99;
@@ -1251,7 +1251,7 @@ $(document).ready(() => {
 									distance = 0;
 											}
 								/* Note that it is possible when coming out of the 0 centre hole
-								that you can get to holes, 5, 29, 53 or 77 by two different paths.  One path is going negative from the centre
+								that you can get to holes 5, 29, 53 or 77 by two different paths.  One path is going negative from the centre
 								hole and another path going positive around the other direction with a Joker 15 card.  In this case, select the path
 								that results in a valid distance */
 								if ([-1,-2,-3, 14].includes(distance)) {
@@ -1997,18 +1997,43 @@ function performDrop(player_color, data, ev) {
 /*  player is moving a marble to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
-		/* Don't allow manually moving a marble into a start row */
+		mid = data;
 		target_hole = ev.target.id;
+		target_element = document.getElementById(target_hole);
 		target_hole_nbr = parseInt(target_hole.substring(4,6));
-		if ( startHoles.includes(target_hole_nbr)) {
-			alert("Invalid play.  Manually moving a marble to a start row is not allowed.");
-			drop_ok = true;
+		/* If marble is being manually moved to start row, it has to go into it's original starting hole */
+		if ( startHoles.includes(target_hole_nbr)) {			
+			marble_color = mid.substring(0,1);
+			if (marble_color != player_color.substring(0,1)) {
+				alert("Can't move another players marble into their start row.")
+				drop_ok = true;
+			} else if (marble_color == "r" && !red_start_holes.includes(target_hole_nbr)){
+				alert("Can't move a marble into a starting row of a different color.");
+				drop_ok = true;
+			} else if (marble_color == "b" && !blue_start_holes.includes(target_hole_nbr)) {
+				alert("Can't move a marble into a starting row of a different color.");
+				drop_ok = true;
+			} else if (marble_color == "y" && !yellow_start_holes.includes(target_hole_nbr)) {
+				alert("Can't move a marble into a starting row of a different color.");
+				drop_ok = true;
+			} else if (marble_color == "g" && !green_start_holes.includes(target_hole_nbr)) {
+				alert("Can't move a marble into a starting row of a different color.");
+				drop_ok = true;
+			} else {
+				tid = "hole" + mid.substring(1,3);
+				target_element = document.getElementById(tid);
+				m.removeAttribute("style");
+				m.style.width = "35px";
+				m.style.height = "35px";
+			    target_element.appendChild(m);
+		  	    drop_ok = true;						
+			}
 		} else {
 			m.removeAttribute("style");
 			m.style.width = "35px";
 			m.style.height = "35px";
-		    ev.target.appendChild(m);
-	  	    drop_ok = true;
+		    target_element.appendChild(m);
+	  	    drop_ok = true;		
 		}
     }
 
