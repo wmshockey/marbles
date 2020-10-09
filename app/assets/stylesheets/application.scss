@@ -18,8 +18,23 @@
 body {
 	background: url('bg.jpg');
 	background-repeat: repeat no-repeat;
-	background-size: cover;
 } 
+
+#myTable {
+	background: url("green_felt.jpg");
+	background-size: 1400px 1080px;
+    width: 1400px;
+    height: 1080px;
+	border: 2px solid black;
+	background-repeat: repeat no-repeat;
+}
+
+#myCanvas {
+	background: url('wood_background2.jpg');
+	background-size: 820px 800px;
+    background-repeat: no-repeat;
+	margin-left: "5px";	
+}
 
 li {
 	margin-bottom: 1.4em;
@@ -104,14 +119,6 @@ li {
     background-repeat: no-repeat;
     background-size: cover;	
 	border: 2px solid black;
-}
-
-#myCanvas {
-	background: url('wood_background2.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-	margin-left: "5px";	
 }
 
 #hand {

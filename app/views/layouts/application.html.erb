@@ -11,35 +11,37 @@
 
   <body>
 
-	  <div class="line1">
-		  <span class="boardlabel">Logged in as: </span>
-		  <% if user_signed_in? %>
-				  <strong><span class="boardlabel" id="user_name"><%= current_user.name %></span></strong>
-		  <% end %>
-	  </div>
+	<div class="line1 row">
 
-	  <div id="navArea" class="navbar">
-			<% if user_signed_in? %>
-				<ul class="navbar-nav">
+
+
+			  <% if user_signed_in? %>
+	  			<div class="boardlabel col-sm-1">Player: </div>
+				<strong><div class="boardlabel col-sm-2" id="user_name"><%= current_user.name %></div></strong>
+				<ul class="navbar-nav col-sm-9">
 				  <li class="nav-item"><%= link_to "Home", '/', :class => 'nav-link', :style => "color:red"%></li>
 				  <li class="nav-item"><%= link_to 'Games', '/games', :style => "color:red"%></li>
 				  <li class="nav-item"><%= link_to "Help", '/welcome/help', :style => "color:red"%></li>
 				  <li class="nav-item"><%= link_to "Rules", '/welcome/rules', :class => 'nav-link', :style => "color:red" %></li>
-				  <li class="nav-item"><%= link_to 'Edit profile', edit_user_registration_path, :class => 'nav-link', :style => "color:red" %></li>
+				  <li class="nav-item"><%= link_to 'Profile', edit_user_registration_path, :class => 'nav-link', :style => "color:red" %></li>
 				  <li class="nav-item"><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'nav-link', :style => "color:red" %></li>
-				  <li class="nav-item"><%= link_to 'Back', games_path%></li>
-			 	</ul>
-			  
+			 	</ul>			  
 			<% else %>
-				<ul class="navbar-nav">
-				  <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, :class => 'nav-link'  %></li>
-				  <li class="nav-item"><%= link_to "Login", new_user_session_path, :class => 'nav-link'  %></li>
+				<ul class="navbar-nav col-sm-12">
+				  <li class="col-sm-6"><%= link_to "Sign up", new_user_registration_path, :class => 'nav-link'  %></li>
+				  <li class="col-sm-6"><%= link_to "Login", new_user_session_path, :class => 'nav-link'  %></li>
 			  	</ul>
+
 			<% end %>
-  	  </div>
-	  
-	<div id="msgArea" class="text-success bg-success"><%= notice %></div>
-	<div id="msgArea" class="text-danger bg-danger"><%= alert %></div>
+			
+			<div class="navbar-nav col-sm-12">
+				<div id="msgArea" class="text-success bg-success"><%= notice %></div>
+				<div id="msgArea" class="text-danger bg-danger"><%= alert %></div>
+			</div>
+	
+	</div>
+	
+
 	<br>
 	
     <%= yield %>

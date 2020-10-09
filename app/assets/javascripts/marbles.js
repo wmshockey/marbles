@@ -561,14 +561,14 @@ $(document).ready(() => {
 		}
 
 	/* Draw board border */
-/*		ctx.strokeRect(0, 0, 800, 800); */
+		ctx.strokeRect(0, 0, 820, 800);
 		ctx.beginPath();
 		ctx.lineWidth = "6";
 		ctx.strokeStyle = "#663300";
 		ctx.moveTo(0,800);
-		ctx.lineTo(800,800);
-		ctx.moveTo(800,800);
-		ctx.lineTo(800,0);
+		ctx.lineTo(820,800);
+		ctx.moveTo(820,800);
+		ctx.lineTo(820,0);
 		ctx.stroke();
 
 	/* Make uppper left arc 270 to 360 degrees*/
