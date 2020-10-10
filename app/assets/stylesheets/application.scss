@@ -17,7 +17,9 @@
 
 body {
 	background: url('bg.jpg');
-	background-repeat: repeat no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+	margin-left: "5px";
 } 
 
 #myTable {
@@ -143,12 +145,6 @@ li {
     left:300px;
 }
 
-#msgArea {
-	position:absolute;
-	top:20px;
-	left:400px;
-}
-
 #btnArea {
 	position: absolute;
 	top: 720px;
@@ -174,6 +170,11 @@ li {
   }
 }
 
+.msgArea {
+	position:absolute;
+	top:25px;
+	left:600px;
+}
 
 .line1 { 
     position:absolute;

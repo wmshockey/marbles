@@ -1,5 +1,4 @@
 
-
 <% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name%>
 
 	<span class="line2">
@@ -8,7 +7,7 @@
 	</span>
 
 	<% if @game.status == "Finished"%>
-		<span id="msgArea" class = "text-success bg-success">
+		<span class = "text-success bg-success msgArea">
 			<%= "** Congratulations to " + @game.winner + " for winning the game!! **"%>
 		</span>
 	<% else %>
@@ -23,7 +22,6 @@
 			<% end %>
 		</span>
 	<% end %>
-
 
 	<body>
 

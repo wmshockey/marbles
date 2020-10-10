@@ -1,6 +1,11 @@
+<head>
+	 <title>Login</title>
+</head>
+
 <div class="container">
 
-<h1>The Online Game of Marbles</h1>
+
+<h1 id="header">The Online Game of Marbles</h1>
 <p>This is a popular addictive game played using marbles that move around a board based on the value of the cards in a players hand.  It is similar to the classic games of Aggravation and Sorry but different in a way that makes it a lot more fun.  It is ideally suited for 4 players, 2 teams of 2 players each, but can also be played with 2 to 4 people and no teams.  This web based version can be played online without everyone needing to be gathered together physically around the same table.  Sign up to try it out or Log in using the form below.  It is free to play.  Have fun!</p>
 
 	<h2>Log in</h2>
@@ -25,10 +30,13 @@
 			
 		</div>
 
-		
-		<div class="col-sm-6">
-			<%= image_tag "marble_game_screenshot2.png", alt: "Marbles Game Screenshot", :class => "marbles_board", :style => "float:right" %>
-		</div>
+
+			<figure class="col-sm-6">
+				<figcaption>Sample screenshot of the game</figcaption>
+				<%= image_tag "marble_game_screenshot2.png", alt: "Marbles Game Screenshot", :class => "page_image" %>
+			</figure>
+
+
 
 	<% end %>
 

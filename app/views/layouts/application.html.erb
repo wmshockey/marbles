@@ -11,37 +11,40 @@
 
   <body>
 
-	<div class="line1 row">
+  <div class="line1">
 
+	  <% if user_signed_in? %>
 
-
-			  <% if user_signed_in? %>
-	  			<div class="boardlabel col-sm-1">Player: </div>
-				<strong><div class="boardlabel col-sm-2" id="user_name"><%= current_user.name %></div></strong>
-				<ul class="navbar-nav col-sm-9">
+			<span class="boardlabel" style="float: left">Player: </span>
+			<strong><span class="boardlabel" id="user_name" style="float: left"><%= current_user.name %></span></strong>
+			<span>
+				<ul class="navbar-nav">
 				  <li class="nav-item"><%= link_to "Home", '/', :class => 'nav-link', :style => "color:red"%></li>
 				  <li class="nav-item"><%= link_to 'Games', '/games', :style => "color:red"%></li>
 				  <li class="nav-item"><%= link_to "Help", '/welcome/help', :style => "color:red"%></li>
-				  <li class="nav-item"><%= link_to "Rules", '/welcome/rules', :class => 'nav-link', :style => "color:red" %></li>
-				  <li class="nav-item"><%= link_to 'Profile', edit_user_registration_path, :class => 'nav-link', :style => "color:red" %></li>
-				  <li class="nav-item"><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'nav-link', :style => "color:red" %></li>
-			 	</ul>			  
-			<% else %>
-				<ul class="navbar-nav col-sm-12">
-				  <li class="col-sm-6"><%= link_to "Sign up", new_user_registration_path, :class => 'nav-link'  %></li>
-				  <li class="col-sm-6"><%= link_to "Login", new_user_session_path, :class => 'nav-link'  %></li>
-			  	</ul>
+				  <li class="nav-item"><%= link_to "Rules", '/welcome/rules',  :style => "color:red" %></li>
+				  <li class="nav-item"><%= link_to 'Profile', edit_user_registration_path, :style => "color:red" %></li>
+				  <li class="nav-item"><%= link_to "Logout", destroy_user_session_path, method: :delete, :style => "color:red" %></li>
+			 	</ul>
+			</span>
+	  
+	<% else %>
 
-			<% end %>
-			
-			<div class="navbar-nav col-sm-12">
-				<div id="msgArea" class="text-success bg-success"><%= notice %></div>
-				<div id="msgArea" class="text-danger bg-danger"><%= alert %></div>
-			</div>
-	
+		<span>
+			<ul class="navbar-nav">
+			  <li class="nav-item"><%= link_to "Sign up", new_user_registration_path, :style => "color:yellow"  %></li>
+			  <li class="nav-item"><%= link_to "Login", new_user_session_path, :style => "color:yellow"  %></li>
+		  	</ul>
+		</span>
+
+	<% end %>
+
 	</div>
 	
-
+	<span class="msgArea">
+		<span class="text-success bg-success"><%= notice %></span>
+		<span class="text-danger bg-danger"><%= alert %></span>
+	</span>
 	<br>
 	
     <%= yield %>
