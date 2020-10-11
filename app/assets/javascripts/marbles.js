@@ -167,9 +167,7 @@ $(document).ready(() => {
 						turn = turn_fair;
 						$("#game_turn").val(turn.toString());
 						$("#game_deck").val(deck.toString());
-						if (discardpile.length > 0) {
-							$("#game_discardpile").val(discardpile.toString());							
-						}
+						$("#game_discardpile").val(discardpile.toString());							
 						$("#game_greenhand").val(greenhand.toString());
 						$("#game_redhand").val(redhand.toString());
 						$("#game_bluehand").val(bluehand.toString());
@@ -1157,8 +1155,7 @@ $(document).ready(() => {
 		$("#greenhand").val(greenhand.toString());
 		$("#redhand").val(redhand.toString());
 		$("#bluehand").val(bluehand.toString());
-		$("#yellowhand").val(yellowhand.toString());
-		
+		$("#yellowhand").val(yellowhand.toString());		
 	}
 	
 

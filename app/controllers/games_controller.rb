@@ -19,7 +19,7 @@ class GamesController < ApplicationController
       @player = @plist[turn]
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
+        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end
@@ -47,7 +47,7 @@ class GamesController < ApplicationController
       @player = @plist[turn]
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
+        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end
@@ -62,7 +62,7 @@ class GamesController < ApplicationController
       @player = @plist[turn]
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: '** You are not a player in this game. **' }
+        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end
@@ -121,7 +121,7 @@ class GamesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to games_url, notice: '** Cannot delete.  You are not a player in this game. **' }
+        format.html { redirect_to games_url, alert: '** Cannot delete.  You are not a player in this game. **' }
         format.json { head :no_content }
       end
     end 
