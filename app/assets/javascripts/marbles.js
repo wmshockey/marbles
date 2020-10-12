@@ -160,8 +160,7 @@ $(document).ready(() => {
 						$("#game_turn").val(turn.toString());	
 					} else {
 						/* Nobody else can play now - must shuffle and redeal the cards */
-						alert("Nobody else can play now.");
-						alert("Another hand will be dealt.");
+						alert("No one can play now.  Another hand will be dealt.");
 						dealCards();
 						displayCards(turn_color);
 						turn = turn_fair;
@@ -1587,6 +1586,30 @@ $(document).ready(() => {
 				alert("A non-green marble went into the green home row.");
 				return false;			
 			}		
+		}
+
+		/* Check that no marbles went past their home row entry point */
+		for (i=0; i<moved_count; i++) {
+			mid = moved_marbles[i][0].substring(0,1);
+			start_hole = moved_marbles[i][1];
+			end_hole = moved_marbles[i][2];
+			dist = moved_marbles[i][4];
+			if (dist!=0) {
+				if (mid=="y" && (40<=start_hole && start_hole<=63) && (end_hole==64 || (73<=end_hole && end_hole<=87))){
+					alert("Yellow marble moved past entry point to its home row.");
+					return false;
+				} else if (mid=="b" && (16<=start_hole && start_hole<=39) && (end_hole==40 || (49<=end_hole && end_hole<=63))) {
+					alert("Blue marble moved past entry point to its home row.");
+					return false;
+				} else if (mid=="r" && (1<=start_hole && start_hole<=15) && (end_hole==16 || (25<=end_hole && end_hole<=39))) {
+					alert("Red marble moved past entry point to its home row.");
+					return false;
+				} else if (mid=="g" && (64<=start_hole && start_hole<=87) && (end_hole==88 || (1<=end_hole && end_hole<=15))) {
+					alert("Green marble moved past entry point to its home row.");
+					return false;
+				}	
+			}
+			
 		}
 
 		/* Check that each killed marble went into their correct starting row */
