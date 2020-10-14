@@ -151,6 +151,6 @@ class GamesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def game_params
-      params.require(:game).permit(:name, :id, :start_date, :status, :yplayer, :gplayer, :rplayer, :bplayer, :ryteam, :gbteam, :turn, :comment, :board, :deck, :discardpile, :greenhand, :redhand, :bluehand, :yellowhand, :screen, :winner, :refresh, :moved, :plays)
+      params.require(:game).permit(:name, :id, :start_date, :status, :yplayer, :gplayer, :rplayer, :bplayer, :ryteam, :gbteam, :turn, :comment, :board, :deck, :discardpile, :greenhand, :redhand, :bluehand, :yellowhand, :screen, :winner, :refresh, :moved, :plays, :updated_at)
     end
 end

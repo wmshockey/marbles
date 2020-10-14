@@ -16,7 +16,7 @@
 	  <% if user_signed_in? %>
 
 			<span class="boardlabel" style="float: left">Player: </span>
-			<strong><span class="boardlabel" id="user_name" style="float: left"><%= current_user.name %></span></strong>
+			<strong><span class="boardlabel" id="user_name" style="float: left"><%= current_user.name.split(" ")[0] %></span></strong>
 			<span>
 				<ul class="navbar-nav">
 				  <li class="nav-item"><%= link_to "Home", '/', :class => 'nav-link', :style => "color:red"%></li>

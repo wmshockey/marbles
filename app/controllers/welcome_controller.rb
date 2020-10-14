@@ -1,5 +1,7 @@
 class WelcomeController < ApplicationController
   def index
+    @user_name = current_user.name;
+    @users = User.all;
     @games = Game.all;
   end
   
@@ -7,4 +9,3 @@ class WelcomeController < ApplicationController
   end
   
 end
-

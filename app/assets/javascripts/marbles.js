@@ -1,4 +1,11 @@
 
+/*
+	This is the one main javascript file used by the Marblemind game.
+	Copyright Phastware Consulting Ltd.
+	Developer: Warren Shockey 2020
+	All rights reserved
+*/
+
 $(document).ready(() => {
   
 /* Listen for player hitting the Save button */
@@ -121,9 +128,9 @@ $(document).ready(() => {
 					} else if (gbteam && playable_colors.includes("green")) {
 						winner = gbteam;
 					} else {
-						winner = getPlayerName(playable_colors[0]);
+						winner = user_name;
+						/* winner = getPlayerName(playable_colors[0]); */
 					}
-					alert("GAME OVER!!  Congratulations to " + winner + " for winning the game!");
 					$("#game_status").val("Finished");
 					$("#game_winner").val(winner);				
 				} else {
@@ -264,7 +271,7 @@ $(document).ready(() => {
 		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
 		var plays = parseInt(document.getElementById('game_plays').innerHTML);
 		var comment = document.getElementById("game_comment").innerHTML;
-		user_name = document.getElementById("user_name").innerHTML;
+		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
 		id = document.getElementById("game_id").innerHTML;
 /* convert strings in page to arrays */	
 		var board = (document.getElementById("game_board").innerHTML).split(",");
@@ -315,7 +322,7 @@ $(document).ready(() => {
 	  			  }
 	  	      },
 		      error: function (jqXHR, textStatus, errorThrown) {
-		        alert('error: ' + textStatus + ': ' + errorThrown);
+		        /* alert('ajax error: ' + textStatus + ': ' + errorThrown); */
 		      }
 	  	  });					
 		}, refresh_rate*1000);						
@@ -394,7 +401,7 @@ $(document).ready(() => {
 		var game_status = $("#game_status").val();
 		var turn = parseInt($("#game_turn").val());
 		var comment = $("#game_comment").val();
-		user_name = document.getElementById("user_name").innerHTML;
+		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
 
 /* convert strings in form to arrays */	
 		var board = ($("#game_board").val()).split(","); 
@@ -813,8 +820,6 @@ $(document).ready(() => {
 			hole_x = hole_x - 25;
 			hole_y = hole_y - 25;
 		}
-		/* Get players name and card count */
-		player_name = getPlayerName(color);
 		/* Draw the players name */
 		player_name = getPlayerName(color);
 		if (player_name != "") {
@@ -1723,16 +1728,24 @@ $(document).ready(() => {
 	function getPlayerList(yplayer, gplayer, rplayer, bplayer) {
 		var pList = [];
 	    if (yplayer) {
-	  	  pList.push([yplayer, "yellow"]);
+			name_str = yplayer.split(" ");
+			first_name = name_str[0];
+	  	  	pList.push([first_name, "yellow"]);
 	    }
 	    if (gplayer) {
-	  	  pList.push([gplayer, "green"]);
+			name_str = gplayer.split(" ");
+			first_name = name_str[0];
+	  	  	pList.push([first_name, "green"]);
 	    }
 	    if (rplayer) {
-	  	  pList.push([rplayer, "red"]);
+			name_str = rplayer.split(" ");
+			first_name = name_str[0];
+	  	  	pList.push([first_name, "red"]);
 	    }
 	    if (bplayer) {
-	  	  pList.push([bplayer, "blue"]);
+			name_str = bplayer.split(" ");
+			first_name = name_str[0];
+	  	  	pList.push([first_name, "blue"]);
 	    }
 		return pList;
 	}
@@ -1903,13 +1916,27 @@ function allowDrop(ev) {
 
 function drag(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
+	yplayer = $("#game_yplayer").val();
+  	gplayer = $("#game_gplayer").val();
+	rplayer = $("#game_rplayer").val();
+	bplayer = $("#game_bplayer").val();	 
+    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+	var turn = parseInt($("#game_turn").val());
+	var player = playerList[turn][0].split(" ")[0];
 	var data = ev.dataTransfer.getData("text");
 	x_offset = ev.clientX - $("#" + data).offset().left;
 	y_offset = ev.clientY - $("#" + data).offset().top;
+	hole_element = ev.target.parentElement;
 	if (ev.target.parentElement.nodeName == "BODY") {
 		draggingFrom = "board";
 	} else {
 		draggingFrom = ev.target.parentElement.id;		
+	}
+	draggingObj = dragObjectType(data);
+	if (draggingObj=="marble" && playedCard=="") {
+		alert(player + ", you have to play a card first before moving any marbles.");
+		drag_ok=true;
+		location.reload();
 	}
 }
 
@@ -1924,12 +1951,9 @@ function drop(ev) {
       playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 	  var data = ev.dataTransfer.getData("text");
 	  var turn = parseInt($("#game_turn").val());
-	  var player = playerList[turn][0];
+	  var player = playerList[turn][0].split(" ")[0];
 	  var player_color = playerList[turn][1];
-	  if (performDrop(player_color, data, ev)) {
-	  } else {
-		  console.log("Drop is NOT valid");
-	  }
+	  performDrop(player_color, data, ev);
 	  updateBoardArray();
 	}
 }
@@ -2013,6 +2037,7 @@ function performDrop(player_color, data, ev) {
  		document.body.appendChild(dm);
  		drop_ok = true;
  	}
+
 
 /*  player is moving a marble to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){

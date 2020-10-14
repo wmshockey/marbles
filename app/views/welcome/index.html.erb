@@ -6,17 +6,19 @@
 	
 	<div class= "row">
 		<h1 id="header">Welcome to the Online Game of Marbles</h1>
-		<p>Developed by Warren Shockey 2020</p>
+		<span>Developed by Warren Shockey 2020</span><br>
+		<span>This game is currently under development.  Please report any issues to <%= mail_to "marblemind01@gmail.com" %>. Thank-you!</span>
 	</div>
 
-	<h4 class="col-sm-12"><%= link_to 'Show All Games', '/games'%></h4>
+	<h4 class="col-sm-12"><%= link_to 'Show All My Games', '/games'%></h4>
 	<br><br>
-	<h4>Current Team Standings</h4>
+
 	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
 	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
 	<% teams = ryteams.concat(gbteams).uniq.sort! %>
-	<div class="col-sm-12">Total games played so far: <%= @games.count()%></div>
+	<% current_time = Time.now.to_i%>
 	
+	<h4>Current Team Standings</h4>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
@@ -35,12 +37,12 @@
 						<% @team_games = (@games.select {|g| g.ryteam == t || g.gbteam == t}) %>
 						<% if @team_games[0].ryteam == t %>
 							<td>
-								<div style="display:inline-block; color:red"><%= @team_games[0].rplayer %></div>
+								<div style="display:inline-block; color:red"><%= @team_games[0].rplayer + ", " %></div>
 								<div style="display:inline-block; color:yellow"><%= @team_games[0].yplayer %></div>
 							</td>
 						<% else %>
 							<td>
-								<div style="display:inline-block; color:green"><%= @team_games[0].gplayer %></div>
+								<div style="display:inline-block; color:green"><%= @team_games[0].gplayer + ", " %></div>
 								<div style="display:inline-block; color:blue"><%= @team_games[0].bplayer %></div>
 							</td>
 						<% end %>
@@ -51,6 +53,81 @@
 			<% end %>
 		</tbody>
 	</table>
+	
+	<h4>Current Individual Standings</h4>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Games</th>
+				<th>Started</td>
+				<th>Finished</th>
+				<th>Active Now</th>
+				<th>Wins</th>
+				<th>Losses</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<% @users.each do |u| %>
+				<% total = 0 %>
+				<% started = 0 %>
+				<% finished = 0 %>				
+				<% active = 0%>
+				<% wins = 0 %>
+				<% losses = 0 %>				
+				<% @games.each do |g| %>
+					<% players = g.yplayer+","+g.gplayer+","+g.rplayer+","+g.bplayer %>
+					<% player_array = players.split(",") %>
+					<% player_array = player_array.reject { |c| c.empty?} %>
+					<% if player_array.include?(u.name)%>
+						<% total = total + 1 %>
+						<% if g.status=="Started"%>
+							<% started = started + 1 %>
+						<% elsif g.status=="Finished"%>
+							<% finished = finished + 1%>
+							<% if g.winner == u.name%>
+								<% wins = wins + 1%>
+							<% else%>
+								<% losses = losses + 1%>
+							<% end %>
+						<% end %>
+						<% if (current_time - g.updated_at.to_time.to_i) <= 300 %>
+							<% active = active + 1 %>
+						<% end %>
+					<% end %>
+				<% end %>
+				<tr>
+					<td><%= u.name%></td>
+					<td><%= total %></td>
+					<td><%= started %></td>
+					<td><%= finished%></td>
+					<td><%= active%></td>
+					<td><%= wins%></td>
+					<td><%= losses%></td>
+				</tr>
+			<% end %>
+			<% total_started = 0%>
+			<% total_finished = 0%>
+			<% total_active = 0%>	
+			<% @games.each do |g| %>
+				<% if g.status=="Started"%>
+					<% total_started = total_started + 1 %>
+				<% elsif g.status=="Finished"%>
+					<% total_finished = total_finished + 1%>
+				<% end %>
+				<% if (current_time - g.updated_at.to_time.to_i) <= 300 %>
+					<% total_active = total_active + 1%>
+				<% end %>
+			<% end %>				
+			<td><%= "Total"%></td>
+			<td><%= @games.count %></td>
+			<td><%= total_started%></td>
+			<td><%= total_finished%></td>
+			<td><%= total_active%></td>
+		</tbody>
+	</table>
+									
 
 </body>
 

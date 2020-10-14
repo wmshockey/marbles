@@ -53,11 +53,7 @@
     <span class="col-sm-2"></span>
 </div>
 <br><br>
-<div class="row">
-	<div class="col-sm-2 top"><%= form.label "Page Refresh Rate (sec)"%> </div>
-	<div class="col-sm-1 top"><%= form.number_field :refresh, {min: 2, max: 60, value: 5} %></div>
-	<div class="col-sm-9">(Frequency of page refresh checks.  5 seconds is usually fast enough.)</div>
-</div>
+
 
 <br>
 <div class="row">
@@ -132,6 +128,12 @@
 	<div class="row">
 		<div class="col-sm-2 top"><%= "Plays Made"%> </div>
 		<div class="col-sm-10 top"><%= form.number_field :plays %></div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2 top"><%= form.label "Page Refresh Rate (sec)"%> </div>
+		<div class="col-sm-1 top"><%= form.number_field :refresh, {min: 2, max: 60, value: 5} %></div>
+		<div class="col-sm-9">(Frequency of page refresh checks.  5 seconds is usually fast enough.)</div>
 	</div>
 
 

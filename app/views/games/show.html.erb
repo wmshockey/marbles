@@ -17,7 +17,7 @@
 				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success blinking' %>
 			<% else %>
 				<span class = "text-warning bg-warning">
-					<%= "** Waiting for " + @player + " **"%>
+					<%= "** Waiting for " + @player.split(" ")[0] + " **"%>
 				</span>
 			<% end %>
 		</span>
