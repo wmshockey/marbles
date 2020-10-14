@@ -80,13 +80,23 @@
 					<% players = g.yplayer+","+g.gplayer+","+g.rplayer+","+g.bplayer %>
 					<% player_array = players.split(",") %>
 					<% player_array = player_array.reject { |c| c.empty?} %>
+					<% winning_players = []%>
 					<% if player_array.include?(u.name)%>
 						<% total = total + 1 %>
 						<% if g.status=="Started"%>
 							<% started = started + 1 %>
 						<% elsif g.status=="Finished"%>
 							<% finished = finished + 1%>
-							<% if g.winner == u.name%>
+							<% if g.winner == g.ryteam %>
+								<% winning_players[0] = g.rplayer%>
+								<% winning_players[1] = g.yplayer%>
+							<% elsif g.winner == g.gbteam%>
+								<% winning_players[0] = g.gplayer%>
+								<% winning_players[1] = g.bplayer%>
+							<% else%>
+								<% winning_players[0] = g.winner %>
+							<% end %>
+							<% if (winning_players.include?(u.name)) %>
 								<% wins = wins + 1%>
 							<% else%>
 								<% losses = losses + 1%>
