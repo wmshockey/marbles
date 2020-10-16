@@ -132,8 +132,8 @@
 	
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Page Refresh Rate (sec)"%> </div>
-		<div class="col-sm-1 top"><%= form.number_field :refresh, {min: 2, max: 60, value: 5} %></div>
-		<div class="col-sm-9">(Frequency of page refresh checks.  5 seconds is usually fast enough.)</div>
+		<div class="col-sm-1 top"><%= form.number_field :refresh, {min: 1, max: 60, value: 2} %></div>
+		<div class="col-sm-9">(Frequency of page refresh checks.  2 seconds is fast enough.)</div>
 	</div>
 
 
