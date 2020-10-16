@@ -322,7 +322,7 @@ $(document).ready(() => {
 	  			  }
 	  	      },
 		      error: function (jqXHR, textStatus, errorThrown) {
-		        /* alert('ajax error: ' + textStatus + ': ' + errorThrown); */
+				  alert('ajax error: ' + textStatus + ': ' + errorThrown);
 		      }
 	  	  });					
 		}, refresh_rate*1000);						
@@ -351,7 +351,7 @@ $(document).ready(() => {
 
 /* show the card on top of the discard pile */
 		if (discardpile.length != 0) {
-	  	  discard_background = "url(/cards/" + discardpile[0] + ".png)";
+	  	  discard_background = "url(/assets/" + discardpile[0] + ".png)";
 	  	} else {
 	  	  discard_background = "discard_background.png";
 	  	}	  
@@ -495,23 +495,23 @@ $(document).ready(() => {
 		}
 		for (i=0; i<=4; i++) {
 			if (playerhand[i]) {
-				cardImage = "/cards/" + playerhand[i] + ".png";
+				cardImage = "/assets/" + playerhand[i] + ".png";
 				spot = "hand";
 				placeCard(spot, playerhand[i], cardImage);
 			}
 		}
 		if (discardpile[0]) {
-	  	  discard_background = "url(/cards/" + discardpile[0] + ".png)";
+	  	  discard_background = "url(/assets/" + discardpile[0] + ".png)";
 	  	  $("#discardpile").css('backgroundImage', discard_background);
 		}
 	}
 
 	function placeCard(spot, card_id) {
 		var c = document.createElement("IMG");
-		card_image = "/cards/" + card_id + ".png";
+		card_image = "/assets/" + card_id + ".png";
 		c.setAttribute("id", card_id);
 		c.className = "card";
-		c.src = "/cards/" + card_id + ".png";
+		c.src = "/assets/" + card_id + ".png";
 		c.src = card_image;
 		c.setAttribute("draggable", "true");
 		c.setAttribute("ondragstart", "drag(event)");
@@ -878,7 +878,7 @@ $(document).ready(() => {
 		for (i=0; i<=96; i++) {
 			if (board[i]) {
 				marble_id = board[i];
-				marble_image = "/" + marble_id.substring(0,1) + "_marble.png"
+				marble_image = "/assets/" + marble_id.substring(0,1) + "_marble.png"
 				placeMarble(i, marble_id, marble_image);
 			}
 		}
@@ -933,7 +933,7 @@ $(document).ready(() => {
 			} else {
 				hole_image = "empty_hole.png"
 			}
-			hole_image = "url(/" + hole_image + ")";
+			hole_image = "url(/assets/" + hole_image + ")";
 			d.style.backgroundImage = hole_image;
 			/* place the hole on the board */
 			document.body.appendChild(d);

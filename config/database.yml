@@ -23,8 +23,9 @@ development:
 #  <<: *default
 #  database: Marbles_test
 
-#production:
-#  <<: *default
-#  database: Marbles_prod
+production:
+  <<: *default
+  database: Marbles_prod
+
 #  username: marbles_root
 #  password: <%= ENV['MARBLES_DATABASE_PASSWORD'] %>
