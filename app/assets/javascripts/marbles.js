@@ -270,7 +270,7 @@ $(document).ready(() => {
 		var turn = parseInt(document.getElementById("game_turn").innerHTML);
 		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
 		var plays = parseInt(document.getElementById('game_plays').innerHTML);
-		var comment = document.getElementById("game_comment").innerHTML;
+		comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
 		id = document.getElementById("game_id").innerHTML;
 /* convert strings in page to arrays */	
@@ -305,9 +305,9 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
-/* Check every few seconds to see if player has made a move (plays count incremented).  Frequency of checks set by refresh_rate. */
+/* Check every 2 seconds to see if player has made a move (plays count incremented).  Frequency of checks set by refresh_rate. */
 		if (refresh_rate < 2) {
-			refresh_rate = 2;			
+			refresh_rate = 2;	
 		}
 		setInterval(function() {			
 	  	    $.ajax({
@@ -322,7 +322,7 @@ $(document).ready(() => {
 	  			  }
 	  	      },
 		      error: function (jqXHR, textStatus, errorThrown) {
-				  alert('ajax error: ' + textStatus + ': ' + errorThrown);
+				  /*alert('ajax error: ' + textStatus + ': ' + errorThrown); */
 		      }
 	  	  });					
 		}, refresh_rate*1000);						
@@ -357,7 +357,6 @@ $(document).ready(() => {
 	  	}	  
 		discardElement = document.getElementById("discardpile");
 		discardElement.style.backgroundImage = discard_background;
-		document.body.appendChild(discardElement);
 	  	 
 /* Display cards of person who is logged in */
 		if (user_color != ""){
@@ -393,6 +392,7 @@ $(document).ready(() => {
 */
 
 	if (header == "Marbles Game") {	
+		
 /* Pull content from page into internal storage */
 		
 		var c = document.getElementById("myCanvas");
@@ -997,6 +997,16 @@ $(document).ready(() => {
 		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 60).toString() + "px";
 		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
 		document.body.appendChild(d);
+		
+	/* Draw the comment area in between Discards and Deck piles */
+		var d = document.createElement("div");
+		d.setAttribute("id", "comment");
+		d.style.position = "absolute";
+		d.className = "comment";
+		d.innerHTML = comment;
+		d.style.left = ( ((centre_x + 15) -60).toString() + "px");
+		d.style.top =  ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		document.body.appendChild(d);
 
 	/* Draw the deck area i.e. deal pile */
 		var d = document.createElement("div");
@@ -1329,6 +1339,11 @@ $(document).ready(() => {
 			return false;
 		}	
 
+		/* If a card was played then clear the comment field */
+		if (playedCard!="") {
+			$("#game_comment").val("");
+		}
+
 		/* Check if no card played and no marbles moved */
 		if (playedCard == "" && moved_count == 0) {
 			if (confirm("Press the Ok button to confirm you can't play")) {
@@ -1365,6 +1380,8 @@ $(document).ready(() => {
 				}
 				discardpile = td;				
 				$("#game_discardpile").val(discardpile.toString());
+				/* save the discarded playerhand as a comment so it can be shown to other players */
+				$("#game_comment").val(playerhand.join(" "));
 				return true;
 			} else {
 				return false;
@@ -2363,17 +2380,17 @@ function get_paths() {
 
 	paths[64]=[13,14,15,16,25,26,27,28,29,30,31,32,33,34,35,36];
 	paths[65]=[13,14,15,17,18,19,20];
-	paths[66]=[13];
+	paths[66]=[13,14,15,16,25,26,27,28,29,30,31,0];
 	paths[67]=[13,12,11,10,9];
 
 	paths[68]=[14,15,16,25,26,27,28,29,30,31,32,33,34,35,36,37];
 	paths[69]=[14,15,17,18,19,20];
-	paths[70]=[14];
+	paths[70]=[14,15,16,25,26,27,28,29,30,31,0];
 	paths[71]=[14,13,12,11,10];
 
 	paths[72]=[15,16,25,26,27,28,29,30,31,32,33,34,35,36,37,38];
 	paths[73]=[15,17,18,19,20];
-	paths[74]=[15];
+	paths[74]=[15,16,25,26,27,28,29,30,31,0];
 	paths[75]=[15,14,13,12,11];
 
 	paths[76]=[16,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39];
