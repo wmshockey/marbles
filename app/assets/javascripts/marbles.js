@@ -47,7 +47,7 @@ $(document).ready(() => {
 			discardpile = [];
 			
 /* Initialize the screen positions of players hands, discard pile and deck */
-			screencoords = ["365", "435", "365", "435", "365", "435", "365", "435"];
+			screencoords = ["290", "435", "290", "435", "290", "435", "290", "435"];
 			$("#game_screen").val(screencoords);
 			
 /* Deal cards for first time */
@@ -250,9 +250,6 @@ $(document).ready(() => {
 /* Initialize the board to all empty */
 		board.fill("");
 
-/* Intiailize the screen coordinates for the players hands, discard pile and deck */
-		screencoords = ["365", "435", "365", "435", "365", "435", "365", "435"];
-		$("#game_screen").val(screencoords.toString());
 	}
 
 /*	
@@ -268,7 +265,7 @@ $(document).ready(() => {
 		var game_name = document.getElementById("game_name").innerHTML;
 		var game_status = document.getElementById("game_status").innerHTML;
 		var turn = parseInt(document.getElementById("game_turn").innerHTML);
-		var refresh_rate = parseInt(document.getElementById('game_refresh').innerHTML);
+		var refresh = parseInt(document.getElementById('game_refresh').innerHTML);
 		var plays = parseInt(document.getElementById('game_plays').innerHTML);
 		comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
@@ -305,27 +302,27 @@ $(document).ready(() => {
 		player = playerList[turn][0];
 		turn_color = playerList[turn][1];
 
-/* Check every 2 seconds to see if player has made a move (plays count incremented).  Frequency of checks set by refresh_rate. */
-		if (refresh_rate < 2) {
-			refresh_rate = 2;	
+/* Check every 5 seconds to see if player has made a move (plays count incremented). */
+		if (refresh==1) {
+			setInterval(function() {			
+		  	    $.ajax({
+				  url: "/games/"+id+"/query",
+		  		  dataType: 'json',
+		  	      success: function(data) {
+					  var old_plays = document.getElementById("game_plays").innerHTML;
+		  			  var new_plays = data.plays;
+		  			  if ( new_plays != old_plays) {
+		  				location.reload();
+						old_plays = new_plays;
+		  			  }
+		  	      },
+			      error: function (jqXHR, textStatus, errorThrown) {
+					 /*alert('ajax error: ' + textStatus + ': ' + errorThrown); */
+			      }
+		  	  });					
+			}, 5000);
 		}
-		setInterval(function() {			
-	  	    $.ajax({
-			  url: "/games/"+id+"/query",
-	  		  dataType: 'json',
-	  	      success: function(data) {
-				  var old_plays = document.getElementById("game_plays").innerHTML;
-	  			  var new_plays = data.plays;
-	  			  if ( new_plays != old_plays) {
-	  				location.reload();
-					old_plays = new_plays;
-	  			  }
-	  	      },
-		      error: function (jqXHR, textStatus, errorThrown) {
-				  /*alert('ajax error: ' + textStatus + ': ' + errorThrown); */
-		      }
-	  	  });					
-		}, refresh_rate*1000);						
+					
 
 /* Get the current user's color */
 		user_color_list = [];
@@ -955,8 +952,6 @@ $(document).ready(() => {
 		coords = getScreenCoords(user_color);
 		d.style.left = coords[0] + "px";
 		d.style.top = coords[1] + "px";
-		d.style.width = "100px";
-		d.style.height = "120px";
 		d.style.border = "dashed 1px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
@@ -1003,7 +998,7 @@ $(document).ready(() => {
 		d.setAttribute("id", "comment");
 		d.style.position = "absolute";
 		d.className = "comment";
-		d.innerHTML = comment;
+		d.innerHTML = comment.replace(/&amp;/g, "&");
 		d.style.left = ( ((centre_x + 15) -60).toString() + "px");
 		d.style.top =  ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
 		document.body.appendChild(d);
@@ -1381,7 +1376,8 @@ $(document).ready(() => {
 				discardpile = td;				
 				$("#game_discardpile").val(discardpile.toString());
 				/* save the discarded playerhand as a comment so it can be shown to other players */
-				$("#game_comment").val(playerhand.join(" "));
+				comment = formatComment(playerhand);
+				$("#game_comment").val(comment);
 				return true;
 			} else {
 				return false;
@@ -1916,6 +1912,35 @@ $(document).ready(() => {
 		} else {
 			return false;
 		}					
+	}
+
+	function formatComment(playerhand) {
+		for (i=0; i<playerhand.length; i++) {
+			card_code = playerhand[i];
+			card_code_length = card_code.length;
+			card_code_suit = card_code.substring(card_code_length-1,card_code_length);
+			card_code_nbr = card_code.substring(0,card_code_length-1);
+			if (card_code_suit=="D") {
+				playerhand[i] = A2U(card_code_nbr) + "&diams;";
+			} else if (card_code_suit=="H") {
+				playerhand[i] = A2U(card_code_nbr) + "&hearts;";
+			} else if (card_code_suit=="S") {
+				playerhand[i] = A2U(card_code_nbr) + "&spades;";
+			} else if (card_code_suit=="C") {
+				playerhand[i] = A2U(card_code_nbr) + "&clubs;";
+			} else if (["J1","J2","J3","J4"].includes(playerhand[i])) {
+				playerhand[i] = "&#129313;";
+			}
+		}
+		return playerhand.join(" ");		
+	}
+
+	function A2U(str) {
+	    var reserved = '';
+	    for (var i = 0; i < str.length; i++) {
+	        reserved += '&#' + str.charCodeAt(i) + ';';
+	    }
+	    return reserved;
 	}
 
 

@@ -1,3 +1,6 @@
+<head>
+	<meta charset="UTF-8"/>
+</head>
 
 <% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name%>
 
@@ -19,7 +22,10 @@
 				<span class = "text-warning bg-warning">
 					<%= "** Waiting for " + @player.split(" ")[0] + " **"%>
 				</span>
+				<br>
+				<div><%= button_to "Refresh", game_path(@game), method: :get, class:'btn btn-warning'%></div>
 			<% end %>
+
 		</span>
 	<% end %>
 

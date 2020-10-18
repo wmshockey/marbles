@@ -51,8 +51,8 @@
 	</div>
 	
 	<div class="row">
-		<div class="col-sm-2 top"><%= form.label "Refresh rate (sec)"%> </div>
-		<div class="col-sm-2 top"><%= form.number_field :refresh %></div>
+		<div class="col-sm-2 top"><%= form.label "Auto Refresh"%> </div>
+		<div class="col-sm-1 top"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
 		<div class="col-sm-2 top", style="text-align:right"><%= form.label "Winner:" %> </div>
 		<div class="col-sm-2 top"><%= form.text_field :winner %></div>
 		<div class="col-sm-6"></div>
@@ -108,7 +108,8 @@
 	<br><br>
 	
     <div class="row" >
-      <%= form.submit "Save", class:"btn btn-danger", id:"Save"%>
+      <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger", id:"Save"%></div>
+      <div class="col-sm-10"><%= link_to 'Back', games_path%></div>
     </div>
 	
 

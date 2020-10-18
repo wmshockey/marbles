@@ -12,17 +12,6 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-    @user_name = current_user.name
-    turn = @game.turn.to_i
-    get_plist
-    if (@plist.include?(@user_name))
-      @player = @plist[turn]
-    else
-      respond_to do |format|
-        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
-        format.json { head :no_content }
-      end
-    end
   end
 
   # GET /games/1/query
@@ -30,7 +19,6 @@ class GamesController < ApplicationController
   def query
     render json: @game
   end
-
 
   # GET /games/new
   def new
@@ -40,40 +28,14 @@ class GamesController < ApplicationController
 
   # GET /games/1/play
   def play
-    @user_name = current_user.name
-    turn = @game.turn.to_i
-    get_plist
-    if (@plist.include?(@user_name))
-      @player = @plist[turn]
-    else
-      respond_to do |format|
-        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
-        format.json { head :no_content }
-      end
-    end
   end
 
   # GET /games/1/edit
   def edit
-    @user_name = current_user.name
-    turn = @game.turn.to_i
-    get_plist
-    if (@plist.include?(@user_name))
-      @player = @plist[turn]
-    else
-      respond_to do |format|
-        format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
-        format.json { head :no_content }
-      end
-    end
   end
 
   # Get /game/1/debug
   def debug
-    @user_name = current_user.name
-    turn = @game.turn.to_i
-    get_plist
-    @player = @plist[turn]
   end  
 
 
@@ -81,7 +43,6 @@ class GamesController < ApplicationController
   # POST /games.json
   def create
     @game = Game.new(game_params)
-
     @game.start_date = DateTime.now.strftime('%Y-%m-%dT%H:%M')
     respond_to do |format|
       if @game.save
@@ -111,26 +72,29 @@ class GamesController < ApplicationController
   # DELETE /games/1
   # DELETE /games/1.json
   def destroy    
-    @user_name = current_user.name
-    get_plist
-    if (@plist.include?(@user_name))
       @game.destroy
       respond_to do |format|
         format.html { redirect_to games_url, notice: '** Game was successfully destroyed. **' }
         format.json { head :no_content }
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to games_url, alert: '** Cannot delete.  You are not a player in this game. **' }
-        format.json { head :no_content }
-      end
-    end 
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
       @game = Game.find(params[:id])
+      @user_name = current_user.name
+      @user_email = current_user.email
+      turn = @game.turn.to_i
+      get_plist
+      if (@plist.include?(@user_name) || @user_email == "wmshockey@gmail.com")
+        @player = @plist[turn]
+      else
+        respond_to do |format|
+          format.html { redirect_to games_url, alert: '** You are not a player in this game. **' }
+          format.json { head :no_content }
+        end
+      end
     end
  
     def get_plist 
