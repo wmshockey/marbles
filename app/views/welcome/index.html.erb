@@ -18,6 +18,27 @@
 	<% teams = ryteams.concat(gbteams).uniq.sort! %>
 	<% current_time = Time.now.to_i%>
 	
+	<% team_stats = []%>
+	<% i = 0%>
+	<% while i<teams.count do %> 
+		<% t = teams[i] %>
+		<% @team_games = (@games.select {|g| (g.ryteam == t || g.gbteam == t) && g.status="Finished"}) %>
+		<% if @team_games[0].ryteam == t %>
+			<% player1 = @team_games[0].rplayer%>
+			<% player2 = @team_games[0].yplayer%>
+		<% else%>
+			<% player1 = @team_games[0].gplayer%>
+			<% player2 = @team_games[0].bplayer%>
+		<% end %>
+		<% num_games = @team_games.count()%>
+		<% num_wins = (@games.select {|g| g.winner == t}).count()%>
+		<% num_losses = num_games - num_wins %>
+		<% team_stats[i] = [t, player1, player2, num_games, num_wins, num_losses]%>
+		<% i = i + 1%>
+	<% end %>
+
+	<% team_stats.sort.reverse! { |a,b| a[4] <=> b[4] }%>
+	
 	<h4>Current Team Standings</h4>
 	<table class="table table-bordered">
 		<thead>
@@ -26,118 +47,82 @@
 				<th>Players</th>
 				<th>Games Played</td>
 				<th>Wins</th>
+				<th>Losses</td>
 			</tr>
 		</thead>
-		
+	
 		<tbody>
-			<% teams.each do |t| %>
-				<% if t != "" %>
+			<% team_stats.each do |t| %>
+				<% if t[0] != "" %>
 					<tr>
-						<td><%= t%></td>
-						<% @team_games = (@games.select {|g| g.ryteam == t || g.gbteam == t}) %>
-						<% if @team_games[0].ryteam == t %>
-							<td>
-								<div style="display:inline-block; color:red"><%= @team_games[0].rplayer + ", " %></div>
-								<div style="display:inline-block; color:yellow"><%= @team_games[0].yplayer %></div>
-							</td>
-						<% else %>
-							<td>
-								<div style="display:inline-block; color:green"><%= @team_games[0].gplayer + ", " %></div>
-								<div style="display:inline-block; color:blue"><%= @team_games[0].bplayer %></div>
-							</td>
-						<% end %>
-						<td><%= @team_games.count()%></td>
-						<td><%= (@games.select {|g| g.winner == t}).count()%></td>
+						<td><%= t[0]%></td>
+						<td><%= t[1]%>, <%= t[2]%></td>
+						<td><%= t[3]%></td>
+						<td><%= t[4]%></td>
+						<td><%= t[5]%></td>
 					</tr>
 				<% end %>
 			<% end %>
 		</tbody>
 	</table>
+
+
+	<% player_stats = []%>
+	<% winning_players = []%>
+	<% i = 0%>
+	<% while i<@users.count do %> 
+		<% player = @users[i].name %>
+		<% @player_games = (@games.select {|g| ([g.rplayer, g.yplayer, g.gplayer, g.bplayer].include?(player)) && g.status="Finished"}) %>
+		<% num_games = @player_games.count()%>
+		<% wins = 0%>
+		<% losses = 0%>
+		<% @player_games.each do |g| %>
+			<% if g.winner == g.ryteam %>
+				<% winning_players[0] = g.rplayer%>
+				<% winning_players[1] = g.yplayer%>
+			<% elsif g.winner == g.gbteam%>
+				<% winning_players[0] = g.gplayer%>
+				<% winning_players[1] = g.bplayer%>
+			<% else%>
+				<% winning_players[0] = g.winner %>
+				<% winning_players[1] = "" %>
+			<% end %>
+			<% if (winning_players.include?(player)) %>
+				<% wins = wins + 1%>
+			<% else%>
+				<% losses = losses + 1%>
+			<% end %>
+		<% end %>
+		<% player_stats[i] = [player, num_games, wins, losses]%>
+		<% i = i + 1%>
+	<% end %>
+
+	<% player_stats.sort.reverse! { |a,b| a[4] <=> b[4] }%>
 	
 	<h4>Current Individual Standings</h4>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Games</th>
-				<th>Started</td>
-				<th>Finished</th>
-				<th>Active Now</th>
+				<th>Player</th>
+				<th>Games Played</th>
 				<th>Wins</th>
 				<th>Losses</th>
 			</tr>
 		</thead>
 		
 		<tbody>
-			<% @users.each do |u| %>
-				<% total = 0 %>
-				<% started = 0 %>
-				<% finished = 0 %>				
-				<% active = 0%>
-				<% wins = 0 %>
-				<% losses = 0 %>				
-				<% @games.each do |g| %>
-					<% players = g.yplayer+","+g.gplayer+","+g.rplayer+","+g.bplayer %>
-					<% player_array = players.split(",") %>
-					<% player_array = player_array.reject { |c| c.empty?} %>
-					<% winning_players = []%>
-					<% if player_array.include?(u.name)%>
-						<% total = total + 1 %>
-						<% if g.status=="Started"%>
-							<% started = started + 1 %>
-						<% elsif g.status=="Finished"%>
-							<% finished = finished + 1%>
-							<% if g.winner == g.ryteam %>
-								<% winning_players[0] = g.rplayer%>
-								<% winning_players[1] = g.yplayer%>
-							<% elsif g.winner == g.gbteam%>
-								<% winning_players[0] = g.gplayer%>
-								<% winning_players[1] = g.bplayer%>
-							<% else%>
-								<% winning_players[0] = g.winner %>
-							<% end %>
-							<% if (winning_players.include?(u.name)) %>
-								<% wins = wins + 1%>
-							<% else%>
-								<% losses = losses + 1%>
-							<% end %>
-						<% end %>
-						<% if (current_time - g.updated_at.to_time.to_i) <= 300 %>
-							<% active = active + 1 %>
-						<% end %>
-					<% end %>
-				<% end %>
+			<% player_stats.each do |u| %>
 				<tr>
-					<td><%= u.name%></td>
-					<td><%= total %></td>
-					<td><%= started %></td>
-					<td><%= finished%></td>
-					<td><%= active%></td>
-					<td><%= wins%></td>
-					<td><%= losses%></td>
+					<td><%= u[0]%></td>
+					<td><%= u[1]%></td>
+					<td><%= u[2]%></td>
+					<td><%= u[3]%></td>
 				</tr>
 			<% end %>
-			<% total_started = 0%>
-			<% total_finished = 0%>
-			<% total_active = 0%>	
-			<% @games.each do |g| %>
-				<% if g.status=="Started"%>
-					<% total_started = total_started + 1 %>
-				<% elsif g.status=="Finished"%>
-					<% total_finished = total_finished + 1%>
-				<% end %>
-				<% if (current_time - g.updated_at.to_time.to_i) <= 300 %>
-					<% total_active = total_active + 1%>
-				<% end %>
-			<% end %>				
 			<td><%= "Total"%></td>
 			<td><%= @games.count %></td>
-			<td><%= total_started%></td>
-			<td><%= total_finished%></td>
-			<td><%= total_active%></td>
 		</tbody>
-	</table>
-									
+	</table>									
 
 </body>
 
