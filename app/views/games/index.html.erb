@@ -20,7 +20,7 @@
 
   <tbody>
 	<% current_time = Time.now.to_i%>
-    <% @games.order(start_date: :desc).each do |game| %>
+    <% @games.order(created_at: :desc).each do |game| %>
 		<% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>	
 		<% if players.include?(@user_name) || @user_email == "wmshockey@gmail.com" %>
 	      <tr>
