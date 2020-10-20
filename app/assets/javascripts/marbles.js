@@ -6,8 +6,8 @@
 	All rights reserved
 */
 
-$(document).ready(() => {
-  
+$(document).ready(() => {  
+
 /* Listen for player hitting the Save button */
 
   $('[id="Save"]').on("click", function(){
@@ -59,6 +59,7 @@ $(document).ready(() => {
 			$("#game_redhand").val(redhand.toString());
 			$("#game_bluehand").val(bluehand.toString());
 			$("#game_yellowhand").val(yellowhand.toString());
+
 		}
 		
 
@@ -752,7 +753,7 @@ $(document).ready(() => {
 		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x - 100;
-			y = hole_y + 50;
+			y = hole_y + 40;
 			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
 			x = hole_x - 100 + 10;
 			y = hole_y + 50 + 25;
@@ -786,7 +787,7 @@ $(document).ready(() => {
 		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x - 60;
-			y = hole_y - 60;
+			y = hole_y - 70;
 			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
 			card_count = getCardCount(color);
 			x = hole_x - 60 + 10;
@@ -821,7 +822,7 @@ $(document).ready(() => {
 		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x + 80;
-			y = hole_y - 50;
+			y = hole_y - 60;
 			labelBoard(x, y, player_name, color, "playername", "rightPlayer");
 			card_count = getCardCount(color);
 			x = hole_x + 80 + 10;
@@ -857,7 +858,7 @@ $(document).ready(() => {
 		player_name = getPlayerName(color);
 		if (player_name != "") {
 			x = hole_x + 20;
-			y = hole_y + 60;
+			y = hole_y + 50;
 			labelBoard(x, y, player_name, color, "playername", "lowerPlayer");
 			/* Draw the players card count */
 			card_count = getCardCount(color);
@@ -942,17 +943,16 @@ $(document).ready(() => {
 		card_width = 65;
 		card_height = 100;
 		coords = [];
+
 	/* Draw the card hand area */
 		var d = document.createElement("div");
 		d.setAttribute("id", "hand");
 		d.setAttribute("draggable", "true");
 		d.setAttribute("ondragstart", "drag(event)");
-		d.className = "cardspot";
-		d.style.position = "absolute";
+		d.className = "cardhand";
 		coords = getScreenCoords(user_color);
 		d.style.left = coords[0] + "px";
 		d.style.top = coords[1] + "px";
-		d.style.border = "dashed 1px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);			
@@ -962,11 +962,8 @@ $(document).ready(() => {
 		d.setAttribute("id", "discardpile");
 		d.setAttribute("draggable", "false");
 		d.className = "discardspot";
-		d.style.position = "absolute";
 		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 33).toString() + "px";
 		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
-		d.style.width = "65px";
-		d.style.height = "100px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -996,7 +993,6 @@ $(document).ready(() => {
 	/* Draw the comment area in between Discards and Deck piles */
 		var d = document.createElement("div");
 		d.setAttribute("id", "comment");
-		d.style.position = "absolute";
 		d.className = "comment";
 		d.innerHTML = comment.replace(/&amp;/g, "&");
 		d.style.left = ( ((centre_x + 15) -60).toString() + "px");
@@ -1007,12 +1003,8 @@ $(document).ready(() => {
 		var d = document.createElement("div");
 		d.setAttribute("id", "deck");
 		d.setAttribute("draggable", "false");
-		d.className = "cardspot";
-		d.style.position = "absolute";
 		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 195).toString() + "px";
 		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
-		d.style.width = "65px";
-		d.style.height = "100px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -1942,7 +1934,6 @@ $(document).ready(() => {
 	    }
 	    return reserved;
 	}
-
 
 });
 
