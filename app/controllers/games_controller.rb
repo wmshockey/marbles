@@ -24,6 +24,7 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
     @users = User.all
+    @games = Game.all
   end
 
   # GET /games/1/play
@@ -32,6 +33,7 @@ class GamesController < ApplicationController
 
   # GET /games/1/edit
   def edit
+    @games = Game.all
   end
 
   # Get /game/1/debug

@@ -13,14 +13,19 @@
     </div>
   <% end %>
 
+	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
+	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
+	<% @teams = ryteams.concat(gbteams).uniq.sort! %>
+
 <body class="container">
 	
 	<div class="row border border-primary">
 	  <div class="col-sm-2"></div>
 	  <div class="col-sm-2"><%= form.label "Game:" %><%= form.text_field :name %></div> 
 	  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
-	  <div class="col-sm-2"><%= form.label :turn %><%= ": " + @plist[@game.turn.to_i] %></div>
-	  <div class="col-sm-4"></div>
+	  <div class="col-sm-2"><%= form.label :turn %><%= form.number_field :turn%></div>
+	  <div class="col-sm-2"><%= form.label :winner%><%= form.text_field :winner %> </div>
+	  <div class="col-sm-2"></div>
 	</div>
 
 	<br>
@@ -42,20 +47,25 @@
 		<div class="col-sm-2"><%= form.text_field :bplayer %></div>
 	    <span class="col-sm-2"></span>
 	</div>
-	
+
 	<div class="row">
-		<div class="col-sm-2"><%= form.label "Teams"%></div>
-		<div class="col-sm-4"><%= form.text_field :ryteam, size: "50"%></div>
-		<div class="col-sm-4"><%= form.text_field :gbteam, size: "50"%></div>
-	    <span class="col-sm-2"></span>
+		<div class="col-sm-2"><%= form.label "Team names"%></div>
+		<div id="ryteam">		
+			<span class="col-sm-3"><%= form.text_field :ryteam, :style => "width:260px"%></span>
+			<span id="ryselect" class="col-sm-1"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
+		</div>
+		<div id="gbteam">
+			<span class="col-sm-3"><%= form.text_field :gbteam, :style => "width:260px"%></span>
+			<span id="gbselect" class="col-sm-1"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
+		</div>
+	    <div class="col-sm-2"></div>
 	</div>
+	<br>
 	
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Auto Refresh"%> </div>
 		<div class="col-sm-1 top"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
-		<div class="col-sm-2 top", style="text-align:right"><%= form.label "Winner:" %> </div>
-		<div class="col-sm-2 top"><%= form.text_field :winner %></div>
-		<div class="col-sm-6"></div>
+		<div class="col-sm-9"></div>
 	</div>
 	
 	<div class="hidden">
@@ -111,7 +121,19 @@
       <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger", id:"Save"%></div>
       <div class="col-sm-10"><%= link_to 'Back', games_path%></div>
     </div>
-	
+
+<script>
+  $("#ryselect").on("change", function(){
+	  selected_team = $("#game_selected_ryteam").val();
+	  $("#game_ryteam").val(selected_team);
+	  $("#game_selected_ryteam").val("");
+  });
+  $("#gbselect").on("change", function(){
+	  selected_team = $("#game_selected_gbteam").val();
+	  $("#game_gbteam").val(selected_team);
+	  $("#game_selected_gbteam").val("");
+  });
+</script>	
 
 </body>
 <% end %>

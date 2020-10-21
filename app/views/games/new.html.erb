@@ -15,6 +15,9 @@
     </div>
   <% end %>
 
+	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
+	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
+	<% @teams = ryteams.concat(gbteams).uniq.sort! %>
 
 <body class="container">
 
@@ -48,18 +51,24 @@
 	
 <div class="row">
 	<div class="col-sm-2"><%= form.label "Team names"%></div>
-	<div class="col-sm-4"><%= form.text_field :ryteam, size: "48"%></div>
-	<div class="col-sm-4"><%= form.text_field :gbteam, size: "48"%></div>
+	<div id="ryteam">		
+		<span class="col-sm-3"><%= form.text_field :ryteam, :style => "width:260px"%></span>
+		<span id="ryselect" class="col-sm-1"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
+	</div>
+	<div id="gbteam">
+		<span class="col-sm-3"><%= form.text_field :gbteam, :style => "width:260px"%></span>
+		<span id="gbselect" class="col-sm-1"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
+	</div>
     <span class="col-sm-2"></span>
 </div>
-<br><br>
+
+<br>
 
 <div class="row">
-	<div class="col-sm-2 top"><%= form.label "Auto Refresh"%> </div>
-	<div class="col-sm-1 top"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
+	<div class="col-sm-2"><%= form.label "Auto Refresh"%> </div>
+	<div class="col-sm-1"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
 	<div class="col-sm-9">Turn automatic display refresh off if you have a slow network</div>
 </div>
-
 
 <br>
 <div class="row">
@@ -138,9 +147,21 @@
 	
 
 </div>
-
-
 <br>
+
+<script>
+  $("#ryselect").on("change", function(){
+	  selected_team = $("#game_selected_ryteam").val();
+	  $("#game_ryteam").val(selected_team);
+	  $("#game_selected_ryteam").val("");
+  });
+  $("#gbselect").on("change", function(){
+	  selected_team = $("#game_selected_gbteam").val();
+	  $("#game_gbteam").val(selected_team);
+	  $("#game_selected_gbteam").val("");
+  });
+</script>
+
 </body>
 
 
