@@ -2,7 +2,7 @@
 	<meta charset="UTF-8"/>	
 </head>
 
-<% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name%>
+<% if @game.yplayer==@user_name || @game.rplayer==@user_name || @game.gplayer==@user_name || @game.bplayer==@user_name %>
 
 	<span class="line2">
 		<span class="boardlabel" id="header">Show Game</span>
@@ -41,18 +41,22 @@
 		<div id="game_name"><%= @game.name %></div>
 		<div id="game_start_date"><%= @game.start_date %></div>
 		<div id="game_status"><%= @game.status %></div>
+		<div id="game_turn"><%= @game.turn %></div>
+		<div id="game_winner"><%= @game.winner%></div>
+		
 		<div id="game_yplayer"><%= @game.yplayer %></div>
 		<div id="game_gplayer"><%= @game.gplayer %></div>
 		<div id="game_rplayer"><%= @game.rplayer %></div>
 		<div id="game_bplayer"><%= @game.bplayer %></div>
 		<div id="game_ryteam"><%= @game.ryteam %></div>
-		<div id="game_gbteam"><%= @game.gbteam %></div>
+		<div id="game_gbteam"><%= @game.gbteam %></div>		
 		<div id="game_refresh"><%= @game.refresh %></div>
+		
 		<div id="game_yellowhand"><%= @game.yellowhand %></div>
 		<div id="game_greenhand"><%= @game.greenhand %></div>
 		<div id="game_redhand"><%= @game.redhand %></div>
 		<div id="game_bluehand"><%= @game.bluehand %></div>
-		<div id="game_turn"><%= @game.turn %></div>
+
 		<div id="game_board"><%= @game.board %></div>
 		<div id="game_deck"><%= @game.deck%></div>
 		<div id="game_discardpile"><%= @game.discardpile %></div>
@@ -66,6 +70,7 @@
 
 <% else %>
 
-	<span class="msgArea">You are not a player on this game.  Please use the Back button to return to the list of games.</span>
+	<span class="text-warning bg-warning msgArea">You are not a player on this game.  Please press the Back button.</span>
+	<div class="col-sm-12"><%= link_to 'Back', games_path%></div>
 	
 <% end %>

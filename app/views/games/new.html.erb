@@ -51,13 +51,13 @@
 	
 <div class="row">
 	<div class="col-sm-2"><%= form.label "Team names"%></div>
-	<div id="ryteam">		
-		<span class="col-sm-3"><%= form.text_field :ryteam, :style => "width:260px"%></span>
-		<span id="ryselect" class="col-sm-1"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
+	<div id="ryteam" class="col-sm-4">		
+		<span ><%= form.text_field :ryteam, :style => "width:260px"%></span>
+		<span id="ryselect"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
 	</div>
-	<div id="gbteam">
-		<span class="col-sm-3"><%= form.text_field :gbteam, :style => "width:260px"%></span>
-		<span id="gbselect" class="col-sm-1"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
+	<div id="gbteam" class="col-sm-4">
+		<span><%= form.text_field :gbteam, :style => "width:260px"%></span>
+		<span id="gbselect"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
 	</div>
     <span class="col-sm-2"></span>
 </div>

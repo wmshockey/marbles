@@ -4,7 +4,15 @@
 	<%= image_tag "marbles_logo.png", alt: "Marbles Game Logo", class: "marbles_logo"%>
 </div>
 
-<h1 id="header">Games</h1>
+<div class="row">
+	<h1 id="header" class="col-sm-6">Games</h1>
+	<div class="col-sm-6 text-right"><%= button_to "New Game", new_game_path, method: :get %></div>
+</div>
+
+
+<div class="row">
+	
+</div>
 
 <table class="table table-bordered">
   <thead>

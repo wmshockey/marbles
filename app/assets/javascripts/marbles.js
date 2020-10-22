@@ -1333,7 +1333,7 @@ $(document).ready(() => {
 
 		/* Check if no card played and no marbles moved */
 		if (playedCard == "" && moved_count == 0) {
-			if (confirm("Press the Ok button to confirm you can't play")) {
+			if (confirm("Press the Ok button to confirm you cannot make a play, otherwise press the Cancel button.")) {
 				/* player can't play so clear out his/her hand and return cards to discard pile */
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
@@ -1677,7 +1677,7 @@ $(document).ready(() => {
 					if (mid) {
 						/* Don't say its a jump if the marble being jumped is also one being moved in this turn e.g. with 7 card*/
 						if (!marbles_in_play.includes(mid)) {
-							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each marble being killed");
+							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each marble being killed.");
 							return false;
 						}
 					}
