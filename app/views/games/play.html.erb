@@ -5,7 +5,42 @@
 </div>
 
 <% if @user_name == @player %>
-	<%= render 'form', game: @game %>	
+
+		<div id="form_name", class="hidden"><%= "game" %></div>
+
+		<%= form_with(model: @game, local: true) do |form| %>
+
+			<span id="btnArea">
+			    <%= form.submit "End Turn", class:"btn btn-danger", id:"Save"%>
+			</span>
+
+			<% if @game.errors.any? %>
+			    <div id="error_explanation">
+			      <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>
+			      <ul>
+			      <% @game.errors.full_messages.each do |message| %>
+			        <li><%= message %></li>
+			      <% end %>
+			      </ul>
+			    </div>
+			<% end %>
+
+			<div id="myTable" width="1400" height="1080">
+				<canvas id="myCanvas" width="1400" height="1080"></canvas>
+			</div>
+
+			<div class="hidden">	
+				<br><br><br><br>
+				<%= render partial: "editfields", locals: {form: form} %>
+				<br>
+			</div>
+
+			<div class="hidden">
+				<%= render partial: "calcfields", locals: {form: form} %>
+			</div>
+
+		<% end %>
+
 <% else %>
 	<span id="msgArea" class = "text-danger bg-danger">It's not your turn.</span>
 	<span> <%= link_to 'Back', games_path%></span>

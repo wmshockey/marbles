@@ -6,7 +6,7 @@
 
   <% if @game.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(game.errors.count, "error") %> prohibited this game from being saved:</h2>
+      <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>
       <ul>
       <% @game.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -15,157 +15,29 @@
     </div>
   <% end %>
 
-	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
-	<% gbteams = @games.map {|g| g.gbteam}.uniq %>
-	<% @teams = ryteams.concat(gbteams).uniq.sort! %>
+	<body class="container">
+		<br>
+		<%= render partial: "editfields", locals: {form: form} %>
+		<br>
 
-<body class="container">
+		<div class="hidden">
+			<%= render partial: "calcfields", locals: {form: form} %>
+		</div>
+		
+		<br>
+		<br>
+		
+		<div class="row">
+		  <div class="col-sm-1"></div>
+		  <div class="col-sm-2" >
+		    <%= form.submit "Save", class:"btn-lg btn-primary", id:"Save"%>
+		  </div>
+		  <div class="col-sm-2"><%= link_to 'Back', games_path%></div>
+		  <span class="col-sm-7"></span>
+		</div>
 
-<br>
-
-<div class="row">
-  <div class="col-sm-2"><%= form.label "Game Name:" %></div>
-  <div class="col-sm-2"><%= form.text_field :name %></div> 
-  <div class="col-sm-8"></div>
-</div>
-
-<br>
-
-<div class="row border text-left">
-	<span class="col-sm-2"></span>
-	<div class="col-sm-2", style="color:yellow; text-align:left"><%= form.label "Yellow"%></div>
-	<div class="col-sm-2", style="color:red; text-align:left"><%= form.label "Red"%></div>
-	<div class="col-sm-2", style="color:green; text-align:left"><%= form.label "Green"%></div>
-	<div class="col-sm-2", style="color:blue; text-align:left"><%= form.label "Blue"%></div>
-    <span class="col-sm-2"></span>
-</div>
-
-<div class="row">
-	<div class="col-sm-2"><%= form.label "Players"%></div>
-	<div class="col-sm-2"><%= form.select :yplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
-	<div class="col-sm-2"><%= form.select :rplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
-	<div class="col-sm-2"><%= form.select :gplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
-	<div class="col-sm-2"><%= form.select :bplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
-    <span class="col-sm-2"></span>
-</div>
-	
-<div class="row">
-	<div class="col-sm-2"><%= form.label "Team names"%></div>
-	<div id="ryteam" class="col-sm-4">		
-		<span ><%= form.text_field :ryteam, :style => "width:260px"%></span>
-		<span id="ryselect"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
-	</div>
-	<div id="gbteam" class="col-sm-4">
-		<span><%= form.text_field :gbteam, :style => "width:260px"%></span>
-		<span id="gbselect"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
-	</div>
-    <span class="col-sm-2"></span>
-</div>
-
-<br>
-
-<div class="row">
-	<div class="col-sm-2"><%= form.label "Auto Refresh"%> </div>
-	<div class="col-sm-1"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
-	<div class="col-sm-9">Turn automatic display refresh off if you have a slow network</div>
-</div>
-
-<br>
-<div class="row">
-  <div class="col-sm-1"></div>
-  <div class="col-sm-2" >
-    <%= form.submit "Save", class:"btn-lg btn-primary", id:"Save"%>
-  </div>
-  <div class="col-sm-2"><%= link_to 'Back', games_path%></div>
-  <span class="col-sm-7"></span>
-</div>
-
-<br>
-
-<div class="hidden">
-
-	<div class="row">
-	  <div class="col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
-	  <div class="col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
-	  <span class="col-sm-8"></span>
-	</div>
-
-
-	<div class="row">
-		<span class="col-sm-2 top"><%= form.label "Hand"%></span>
-		<span class="col-sm-2 top"><%= form.text_area :yellowhand %></span>
-		<span class="col-sm-2 top"><%= form.text_area :redhand %></span>
-		<span class="col-sm-2 top"><%= form.text_area :greenhand %></span>
-		<span class="col-sm-2 top"><%= form.text_area :bluehand %></span>
-	    <span class="col-sm-2"></span>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= form.label "Deck"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
-	    <span class="col-sm-2"></span>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= form.label "Board"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
-	    <span class="col-sm-2"></span>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= form.label "Discard Pile"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
-	    <span class="col-sm-2"></span>
-	</div>
-	
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= form.label "Message"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "2"%></div>
-		<span class="col-sm-2"></span>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= "Screen Coordinates"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :screen, cols: "104", rows: "1"%></div>
-	</div>
-	
-	<div class="row">
-		<div class="col-sm-2 top"><%= "Moved Marbles"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :moved, cols: "104", rows: "1"%></div>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= "Winner"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :winner, cols: "104", rows: "1"%></div>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-2 top"><%= "Plays Made"%> </div>
-		<div class="col-sm-10 top"><%= form.number_field :plays %></div>
-	</div>
-	
-
-</div>
-<br>
-
-<script>
-  $("#ryselect").on("change", function(){
-	  selected_team = $("#game_selected_ryteam").val();
-	  $("#game_ryteam").val(selected_team);
-	  $("#game_selected_ryteam").val("");
-  });
-  $("#gbselect").on("change", function(){
-	  selected_team = $("#game_selected_gbteam").val();
-	  $("#game_gbteam").val(selected_team);
-	  $("#game_selected_gbteam").val("");
-  });
-</script>
-
-</body>
-
+	</body>
 
 <% end %>
-
 
 

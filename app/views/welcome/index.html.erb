@@ -86,7 +86,15 @@
 					<% winning_players[0] = g.gplayer%>
 					<% winning_players[1] = g.bplayer%>
 				<% else%>
-					<% winning_players[0] = g.winner %>
+					<% if (g.yplayer.split(" ")[0] == g.winner) %>
+						<% winning_players[0] = g.yplayer %>
+					<% elsif (g.rplayer.split(" ")[0] == g.winner) %>
+						<% winning_players[0] = g.rplayer%>
+					<% elsif (g.gplayer.split(" ")[0] == g.winner)%>
+						<% winning_players[0] = g.gplayer%>
+					<% elsif (g.bplayer.split(" ")[0] == g.winner)%>
+						<% winning_players[0] = g.bplayer%>
+					<% end %>
 					<% winning_players[1] = "" %>
 				<% end %>
 				<% if (winning_players.include?(player)) %>

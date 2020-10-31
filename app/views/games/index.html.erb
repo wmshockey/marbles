@@ -29,8 +29,8 @@
   <tbody>
 	<% current_time = Time.now.to_i%>
     <% @games.order(created_at: :desc).each do |game| %>
-		<% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>	
-		<% if players.include?(@user_name) || @user_email == "wmshockey@gmail.com" %>
+		<% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>
+		<% if (players.include?(@user_name) || @user_email == "wmshockey@gmail.com") %>
 	      <tr>
 			<% if (current_time - game.updated_at.to_time.to_i) <= 300 %>
 	       	 	<td class="col-sm-2 blinking"><%= game.name %></td>
@@ -49,7 +49,7 @@
 						<div style="display:inline-block; color:red"><%= game.rplayer.split(" ")[0] %></div>
 					<% end %>
 					<% if game.yplayer!=""%>
-						<div style="display:inline-block; color:yellow"><%= ", " + game.yplayer.split(" ")[0]%></div>
+						<div style="display:inline-block; color:yellow"><%= " " + game.yplayer.split(" ")[0]%></div>
 					<% end %>
 				<% end %>		
 				<% if game.gbteam!="" %>
@@ -62,7 +62,7 @@
 						<div style="display:inline-block; color:green"><%= game.gplayer.split(" ")[0] %></div>
 					<% end %>
 					<% if game.bplayer!="" %>
-						<div style="display:inline-block; color:blue"><%= ", " + game.bplayer.split(" ")[0] %></div>
+						<div style="display:inline-block; color:blue"><%= " " + game.bplayer.split(" ")[0] %></div>
 					<% end %>
 				<% end %>
 			</td>			

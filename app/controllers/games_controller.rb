@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :destroy]
+  before_action :get_teams, only: [:new, :create, :edit, :debug, :play]
 
   # GET /games
   # GET /games.json
@@ -24,26 +25,28 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
     @users = User.all
-    @games = Game.all
   end
 
   # GET /games/1/play
   def play
+    @users = User.all
   end
 
   # GET /games/1/edit
   def edit
-    @games = Game.all
+    @users = User.all
   end
 
   # Get /game/1/debug
   def debug
+    @users = User.all
   end  
 
 
   # POST /games
   # POST /games.json
   def create
+    @users = User.all
     @game = Game.new(game_params)
     @game.start_date = DateTime.now.strftime('%Y-%m-%dT%H:%M')
     respond_to do |format|
@@ -97,6 +100,13 @@ class GamesController < ApplicationController
           format.json { head :no_content }
         end
       end
+    end
+
+    def get_teams
+      @games = Game.all
+    	ryteams = @games.map {|g| g.ryteam}.uniq
+    	gbteams = @games.map {|g| g.gbteam}.uniq
+    	@teams = ryteams.concat(gbteams).uniq.sort!  
     end
  
     def get_plist 

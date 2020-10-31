@@ -80,7 +80,7 @@ $(document).ready(() => {
 	/* check if move is valid and if not, reset board to start of move */
 			if (checkMove(playedCard, board_start, board_end) == false) {
 				/* Move was not valid */
-				alert("There was a problem with your move.  Take your turn over.");
+				alert("Press OK to take your turn over.");
 				/* Restore board and hands to point before the last move */
 				board = board_start;
 				yellowhand = yellowhand_start;
@@ -1333,7 +1333,7 @@ $(document).ready(() => {
 
 		/* Check if no card played and no marbles moved */
 		if (playedCard == "" && moved_count == 0) {
-			if (confirm("Press the Ok button to confirm you cannot make a play, otherwise press the Cancel button.")) {
+			if (confirm("Press the Ok button to confirm you cannot make a play, \nPress Cancel if you can still make a play.")) {
 				/* player can't play so clear out his/her hand and return cards to discard pile */
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
@@ -1967,9 +1967,8 @@ function drag(ev) {
 	}
 	draggingObj = dragObjectType(data);
 	if (draggingObj=="marble" && playedCard=="") {
-		alert(player + ", you have to play a card first before moving any marbles.");
-		drag_ok=true;
-		location.reload();
+		alert("You have to play a card before moving any marbles.");
+		ev.preventDefault();
 	}
 }
 
@@ -2799,7 +2798,7 @@ function get_paths() {
 	paths[386]=[92];
 	paths[387]=[92];
 
-	back_paths=[3,7,11,15,19,23,27,31,35,39,43,47,51,54,55,59,63,67,71,75,79,115,119,123,127,131,135,139,143,147,150,151,155,159,163,167,171,175,211,215,219,223,227,231,235,239,243,246,247,251,255,259,263,267,271,307,311,315,319,323,327,331,335,342,343,347,351,355,359,363,367];
+	back_paths=[3,7,11,15,19,23,27,31,35,39,43,47,51,54,55,59,63,67,71,75,79,115,119,123,127,131,135,139,143,147,150,151,155,159,163,167,171,175,211,215,219,223,227,231,235,239,243,246,247,251,255,259,263,267,271,307,311,315,319,323,327,331,335,339,342,343,347,351,355,359,363,367];
 
 }
 

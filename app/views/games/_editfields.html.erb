@@ -1,0 +1,63 @@
+	<div class="row border border-primary">
+	  <div class="col-sm-2"></div>
+	  <div class="col-sm-2"><%= form.label "Game Name:" %><%= form.text_field :name %></div> 
+	  <div class="hidden col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
+	  <div class="hidden col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
+	  <div class="col-sm-2"></div>
+	</div>
+
+	<br>
+
+	<div class="row border text-left">
+		<span class="col-sm-2"></span>
+		<div class="col-sm-2", style="color:yellow; text-align:left"><%= form.label "Yellow"%></div>
+		<div class="col-sm-2", style="color:red; text-align:left"><%= form.label "Red"%></div>
+		<div class="col-sm-2", style="color:green; text-align:left"><%= form.label "Green"%></div>
+		<div class="col-sm-2", style="color:blue; text-align:left"><%= form.label "Blue"%></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Players"%></div>
+		<div class="col-sm-2"><%= form.select :yplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+		<div class="col-sm-2"><%= form.select :rplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+		<div class="col-sm-2"><%= form.select :gplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+		<div class="col-sm-2"><%= form.select :bplayer, @users.collect {|u| [u.name]}, :include_blank => true %></div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Team names"%></div>
+		<div id="ryteam" class="col-sm-4">		
+			<span ><%= form.text_field :ryteam, :style => "width:260px"%></span>
+			<span id="ryselect"><%=form.select :selected_ryteam, @teams, {}, :style => "width:20px"%></span>
+		</div>
+		<div id="gbteam" class="col-sm-4">
+			<span><%= form.text_field :gbteam, :style => "width:260px"%></span>
+			<span id="gbselect"><%=form.select :selected_gbteam, @teams, {}, :style => "width:20px"%></span>
+		</div>
+	    <span class="col-sm-2"></span>
+	</div>
+
+
+
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Auto Refresh"%> </div>
+		<div class="col-sm-1"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
+		<div class="col-sm-9">Turn automatic display refresh off if you have a slow network</div>
+	</div>
+
+
+	<script>
+	  $("#ryselect").on("change", function(){
+		  selected_team = $("#game_selected_ryteam").val();
+		  $("#game_ryteam").val(selected_team);
+		  $("#game_selected_ryteam").val("");
+	  });
+	  $("#gbselect").on("change", function(){
+		  selected_team = $("#game_selected_gbteam").val();
+		  $("#game_gbteam").val(selected_team);
+		  $("#game_selected_gbteam").val("");
+	  });
+	</script>
