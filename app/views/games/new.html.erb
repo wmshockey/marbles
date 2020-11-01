@@ -24,17 +24,22 @@
 			<%= render partial: "calcfields", locals: {form: form} %>
 		</div>
 		
-		<br>
-		<br>
+
 		
 		<div class="row">
-		  <div class="col-sm-1"></div>
 		  <div class="col-sm-2" >
 		    <%= form.submit "Save", class:"btn-lg btn-primary", id:"Save"%>
 		  </div>
-		  <div class="col-sm-2"><%= link_to 'Back', games_path%></div>
-		  <span class="col-sm-7"></span>
+		  <div class="col-sm-1"><%= link_to 'Back', games_path%></div>
+		  <div class="col-sm-4 clipart">
+			  <%= image_tag "marble_clip_art.png", alt: "Marbles Clip Art"%>		  				
+		  </div>
+		  <div class="col-sm-4 clipart">
+			  <%= image_tag "card_deck_image.png", alt: "Deck of Cards Clip Art"%>		  				
+		  </div>
 		</div>
+
+
 
 	</body>
 

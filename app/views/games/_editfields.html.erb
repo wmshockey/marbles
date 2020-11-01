@@ -1,9 +1,11 @@
+<div class="container"  style="border:1px solid">
+	<br>
 	<div class="row border border-primary">
-	  <div class="col-sm-2"></div>
-	  <div class="col-sm-2"><%= form.label "Game Name:" %><%= form.text_field :name %></div> 
+	  <div class="col-sm-2"><%= form.label "Game Name:" %></div>
+	  <div class="col-sm-2"><%= form.text_field :name %></div> 
 	  <div class="hidden col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
 	  <div class="hidden col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
-	  <div class="col-sm-2"></div>
+	  <div class="col-sm-4"></div>
 	</div>
 
 	<br>
@@ -39,15 +41,14 @@
 	    <span class="col-sm-2"></span>
 	</div>
 
-
-
-
+	<br>
 	<div class="row">
 		<div class="col-sm-2"><%= form.label "Auto Refresh"%> </div>
 		<div class="col-sm-1"><%= form.select :refresh, [["On", 1],["Off", 0]] %></div>
-		<div class="col-sm-9">Turn automatic display refresh off if you have a slow network</div>
+		<div class="col-sm-9 text-muted">Turn automatic refresh off if you are on a slow network</div>
 	</div>
-
+	
+</div>
 
 	<script>
 	  $("#ryselect").on("change", function(){

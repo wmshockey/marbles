@@ -28,6 +28,7 @@
 				  <li class="nav-item"><%= link_to "Logout", destroy_user_session_path, method: :delete, :style => "color:red" %></li>
 			 	</ul>
 			</span>
+			<span class="hidden" id="user_theme"><%= current_user.theme %></span>
 	  
 	<% else %>
 

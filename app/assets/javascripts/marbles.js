@@ -270,6 +270,7 @@ $(document).ready(() => {
 		var plays = parseInt(document.getElementById('game_plays').innerHTML);
 		comment = document.getElementById("game_comment").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
+		user_theme = document.getElementById("user_theme").innerHTML;
 		id = document.getElementById("game_id").innerHTML;
 /* convert strings in page to arrays */	
 		var board = (document.getElementById("game_board").innerHTML).split(",");
@@ -400,6 +401,7 @@ $(document).ready(() => {
 		var turn = parseInt($("#game_turn").val());
 		var comment = $("#game_comment").val();
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
+		user_theme = document.getElementById("user_theme").innerHTML;
 
 /* convert strings in form to arrays */	
 		var board = ($("#game_board").val()).split(","); 
@@ -752,11 +754,11 @@ $(document).ready(() => {
 		}
 		player_name = getPlayerName(color);
 		if (player_name != "") {
-			x = hole_x - 100;
-			y = hole_y + 40;
+			x = hole_x - 120;
+			y = hole_y + 10;
 			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
 			x = hole_x - 100 + 10;
-			y = hole_y + 50 + 25;
+			y = hole_y + 25 + 10;
 			card_count = getCardCount(color);
 			if (card_count>=0) {
 				labelBoard(x, y, card_count, "white", "boardlabel", "leftPlayer")			
@@ -786,12 +788,12 @@ $(document).ready(() => {
 		}
 		player_name = getPlayerName(color);
 		if (player_name != "") {
-			x = hole_x - 60;
+			x = hole_x - 80;
 			y = hole_y - 70;
 			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
 			card_count = getCardCount(color);
 			x = hole_x - 60 + 10;
-			y = hole_y - 60 + 25;
+			y = hole_y - 60 + 15;
 			if (card_count>=0) {
 				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "upperPlayer")			
 			} else {
@@ -821,12 +823,12 @@ $(document).ready(() => {
 		/* Draw the players name */
 		player_name = getPlayerName(color);
 		if (player_name != "") {
-			x = hole_x + 80;
-			y = hole_y - 60;
+			x = hole_x + 40;
+			y = hole_y - 30;
 			labelBoard(x, y, player_name, color, "playername", "rightPlayer");
 			card_count = getCardCount(color);
-			x = hole_x + 80 + 10;
-			y = hole_y - 50 + 25;
+			x = hole_x + 60 + 10;
+			y = hole_y - 30 + 25;
 			if (card_count>=0) {
 				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "rightPlayer")			
 			} else {
@@ -857,8 +859,8 @@ $(document).ready(() => {
 		/* Draw the players name */
 		player_name = getPlayerName(color);
 		if (player_name != "") {
-			x = hole_x + 20;
-			y = hole_y + 50;
+			x = hole_x + 5;
+			y = hole_y + 60;
 			labelBoard(x, y, player_name, color, "playername", "lowerPlayer");
 			/* Draw the players card count */
 			card_count = getCardCount(color);
@@ -873,10 +875,15 @@ $(document).ready(() => {
 		
 		
 	/* Display all the marbles on the board */
+		if (user_theme == "Labeled Marbles") {
+			theme_str = "_t2";
+		} else {
+			theme_str = "_t1";
+		}
 		for (i=0; i<=96; i++) {
 			if (board[i]) {
 				marble_id = board[i];
-				marble_image = "/assets/" + marble_id.substring(0,1) + "_marble.png"
+				marble_image = "/assets/" + marble_id.substring(0,1) + "_marble" + theme_str + ".png";
 				placeMarble(i, marble_id, marble_image);
 			}
 		}
