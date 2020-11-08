@@ -65,8 +65,11 @@ class GamesController < ApplicationController
   def update
     respond_to do |format|
       if @game.update(game_params)
-        format.html { redirect_to @game }
-        format.json { render :show, status: :ok, location: @game }
+        if params[:commit]=="End Turn"
+          format.html { redirect_to @game }
+        else
+          format.html { redirect_to games_url, notice: '** Game was successfully updated. **'}
+        end
       else
         format.html { render :edit }
         format.json { render json: @game.errors, status: :unprocessable_entity }

@@ -23,16 +23,22 @@
 		<div>
 			<%= render partial: "calcfields", locals: {form: form} %>
 		</div>
-		
-		<br>
-	
-	<br><br>
 	
     <div class="row" >
       <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger", id:"Save"%></div>
       <div class="col-sm-10"><%= link_to 'Back', games_path%></div>
     </div>
+
+	<br>
+	<% i = 0%>
+	<% board_array = @game.board.split(",")%>
+	<% until i > 96  do%>
+		<div class="col-sm-1"><%= i%>:<%= board_array[i]%></div>
+		<% i = i + 1%>
+	<% end %>
 	
+	<br>
+ 	<%= image_tag "marbles_board_numbered.png", alt: "Marbles Clip Art"%>	
 
 </body>
 <% end %>

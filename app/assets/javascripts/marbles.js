@@ -61,7 +61,6 @@ $(document).ready(() => {
 			$("#game_yellowhand").val(yellowhand.toString());
 
 		}
-		
 
 /* 
 -------------------------------------------------		
@@ -1340,7 +1339,7 @@ $(document).ready(() => {
 
 		/* Check if no card played and no marbles moved */
 		if (playedCard == "" && moved_count == 0) {
-			if (confirm("Press the Ok button to confirm you cannot make a play, \nPress Cancel if you can still make a play.")) {
+			if (confirm("Are you sure? \nPress the Ok button to confirm you cannot make a play, \nPress Cancel if you can still make a play.")) {
 				/* player can't play so clear out his/her hand and return cards to discard pile */
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
