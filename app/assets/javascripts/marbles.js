@@ -432,6 +432,9 @@ $(document).ready(() => {
 		var turn_color = playerList[turn][1];
 		playedCard = "";  
 
+/* get the marble paths array */
+		get_paths();
+
 /* This is edit mode so the user color is same as the turn color */
 		user_color = turn_color; 
 
@@ -524,33 +527,26 @@ $(document).ready(() => {
 
 	function drawBoard() {		
 
-/* draw marble holes and card areas on a canvas first to get positioning */
-		board_offset = 50;
-		board_size = 800 - 2 * board_offset;
-		centre_x = board_offset + board_size/2;
-		centre_y = board_offset + board_size/2;
-		
-		var radius = board_size * 0.5;
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
-		var arc_centre_x = 0;
-		var arc_centre_y = 0;
-		var arc_radius = board_size * 0.4;
-		var start_angle = 0.0;
-		var end_angle = 0.0;
-		var hole_nbr = 0.0;
-		var hole_x = 0.0;
-		var hole_y = 0.0;
-		var hole_color = "";
-		
-		var arcHoleNbrs = [1,25,49,73];
-		var homeHoleNbrs = [86, 14, 38, 62];
-		var startHoleNbrs = [21, 45, 69, 93];
 		var colorList = ["yellow", "green", "red", "blue"];
-
 	/* Allow drops onto the board canvas */
 		c.setAttribute("ondrop", "drop(event)");
 		c.setAttribute("ondragover", "allowDrop(event)");
+
+	/* Draw board border */
+		ctx.strokeRect(0, 0, 820, 800);
+		ctx.beginPath();
+		ctx.lineWidth = "6";
+		ctx.strokeStyle = "#663300";
+		ctx.moveTo(0,800);
+		ctx.lineTo(820,800);
+		ctx.moveTo(820,800);
+		ctx.lineTo(820,0);
+		ctx.stroke();
+		
+	/* Get the hole x,y coordinates */
+		get_holexy();
 
 	/* Board Orientation: For board rotations to put current player's home at bottom of screen */
 		if (user_color == "yellow") {
@@ -563,315 +559,41 @@ $(document).ready(() => {
 			colorIndex = 3;
 		}
 
-	/* Draw board border */
-		ctx.strokeRect(0, 0, 820, 800);
-		ctx.beginPath();
-		ctx.lineWidth = "6";
-		ctx.strokeStyle = "#663300";
-		ctx.moveTo(0,800);
-		ctx.lineTo(820,800);
-		ctx.moveTo(820,800);
-		ctx.lineTo(820,0);
-		ctx.stroke();
-
-	/* Make uppper left arc 270 to 360 degrees*/
-		arc_centre_x = board_offset;
-		arc_centre_y = board_offset;
-		start_angle = 3*Math.PI/2;
-		holeIndex = colorIndex;
-		start_nbr = arcHoleNbrs[holeIndex];
-		ctx.beginPath();
-		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
-
-	/* Make upper right arc 180 to 270 degrees*/
-		ctx.beginPath();
-		arc_centre_x = board_offset + board_size;
-		arc_centre_y = board_offset;
-		start_angle = Math.PI;
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		start_nbr = arcHoleNbrs[holeIndex];
-		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
-	
-	/* Make lower right arc 90 to 180 degrees*/
-		ctx.beginPath();
-		arc_centre_x = board_offset + board_size;
-		arc_centre_y = board_offset + board_size;
-		start_angle = Math.PI/2;
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		start_nbr = arcHoleNbrs[holeIndex];
-		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
-	
-	/* Make lower left arc 0 to 90 degrees*/
-		ctx.beginPath();
-		arc_centre_x = board_offset;
-		arc_centre_y = board_offset + board_size;
-		start_angle = 0;
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		start_nbr = arcHoleNbrs[holeIndex];
-		makeArcHoles(arc_centre_x, arc_centre_y, arc_radius, start_angle, start_nbr);
-	
-	/* Make left home holes */
-		holeIndex = colorIndex;
-		c = colorIndex + 1;;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		nbr = homeHoleNbrs[holeIndex];	
-		hole_x = board_offset;
-		hole_y = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		hole_y = board_offset + board_size/2;
-		nbr++;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		hole_y = (board_offset + board_size/2) - 35;
-		nbr++;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		hole_y = board_offset + board_size/2;
-		nbr++;	
-		for (i=1; i<=4; i++){
-			hole_x = board_offset + i * 35;
-			makeHole(hole_x, hole_y, color, nbr);
-			nbr = nbr + 1;
-		}
-
-	/* Make upper home holes */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = homeHoleNbrs[holeIndex];
-		hole_y = board_offset;
-		hole_x = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = board_offset + board_size/2;
-		for (i=1; i<=4; i++){
-			hole_y = board_offset + i * 35;
-			makeHole(hole_x, hole_y, color, nbr);
-			nbr = nbr + 1;
-		}
-	
-	/* Make right home holes */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = homeHoleNbrs[holeIndex];		
-		hole_x = board_offset + board_size;
-		hole_y = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_y = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_y = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_y = board_offset + board_size/2;
-		for (i=1; i<=4; i++){
-			hole_x = (board_offset + board_size) - i * 35;
-			makeHole(hole_x, hole_y, color, nbr);
-			nbr = nbr + 1;
-		}
-
-	/* Make lower home holes */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = homeHoleNbrs[holeIndex];
-		hole_y = board_offset + board_size;
-		hole_x = (board_offset + board_size/2) + 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = (board_offset + board_size/2) - 35;
-		makeHole(hole_x, hole_y, "grey", nbr);
-		nbr++;
-		hole_x = board_offset + board_size/2;
-		for (i=1; i<=4; i++){
-			hole_y = (board_offset + board_size) - i * 35;
-			makeHole(hole_x, hole_y, color, nbr);
-			nbr = nbr + 1;
-		}
-	
-	/* Make Centre Hole */
-		hole_x = board_offset + board_size/2;
-		hole_y = board_offset + board_size/2;
-		makeHole(hole_x, hole_y, "black", 0);
-
-
-	/* Make Left Starting Row */
-		holeIndex = colorIndex;
-		/* the color of the left starting holes is actually 1 position beyond the lower player's color */
-		c = colorIndex + 1;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];	
-		holeIndex = colorIndex;
-		nbr = startHoleNbrs[holeIndex];					
-		hole_x = board_size / 8;
-		hole_y = board_size / 8;
-		for (i=nbr; i<=(nbr+3); i++){
-			makeHole(hole_x, hole_y, color, i);
-			hole_x = hole_x + 25;
-			hole_y = hole_y + 25;
-		}
-		player_name = getPlayerName(color);
-		if (player_name != "") {
-			x = hole_x - 120;
-			y = hole_y + 10;
-			labelBoard(x, y, player_name, color, "playername", "leftPlayer");
-			x = hole_x - 100 + 10;
-			y = hole_y + 25 + 10;
-			card_count = getCardCount(color);
-			if (card_count>=0) {
-				labelBoard(x, y, card_count, "white", "boardlabel", "leftPlayer")			
-			} else {
-				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
-			}
-		}
-
-		
-	/* Make Upper Starting Row */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = startHoleNbrs[holeIndex];
-		hole_x = board_size + 2*board_offset - board_size/8;
-		hole_y = board_size / 8;
-		for (i=nbr; i<=(nbr+3); i++){
-			makeHole(hole_x, hole_y, color, i);
-			hole_x = hole_x - 25;
-			hole_y = hole_y + 25;
-		}
-		player_name = getPlayerName(color);
-		if (player_name != "") {
-			x = hole_x - 80;
-			y = hole_y - 70;
-			labelBoard(x, y, player_name, color, "playername", "upperPlayer");
-			card_count = getCardCount(color);
-			x = hole_x - 60 + 10;
-			y = hole_y - 60 + 15;
-			if (card_count>=0) {
-				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "upperPlayer")			
-			} else {
-				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
-			}
-		}
-
-
-	/* Make Right Starting Row */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = startHoleNbrs[holeIndex];
-		hole_x = board_size + 2*board_offset - board_size/8;
-		hole_y = board_size + 2*board_offset - board_size/ 8;
-		for (i=nbr; i<=(nbr+3); i++){
-			makeHole(hole_x, hole_y, color, i);
-			hole_x = hole_x - 25;
-			hole_y = hole_y - 25;
-		}
-		/* Draw the players name */
-		player_name = getPlayerName(color);
-		if (player_name != "") {
-			x = hole_x + 40;
-			y = hole_y - 30;
-			labelBoard(x, y, player_name, color, "playername", "rightPlayer");
-			card_count = getCardCount(color);
-			x = hole_x + 60 + 10;
-			y = hole_y - 30 + 25;
-			if (card_count>=0) {
-				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "rightPlayer")			
-			} else {
-				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
-			}
-		}
-
-		
-			
-	/* Make Lower Starting Row */
-		c++;
-		if (c > 3) {
-			c = 0;
-		}
-		color = colorList[c];
-		holeIndex++;
-		if (holeIndex > 3) {
-			holeIndex = 0;
-		}
-		nbr = startHoleNbrs[holeIndex];
-		hole_x = board_size / 8;
-		hole_y = board_size + 2*board_offset - board_size/8;
-		for (i=nbr; i<=(nbr+3); i++){
-			makeHole(hole_x, hole_y, color, i);
-			hole_x = hole_x + 25;
-			hole_y = hole_y - 25;
-		}
-		/* Draw the players name */
-		player_name = getPlayerName(color);
-		if (player_name != "") {
-			x = hole_x + 5;
-			y = hole_y + 60;
-			labelBoard(x, y, player_name, color, "playername", "lowerPlayer");
-			/* Draw the players card count */
-			card_count = getCardCount(color);
-			x = hole_x + 20 + 10;
-			y = hole_y + 60 + 25;
-			if (card_count>=0) {
-				labelBoard(x, y, card_count.toString(), "white", "boardlabel", "lowerPlayer")
-			} else {
-				labelBoard(x, y, "Can't play", "white", "boardlabel", "lowerPlayer");
-			}
+	/* Draw all the board holes */
+		for (i=0; i<=96; i++) {
+			makeHole(i, colorIndex);
 		}
 		
+	/* Get coordinates for the players names and card hand counts */
+		nameLabelCoords = [];
+		nameLabelCoords[0] = [holexy[24][0] - 40, holexy[24][1] + 40];
+		nameLabelCoords[1] = [holexy[48][0], holexy[48][1] + 40];
+		nameLabelCoords[2] = [holexy[72][0], holexy[72][1] - 40];
+		nameLabelCoords[3] = [holexy[96][0] - 40, holexy[96][1] - 40];
+
+	/* Display players names and their card hand counts in each of the 4 board quadrants */
+	/* e.g. the color of the left starting holes is actually 1 position beyond the lower player's color */
+		c = colorIndex;
+		for (quad=0; quad<=3; quad++) {
+			c = c + 1;
+			if (c>3) {
+				c = 0;
+			}
+			color = colorList[c];
+			x = nameLabelCoords[quad][0];
+			y = nameLabelCoords[quad][1];
+		/* Display players names on board */
+			player_name = getPlayerName(color);
+			if (player_name != "") {
+				labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+				card_count = getCardCount(color);
+				if (card_count>=0) {
+					labelBoard(x+20, y+20, card_count, "white", "boardlabel", "leftPlayer")			
+				} else {
+					labelBoard(x+20, y+20, "Can't play", "white", "boardlabel", "lowerPlayer");
+				}
+			}			
+		}		
 		
 	/* Display all the marbles on the board */
 		if (user_theme == "Labeled Marbles") {
@@ -889,66 +611,45 @@ $(document).ready(() => {
 		
 	}	
 
-	function makeArcHoles(centre_x, centre_y, arc_radius, start_radian, start_nbr){
-		var nbr = start_nbr;
-		var x = 0.0;
-		var y = 0.0;
-		var radian_increment = (Math.PI/2.0) / 12.0;
-		var angle = start_radian;
-		var start_angle = start_radian;
-		var end_angle = start_radian + Math.PI/2;
-		ctx.arc(centre_x, centre_y, arc_radius, start_angle, end_angle);
-		while (angle <= end_angle+0.001) {
-		    x = centre_x + arc_radius * Math.cos(-angle);
-		    y = centre_y + arc_radius * Math.sin(-angle);
-			makeHole(x, y, "grey", nbr);
-			angle = angle + radian_increment;
-			nbr = nbr + 1;
+	function makeHole(nbr, colorIndex){	
+	/* The id of the holes starting from the left side varies depending on which player is viewing the board */
+		id_offset = colorIndex * 24;	
+		/* The center hole 0 is always positioned the same for every player */
+		if (nbr==0) {
+			id_offset = 0;
+		}	
+		hole_id = nbr + id_offset;
+		if (hole_id > 96) {
+			hole_id = hole_id - 96;
 		}
-	}
-
-	function makeHole(x, y, color, nbr){
-/*	create the div for the hole */
-			var d = document.createElement("div");
-			var divID = 'hole' + nbr.toString();
-			d.setAttribute("id", divID);
-			d.style.position = "absolute";
-			d.style.left = x.toString() + 'px';
-			d.style.top = y.toString() + 'px';
-			d.style.width = "30px";
-			d.style.height = "30px";
-			d.setAttribute("ondrop", "drop(event)");
-			d.setAttribute("ondragover", "allowDrop(event)");
-			/*	select background image for the hole */
-			var hole_image = "empty_hole";
-			/* color the holes */
-			if ([7, 31, 55, 79].includes(nbr) || color == "black") {
-				hole_image = "black_hole.png";				
-			} else if (color =="green" || nbr == 1){
-				hole_image = "green_hole.png";
-			} else if (color == "red" || nbr == 25){
-				hole_image = "red_hole.png";
-			} else if (color == "blue" || nbr == 49) {
-				hole_image = "blue_hole.png";
-			} else if (color == "yellow" || nbr == 73) {
-				hole_image = "yellow_hole.png"
-			} else if (color == "grey") {
-				hole_image = "empty_hole.png"
-			} else {
-				hole_image = "empty_hole.png"
-			}
-			hole_image = "url(/assets/" + hole_image + ")";
-			d.style.backgroundImage = hole_image;
-			/* place the hole on the board */
-			document.body.appendChild(d);
-		
-	}
-
+		x = holexy[nbr][0];
+		y = holexy[nbr][1];
+		hole_color = holexy[hole_id][2];
+		var d = document.createElement("div");
+		var divID = 'hole' + hole_id.toString();
+		d.setAttribute("id", divID);
+		d.style.position = "absolute";
+		d.style.left = x.toString() + 'px';
+		d.style.top = y.toString() + 'px';
+		d.style.width = "30px";
+		d.style.height = "30px";
+		d.setAttribute("ondrop", "drop(event)");
+		d.setAttribute("ondragover", "allowDrop(event)");
+		hole_image = "url(/assets/" + hole_color +"_hole.png)";
+		d.style.backgroundImage = hole_image;
+		/* place the hole on the board */
+		document.body.appendChild(d);
+	}	
+				
 
 	function drawCardArea() {
 		card_width = 65;
 		card_height = 100;
 		coords = [];
+		board_offset = 50;
+		board_size = 800 - 2 * board_offset;
+		centre_x = board_offset + board_size/2;
+		centre_y = board_offset + board_size/2;
 
 	/* Draw the card hand area */
 		var d = document.createElement("div");
@@ -1039,23 +740,6 @@ $(document).ready(() => {
 		document.body.appendChild(d);
 	}
 	
-	function makeCardSpot(x, y, spot) {
-/*	create the div for the card spots */
-		var d = document.createElement("div");
-		var divID = spot;
-		d.setAttribute("id", divID);
-		d.setAttribute("draggable", "false");
-		d.className = "cardspot";
-		d.style.position = "absolute";
-		d.style.left = x.toString() + 'px';
-		d.style.top = y.toString() + 'px';
-		d.style.width = "65px";
-		d.style.height = "100px";
-		d.setAttribute("ondrop", "drop(event)");
-		d.setAttribute("ondragover", "allowDrop(event)");
-/* place the card spot on the board */
-		document.body.appendChild(d);				
-	}
 	
 	function placeMarble(hole_nbr, marble_id, marble_image){
 		var m = document.createElement("IMG");
@@ -1081,6 +765,7 @@ $(document).ready(() => {
 				x = marble_element.parentElement.offsetLeft;
 				y = marble_element.parentElement.offsetTop;
 				arrow_element = document.createElement("div");
+				arrow_element.style.backgroundImage =  "url(/assets/arrow.png";
 				arrow_element.setAttribute("id", "arrow");
 				arrow_element.style.position = "absolute";
 				arrow_element.style.width = "50px";
@@ -2216,13 +1901,18 @@ function performDrop(player_color, data, ev) {
 		}
 		
 	}
-
 	
 /* player is dragging marble to their card hand, to discard pile or onto the draw deck */
 	if ((draggingObj == "marble") && ((draggingTo == "card") || (draggingTo == "hand") || (draggingTo == "discard") || draggingTo == "deck")) {
 		alert("Invalid Play.  A marble can only be placed on a valid hole spot on the board.");
 		drop_ok = true;
 	}
+
+/* remove any arrows shown during the drag operation */
+	var id_count = $('[id=arrow]');
+    if (id_count.length > 0){
+        $('[id=arrow]').remove();
+    }
 	
 	if (drop_ok) {
 		return true;
@@ -2306,6 +1996,109 @@ function saveScreenCoords(x, y, user_color) {
 		screencoords[6] = x.toString();
 		screencoords[7] = y.toString();
 	}
+}
+
+
+/*-----------------Hole Coordinates----------------*/
+function get_holexy(){
+	holexy = [];
+	holexy[0]=[400, 400, "black"];
+	holexy[1]=[50, 330, "green"];
+	holexy[2]=[86.5473338216143, 327.604561184666, "grey"];
+	holexy[3]=[122.469332628705, 320.459231360939, "grey"];
+	holexy[4]=[157.151361062224, 308.68626910316, "grey"];
+	holexy[5]=[190, 292.487113059642, "grey"];
+	holexy[6]=[220.453200122441, 272.138935281545, "grey"];
+	holexy[7]=[247.989898732233, 247.989898732233, "black"];
+	holexy[8]=[272.138935281545, 220.453200122442, "grey"];
+	holexy[9]=[292.487113059642, 190, "grey"];
+	holexy[10]=[308.68626910316, 157.151361062225, "grey"];
+	holexy[11]=[320.459231360939, 122.469332628706, "grey"];
+	holexy[12]=[327.604561184666, 86.5473338216149, "grey"];
+	holexy[13]=[330, 50, "grey"];
+	holexy[14]=[365, 50, "grey"];
+	holexy[15]=[400, 50, "grey"];
+	holexy[16]=[435, 50, "grey"];
+	holexy[17]=[400, 85, "red"];
+	holexy[18]=[400, 120, "red"];
+	holexy[19]=[400, 155, "red"];
+	holexy[20]=[400, 190, "red"];
+	holexy[21]=[87.5, 87.5, "green"];
+	holexy[22]=[112.5, 112.5, "green"];
+	holexy[23]=[137.5, 137.5, "green"];
+	holexy[24]=[162.5, 162.5, "green"];
+	holexy[25]=[470, 50, "red"];
+	holexy[26]=[472.395438815333, 86.5473338216143, "grey"];
+	holexy[27]=[479.54076863906, 122.469332628705, "grey"];
+	holexy[28]=[491.313730896839, 157.151361062224, "grey"];
+	holexy[29]=[507.512886940357, 190, "grey"];
+	holexy[30]=[527.861064718454, 220.453200122441, "grey"];
+	holexy[31]=[552.010101267766, 247.989898732233, "black"];
+	holexy[32]=[579.546799877558, 272.138935281545, "grey"];
+	holexy[33]=[610, 292.487113059642, "grey"];
+	holexy[34]=[642.848638937774, 308.68626910316, "grey"];
+	holexy[35]=[677.530667371293, 320.459231360939, "grey"];
+	holexy[36]=[713.452666178385, 327.604561184666, "grey"];
+	holexy[37]=[750, 330, "grey"];
+	holexy[38]=[750, 365, "grey"];
+	holexy[39]=[750, 400, "grey"];
+	holexy[40]=[750, 435, "grey"];
+	holexy[41]=[715, 400, "blue"];
+	holexy[42]=[680, 400, "blue"];
+	holexy[43]=[645, 400, "blue"];
+	holexy[44]=[610, 400, "blue"];
+	holexy[45]=[712.5, 87.5, "red"];
+	holexy[46]=[687.5, 112.5, "red"];
+	holexy[47]=[662.5, 137.5, "red"];
+	holexy[48]=[637.5, 162.5, "red"];
+	holexy[49]=[750, 470, "blue"];
+	holexy[50]=[713.452666178385, 472.395438815333, "grey"];
+	holexy[51]=[677.530667371294, 479.54076863906, "grey"];
+	holexy[52]=[642.848638937774, 491.313730896839, "grey"];
+	holexy[53]=[610, 507.512886940357, "grey"];
+	holexy[54]=[579.546799877558, 527.861064718454, "grey"];
+	holexy[55]=[552.010101267766, 552.010101267766, "black"];
+	holexy[56]=[527.861064718454, 579.546799877558, "grey"];
+	holexy[57]=[507.512886940357, 610, "grey"];
+	holexy[58]=[491.313730896839, 642.848638937774, "grey"];
+	holexy[59]=[479.54076863906, 677.530667371293, "grey"];
+	holexy[60]=[472.395438815333, 713.452666178385, "grey"];
+	holexy[61]=[470, 750, "grey"];
+	holexy[62]=[435, 750, "grey"];
+	holexy[63]=[400, 750, "grey"];
+	holexy[64]=[365, 750, "grey"];
+	holexy[65]=[400, 715, "yellow"];
+	holexy[66]=[400, 680, "yellow"];
+	holexy[67]=[400, 645, "yellow"];
+	holexy[68]=[400, 610, "yellow"];
+	holexy[69]=[712.5, 712.5, "blue"];
+	holexy[70]=[687.5, 687.5, "blue"];
+	holexy[71]=[662.5, 662.5, "blue"];
+	holexy[72]=[637.5, 637.5, "blue"];
+	holexy[73]=[330, 750, "yellow"];
+	holexy[74]=[327.604561184666, 713.452666178385, "grey"];
+	holexy[75]=[320.459231360939, 677.530667371294, "grey"];
+	holexy[76]=[308.68626910316, 642.848638937774, "grey"];
+	holexy[77]=[292.487113059642, 610, "grey"];
+	holexy[78]=[272.138935281545, 579.546799877558, "grey"];
+	holexy[79]=[247.989898732233, 552.010101267766, "black"];
+	holexy[80]=[220.453200122441, 527.861064718454, "grey"];
+	holexy[81]=[190, 507.512886940357, "grey"];
+	holexy[82]=[157.151361062225, 491.313730896839, "grey"];
+	holexy[83]=[122.469332628705, 479.54076863906, "grey"];
+	holexy[84]=[86.5473338216144, 472.395438815333, "grey"];
+	holexy[85]=[50, 470, "grey"];
+	holexy[86]=[50, 435, "grey"];
+	holexy[87]=[50, 400, "grey"];
+	holexy[88]=[50, 365, "grey"];
+	holexy[89]=[85, 400, "green"];
+	holexy[90]=[120, 400, "green"];
+	holexy[91]=[155, 400, "green"];
+	holexy[92]=[190, 400, "green"];
+	holexy[93]=[87.5, 712.5, "yellow"];
+	holexy[94]=[112.5, 687.5, "yellow"];
+	holexy[95]=[137.5, 662.5, "yellow"];
+	holexy[96]=[162.5, 637.5, "yellow"];
 }
 
 
