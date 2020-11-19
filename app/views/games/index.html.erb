@@ -26,9 +26,10 @@
     </tr>
   </thead>
 
+	
   <tbody>
 	<% current_time = Time.now.to_i%>
-    <% @games.order(created_at: :desc).each do |game| %>
+    <% @records.order(created_at: :desc).each do |game| %>
 		<% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>
 		<% if (players.include?(@user_name) || @user_email == "wmshockey@gmail.com") %>
 	      <tr>
@@ -81,6 +82,8 @@
     <% end %>
   </tbody>
 </table>
+
+<%== pagy_nav(@pagy) %>
 
 <br>
 

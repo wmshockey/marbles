@@ -7,7 +7,7 @@ class GamesController < ApplicationController
   def index
     @user_name = current_user.name
     @user_email = current_user.email
-    @games = Game.all
+    @pagy, @records = pagy(Game.all.order(created_at: :desc))
   end
 
   # GET /games/1
