@@ -781,7 +781,9 @@ $(document).ready(() => {
 	  	yplayer = $("#game_yplayer").val();
 		gplayer = $("#game_gplayer").val();
 		rplayer = $("#game_rplayer").val();
-		bplayer = $("#game_bplayer").val();  
+		bplayer = $("#game_bplayer").val();
+		discardpile = $("#game_discardpile").val().split(",");
+		comment = $("#game_comment").val();
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		/* If any cards left in players hands, add them to bottom of the discard pile */
 
@@ -807,17 +809,22 @@ $(document).ready(() => {
 		}
 		
 		/* clear out the players hands */
-
 		greenhand = [];
 		yellowhand = [];
 		redhand = [];
 		bluehand = [];
 
-
 		/* If deck out of cards, empty the discard pile and shuffle the full deck */
 		number_players = playerList.length;
 		if (deck.length <= 1) {
 			alert("No cards left in the deck.  Will shuffle and deal from full deck now.")
+			/* Put a comment on screen for what the last discard was before the shuffle */
+			if(comment == "") {
+				com = [discardpile[0]];
+				comment = formatComment(com);
+				$("#game_comment").val(comment);
+			}
+			/* Set to full deck and shuffle */
 			deck = fulldeck;
 			shuffle(deck);
 			discardpile = [];
