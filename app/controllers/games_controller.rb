@@ -6,8 +6,19 @@ class GamesController < ApplicationController
   # GET /games.json
   def index
     @user_name = current_user.name
-    @user_email = current_user.email
-    @pagy, @records = pagy(Game.all.order(created_at: :desc))
+    @user_id = current_user.id
+    if @user_id==1
+      @recs = Game.all.order(created_at: :desc)
+    else
+      @yrecs = Game.all.where(yplayer: @user_name)
+      @rrecs = Game.all.where(rplayer: @user_name)
+      @grecs = Game.all.where(gplayer: @user_name)
+      @brecs = Game.all.where(bplayer: @user_name)
+      @recs = @yrecs.or(@rrecs)
+      @recs = @recs.or(@grecs)
+      @recs = @recs.or(@brecs)
+    end
+    @pagy, @records = pagy( @recs.order(created_at: :desc) )
   end
 
   # GET /games/1
