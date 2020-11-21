@@ -10,13 +10,7 @@ class GamesController < ApplicationController
     if @user_id==1
       @recs = Game.all.order(created_at: :desc)
     else
-      @yrecs = Game.all.where(yplayer: @user_name)
-      @rrecs = Game.all.where(rplayer: @user_name)
-      @grecs = Game.all.where(gplayer: @user_name)
-      @brecs = Game.all.where(bplayer: @user_name)
-      @recs = @yrecs.or(@rrecs)
-      @recs = @recs.or(@grecs)
-      @recs = @recs.or(@brecs)
+      @recs = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'").order(created_at: :desc)
     end
     @pagy, @records = pagy( @recs.order(created_at: :desc) )
   end
