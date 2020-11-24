@@ -72,7 +72,7 @@
         <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
         <td class="col-sm-1 navbar-link"><%= link_to 'Play', game_path(game) %></td>
 		<td class="col-sm-1 navbar-link"><%= link_to 'Edit', edit_game_path(game) %>
-		<% if @user_id == 1 %>
+		<% if current_user.id == 1 %>
 			<td class="col-sm-1"><%= link_to 'Debug', debug_game_path(game) %></td>
 		<% end %>
         <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
