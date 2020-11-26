@@ -9,7 +9,6 @@
 	</div>
 
 	<h4 class="col-sm-4"><%= link_to 'Show All My Games', '/games'%></h4>
-	<div class="col-sm-8 text-success bg-success"><%= "** 18-Nov-2020: minor upgrade to show last discard prior to a full deck shuffle and deal. **"%></div>
 	<br><br>
 
 	<% ryteams = @games.map {|g| g.ryteam}.uniq %>
