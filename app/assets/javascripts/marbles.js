@@ -11,54 +11,54 @@ $(document).ready(() => {
 /* Listen for player hitting the Save button */
 
   $('[id="Save"]').on("click", function(){
-	  
+
 	  var header = document.getElementById("header").innerHTML;
-	  
+
 /* get the players list */
-	    yplayer = $("#game_yplayer").val();
-	    gplayer = $("#game_gplayer").val();
-	    rplayer = $("#game_rplayer").val();
-	    bplayer = $("#game_bplayer").val();	  
-	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-	
+	  yplayer = $("#game_yplayer").val();
+	  gplayer = $("#game_gplayer").val();
+	  rplayer = $("#game_rplayer").val();
+	  bplayer = $("#game_bplayer").val();	  
+	  playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+
 /*
 -------------------------------------------------		
 		 New Game is being created 
 -------------------------------------------------		
 */
-	    if (header == "New Game") {
+	  if (header == "New Game") {
 
 /* Randomly set who gets to play first  */
-		  	number_players = playerList.length;
-			turn = (Math.floor(Math.random() * number_players));
-			alert(playerList[turn][0] + "-" + playerList[turn][1] + " gets to play first.");
-			$("#game_turn").val(turn.toString());
-			
+		  number_players = playerList.length;
+		  turn = (Math.floor(Math.random() * number_players));
+		  alert(playerList[turn][0] + "-" + playerList[turn][1] + " gets to play first.");
+		  $("#game_turn").val(turn.toString());
+	
 /* Initialize the Board */
-		    initializeBoard();		 
-			$("#game_board").val(board.toString());
-			$("#game_status").val("Started");
-			$("#game_winner").val("");
-			$("#game_moved").val("");
-			$("#game_plays").val("0");
-			
+		  initializeBoard();		 
+		  $("#game_board").val(board.toString());
+		  $("#game_status").val("Started");
+		  $("#game_winner").val("");
+		  $("#game_moved").val("");
+		  $("#game_plays").val("0");
+	
 /* Initialize the deck */
-			deck = fulldeck;
-			discardpile = [];
-			
+		  deck = fulldeck;
+		  discardpile = [];
+	
 /* Initialize the screen positions of players hands, discard pile and deck */
-			screencoords = ["290", "435", "290", "435", "290", "435", "290", "435"];
-			$("#game_screen").val(screencoords);
-			
+		  screencoords = ["290", "435", "290", "435", "290", "435", "290", "435"];
+		  $("#game_screen").val(screencoords);
+	
 /* Deal cards for first time */
-			shuffle(deck);
-			dealCards();
-			$("#game_deck").val(deck.toString());
-			$("#game_discardpile").val(discardpile.toString());
-			$("#game_greenhand").val(greenhand.toString());
-			$("#game_redhand").val(redhand.toString());
-			$("#game_bluehand").val(bluehand.toString());
-			$("#game_yellowhand").val(yellowhand.toString());
+		  shuffle(deck);
+		  dealCards();
+		  $("#game_deck").val(deck.toString());
+		  $("#game_discardpile").val(discardpile.toString());
+		  $("#game_greenhand").val(greenhand.toString());
+		  $("#game_redhand").val(redhand.toString());
+		  $("#game_bluehand").val(bluehand.toString());
+		  $("#game_yellowhand").val(yellowhand.toString());
 
 		}
 
@@ -69,9 +69,6 @@ $(document).ready(() => {
 */
 
 		else if (header == "Marbles Game") {
-			
-	/* get the marble paths array */
-			get_paths();
 
 	/* save the end of move board positions */
 			board_end = ($("#game_board").val()).split(",");
@@ -135,7 +132,7 @@ $(document).ready(() => {
 					$("#game_winner").val(winner);				
 				} else {
 					/* Set next persons turn */
-				  	number_players = playerList.length;
+					number_players = playerList.length;
 					/* To be fair, the next person in line to play should play even if cards have to be redealt */
 					turn_fair = turn + 1;
 					if (turn_fair >= number_players) {
@@ -188,8 +185,8 @@ $(document).ready(() => {
 				discard = discardElement.childNodes[0];
 				discard_url = discard.getAttribute('src');
 				discardElement.removeChild(discardElement.childNodes[0]);
-			  	discard_background = "url(" + discard_url + ")";
-			  	$("#discardpile").css('backgroundImage', discard_background);
+				discard_background = "url(" + discard_url + ")";
+				$("#discardpile").css('backgroundImage', discard_background);
 			}
 									
 		}
@@ -227,6 +224,12 @@ $(document).ready(() => {
 		startHoles = red_start_holes.concat(blue_start_holes, yellow_start_holes, green_start_holes);
 		homeHoles = red_home_holes.concat(blue_home_holes, yellow_home_holes, green_home_holes);
 		
+		/* Get the marble paths array */
+		paths = get_paths();
+		
+		/* Get the hole x,y coordinates */
+		holexy = get_holexy();
+		
 		var headerElement = document.getElementById("header");
 		var header = headerElement.innerHTML;
 
@@ -241,15 +244,10 @@ $(document).ready(() => {
 		$("#game_status").val("Started");
 		$("#game_turn").val("0");
 		$("#game_plays").val("0");
-		var greenplayer = false;
-		var yellowplayer = false;
-		var redplayer = false;
-		var blueplayer = false;
 		playedCard = "";
 		discardpile = [];
 /* Initialize the board to all empty */
 		board.fill("");
-
 	}
 
 /*	
@@ -260,70 +258,29 @@ $(document).ready(() => {
 */
 	if (header == "Show Game") {
 				
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");
-		var game_name = document.getElementById("game_name").innerHTML;
-		var game_status = document.getElementById("game_status").innerHTML;
-		var turn = parseInt(document.getElementById("game_turn").innerHTML);
-		var refresh = parseInt(document.getElementById('game_refresh').innerHTML);
-		var plays = parseInt(document.getElementById('game_plays').innerHTML);
-		comment = document.getElementById("game_comment").innerHTML;
-		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
-		user_theme = document.getElementById("user_theme").innerHTML;
-		id = document.getElementById("game_id").innerHTML;
-/* convert strings in page to arrays */	
-		var board = (document.getElementById("game_board").innerHTML).split(",");
-		var deck = (document.getElementById("game_deck").innerHTML).split(",");
-		/* If deck is empty, make sure it is truly empty */
-		if (deck[0] == "") {
-			deck = [];
-		}
-		discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
-		/* If discardpile is empty, make sure it is truly empty */
-		if (discardpile[0] == "") {
-			discardpile = [];
-		}
-		moved = document.getElementById("game_moved").innerHTML.split(",");
-/* Get the card hands for each player and the screen coordinates for their hands */
-		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
-		redhand = document.getElementById("game_redhand").innerHTML.split(",");
-		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
-		yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
-		screencoords = document.getElementById("game_screen").innerHTML.split(",");
-
-/* Get the player list */
-		playerList = [];
-		yplayer = document.getElementById("game_yplayer").innerHTML;
-		gplayer = document.getElementById("game_gplayer").innerHTML;
-		rplayer = document.getElementById("game_rplayer").innerHTML;
-		bplayer = document.getElementById("game_bplayer").innerHTML;
-		ryteam = document.getElementById("game_ryteam").innerHTML;
-		gbteam = document.getElementById("game_gbteam").innerHTML;
-		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-		player = playerList[turn][0];
-		turn_color = playerList[turn][1];
+/* Get all variables off the web page into internal global variables */
+		getPageInnerHTML();
 
 /* Check every 5 seconds to see if player has made a move (plays count incremented). */
 		if (refresh==1) {
 			setInterval(function() {			
-		  	    $.ajax({
-				  url: "/games/"+id+"/query",
-		  		  dataType: 'json',
-		  	      success: function(data) {
-					  var old_plays = document.getElementById("game_plays").innerHTML;
-		  			  var new_plays = data.plays;
-		  			  if ( new_plays != old_plays) {
-		  				location.reload();
-						old_plays = new_plays;
-		  			  }
-		  	      },
-			      error: function (jqXHR, textStatus, errorThrown) {
-					 /*alert('ajax error: ' + textStatus + ': ' + errorThrown); */
-			      }
-		  	  });					
+				$.ajax({
+					url: "/games/"+id+"/query",
+					dataType: 'json',
+					success: function(data) {
+						var old_plays = document.getElementById("game_plays").innerHTML;
+						var new_plays = data.plays;
+						if ( new_plays != old_plays) {
+							location.reload();
+							old_plays = new_plays;
+						}
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						/*alert('ajax error: ' + textStatus + ': ' + errorThrown); */
+					}
+				});					
 			}, 5000);
-		}
-					
+		}					
 
 /* Get the current user's color */
 		user_color_list = [];
@@ -332,6 +289,7 @@ $(document).ready(() => {
 				user_color_list.push(playerList[i][1]);
 			}
 		}
+
 /* Set the users color. It will be set to the current turn color if the user is playing that color.
 	Otherwise it will be set to the next color that user happens to be playing */
 		i = turn;
@@ -349,10 +307,10 @@ $(document).ready(() => {
 
 /* show the card on top of the discard pile */
 		if (discardpile.length != 0) {
-	  	  discard_background = "url(/assets/" + discardpile[0] + ".png)";
-	  	} else {
-	  	  discard_background = "discard_background.png";
-	  	}	  
+			discard_background = "url(/assets/" + discardpile[0] + ".png)";
+		} else {
+			discard_background = "discard_background.png";
+		}	  
 		discardElement = document.getElementById("discardpile");
 		discardElement.style.backgroundImage = discard_background;
 	  	 
@@ -379,8 +337,7 @@ $(document).ready(() => {
 			p[i].setAttribute("draggable", "false");
 		}
 
-	}
-	
+	}	
 		
 /*
 
@@ -391,49 +348,10 @@ $(document).ready(() => {
 
 	if (header == "Marbles Game") {	
 		
-/* Pull content from page into internal storage */
-		
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");
-		var game_name = $("#game_name").val();
-		var game_status = $("#game_status").val();
-		var turn = parseInt($("#game_turn").val());
-		var comment = $("#game_comment").val();
-		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
-		user_theme = document.getElementById("user_theme").innerHTML;
+/* Get all variables off the web page into internal global variables */
+		getPageValues();
 
-/* convert strings in form to arrays */	
-		var board = ($("#game_board").val()).split(","); 
-		var deck = ($("#game_deck").val()).split(",");
-		/* If deck is empty, make sure it is truly empty */
-		if (deck[0] == "") {
-			deck = [];
-		}
-		var discardpile = ($("#game_discardpile").val()).split(",");
-		/* If discardpile is empty, make sure it is truly empty */
-		if (discardpile[0] == "") {
-			discardpile = [];
-		}
-		greenhand = ($("#game_greenhand").val()).split(",");
-		redhand = ($("#game_redhand").val()).split(",");
-		bluehand = ($("#game_bluehand").val()).split(",");
-		yellowhand = ($("#game_yellowhand").val()).split(",");
-		screencoords = ($("#game_screen").val()).split(",");
-	  	yplayer = $("#game_yplayer").val();
-		gplayer = $("#game_gplayer").val();
-		rplayer = $("#game_rplayer").val();
-		bplayer = $("#game_bplayer").val();
-		ryteam = $("#game_ryteam").val();
-		gbteam = $("#game_gbteam").val();
-		
-/* get the players list */
-	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-		var player = playerList[turn][0];
-		var turn_color = playerList[turn][1];
 		playedCard = "";  
-
-/* get the marble paths array */
-		get_paths();
 
 /* This is edit mode so the user color is same as the turn color */
 		user_color = turn_color; 
@@ -482,18 +400,19 @@ $(document).ready(() => {
 
 /* Display the hand */
 	function displayCards(turn_color) {
+		var playerhand;
 		hand = document.getElementById("hand");
 		while (hand.firstChild) {
 			hand.removeChild(hand.lastChild);
 		}
 		if (turn_color == "green") {
-			var playerhand = greenhand;
+			playerhand = greenhand;
 		} else if (turn_color == "yellow") {
-			var playerhand = yellowhand;
+			playerhand = yellowhand;
 		} else if (turn_color == "red") {
-			var playerhand = redhand;
+			playerhand = redhand;
 		} else if (turn_color == "blue") {
-			var playerhand = bluehand;
+			playerhand = bluehand;
 		}
 		for (i=0; i<=4; i++) {
 			if (playerhand[i]) {
@@ -503,8 +422,8 @@ $(document).ready(() => {
 			}
 		}
 		if (discardpile[0]) {
-	  	  discard_background = "url(/assets/" + discardpile[0] + ".png)";
-	  	  $("#discardpile").css('backgroundImage', discard_background);
+			discard_background = "url(/assets/" + discardpile[0] + ".png)";
+			$("#discardpile").css('backgroundImage', discard_background);
 		}
 	}
 
@@ -544,9 +463,6 @@ $(document).ready(() => {
 		ctx.moveTo(820,800);
 		ctx.lineTo(820,0);
 		ctx.stroke();
-		
-	/* Get the hole x,y coordinates */
-		get_holexy();
 
 	/* Board Orientation: For board rotations to put current player's home at bottom of screen */
 		if (user_color == "yellow") {
@@ -643,6 +559,7 @@ $(document).ready(() => {
 				
 
 	function drawCardArea() {
+		var d;
 		card_width = 65;
 		card_height = 100;
 		coords = [];
@@ -652,7 +569,7 @@ $(document).ready(() => {
 		centre_y = board_offset + board_size/2;
 
 	/* Draw the card hand area */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "hand");
 		d.setAttribute("draggable", "true");
 		d.setAttribute("ondragstart", "drag(event)");
@@ -665,7 +582,7 @@ $(document).ready(() => {
 		document.body.appendChild(d);			
 
 	/* Draw the discard area */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "discardpile");
 		d.setAttribute("draggable", "false");
 		d.className = "discardspot";
@@ -675,7 +592,7 @@ $(document).ready(() => {
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
 	/* Draw the discard area label */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "discard_label");
 		d.style.position = "absolute";
 		d.className = "boardlabel";
@@ -684,7 +601,7 @@ $(document).ready(() => {
 		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
 	/* Draw the discard card count */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "discard_count");
 		d.style.position = "absolute";
 		d.className = "boardlabel";
@@ -698,7 +615,7 @@ $(document).ready(() => {
 		document.body.appendChild(d);
 		
 	/* Draw the comment area in between Discards and Deck piles */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "comment");
 		d.className = "comment";
 		d.innerHTML = comment.replace(/&amp;/g, "&");
@@ -707,7 +624,7 @@ $(document).ready(() => {
 		document.body.appendChild(d);
 
 	/* Draw the deck area i.e. deal pile */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "deck");
 		d.setAttribute("draggable", "false");
 		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 195).toString() + "px";
@@ -716,7 +633,7 @@ $(document).ready(() => {
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
 	/* Draw the deck label */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "deck_label");
 		d.className = "boardlabel";
 		d.style.position = "absolute";
@@ -725,7 +642,7 @@ $(document).ready(() => {
 		d.style.top = "265px";
 		document.body.appendChild(d);
 	/* Draw the deck card count */
-		var d = document.createElement("div");
+		d = document.createElement("div");
 		d.setAttribute("id", "deck_count");
 		d.style.position = "absolute";
 		d.className = "boardlabel";		
@@ -776,7 +693,7 @@ $(document).ready(() => {
 			}
 		}		
 	}
-			
+		
 	function dealCards() {
 	  	yplayer = $("#game_yplayer").val();
 		gplayer = $("#game_gplayer").val();
@@ -859,29 +776,29 @@ $(document).ready(() => {
 	
 
 	function initializeBoard() {
-	  if ($("#game_yplayer").val()) {
-  		  for (p=93; p<=96; p++) {
-  			board[p] = "y" + p.toString();
-  		  }	
-	  }
-	  if ($("#game_gplayer").val()) {
-		  for (p=21; p<=24; p++) {
-			board[p] = "g" + p.toString();
-		  }
-	  }
-	  if ($("#game_rplayer").val()) {
-		  for (p=45; p<=48; p++) {
-			board[p] = "r" + p.toString();
-	      }
-	  }
-	  if ($("#game_bplayer").val()) {
-		  for (p=69; p<=72; p++) {
-			board[p] = "b" + p.toString();
-	      }	
-	  }	
+		if ($("#game_yplayer").val()) {
+			for (p=93; p<=96; p++) {
+				board[p] = "y" + p.toString();
+			}
+		}
+		if ($("#game_gplayer").val()) {
+			for (p=21; p<=24; p++) {
+				board[p] = "g" + p.toString();
+			}
+		}
+		if ($("#game_rplayer").val()) {
+			for (p=45; p<=48; p++) {
+				board[p] = "r" + p.toString();
+			}
+		}
+		if ($("#game_bplayer").val()) {
+			for (p=69; p<=72; p++) {
+				board[p] = "b" + p.toString();
+			}
+		}
 	}
 
-	
+
 	function checkMove(playedCard, board_start, board_end) {
 /* Uncomment the line below to turn move checking off for testing purposes */
 		/*moved_marbles = [];
@@ -1379,11 +1296,11 @@ $(document).ready(() => {
 							return false;
 						}
 					}
-   					j++;
-   					hole = marble_path[j];	
-				}				
+					j++;
+					hole = marble_path[j];	
+				}
 			}
-		}			
+		}	
 
 		/* Checks for when just one marble moved */
 		if (moved_count == 1){
@@ -1430,26 +1347,26 @@ $(document).ready(() => {
 
 	function getPlayerList(yplayer, gplayer, rplayer, bplayer) {
 		var pList = [];
-	    if (yplayer) {
+		if (yplayer) {
 			name_str = yplayer.split(" ");
 			first_name = name_str[0];
 	  	  	pList.push([first_name, "yellow"]);
-	    }
-	    if (gplayer) {
+		}
+		if (gplayer) {
 			name_str = gplayer.split(" ");
 			first_name = name_str[0];
 	  	  	pList.push([first_name, "green"]);
-	    }
-	    if (rplayer) {
+		}
+		if (rplayer) {
 			name_str = rplayer.split(" ");
 			first_name = name_str[0];
 	  	  	pList.push([first_name, "red"]);
-	    }
-	    if (bplayer) {
+		}
+		if (bplayer) {
 			name_str = bplayer.split(" ");
 			first_name = name_str[0];
 	  	  	pList.push([first_name, "blue"]);
-	    }
+		}
 		return pList;
 	}
 
@@ -1633,6 +1550,100 @@ $(document).ready(() => {
 	    return reserved;
 	}
 
+	function getPageInnerHTML() {
+
+	/* Pull content from page into internal storage - (similar to getPageValues function) */
+		game_name = document.getElementById("game_name").innerHTML;
+		game_status = document.getElementById("game_status").innerHTML;
+		turn = parseInt(document.getElementById("game_turn").innerHTML);
+		refresh = parseInt(document.getElementById('game_refresh').innerHTML);
+		plays = parseInt(document.getElementById('game_plays').innerHTML);
+		comment = document.getElementById("game_comment").innerHTML;
+		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
+		user_theme = document.getElementById("user_theme").innerHTML;
+		id = document.getElementById("game_id").innerHTML;
+
+	/* convert strings in page to arrays */	
+		board = (document.getElementById("game_board").innerHTML).split(",");
+		deck = (document.getElementById("game_deck").innerHTML).split(",");
+		/* If deck is empty, make sure it is truly empty */
+		if (deck[0] == "") {
+			deck = [];
+		}
+		discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
+		/* If discardpile is empty, make sure it is truly empty */
+		if (discardpile[0] == "") {
+			discardpile = [];
+		}
+		moved = document.getElementById("game_moved").innerHTML.split(",");
+
+	/* Get the card hands for each player and the screen coordinates for their hands */
+		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
+		redhand = document.getElementById("game_redhand").innerHTML.split(",");
+		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
+		yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+		screencoords = document.getElementById("game_screen").innerHTML.split(",");
+
+	/* Get the player list */
+		playerList = [];
+		yplayer = document.getElementById("game_yplayer").innerHTML;
+		gplayer = document.getElementById("game_gplayer").innerHTML;
+		rplayer = document.getElementById("game_rplayer").innerHTML;
+		bplayer = document.getElementById("game_bplayer").innerHTML;
+		ryteam = document.getElementById("game_ryteam").innerHTML;
+		gbteam = document.getElementById("game_gbteam").innerHTML;
+		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+		turn_color = playerList[turn][1];	
+	
+	}
+	
+	function getPageValues() {
+
+	/* Pull content from page into internal storage - (similar to getPageInnerHTML function) */
+		game_name = document.getElementById("game_name").value;
+		game_status = document.getElementById("game_status").value;
+		turn = parseInt(document.getElementById("game_turn").value);
+		refresh = parseInt(document.getElementById('game_refresh').value);
+		plays = parseInt(document.getElementById('game_plays').value);
+		comment = document.getElementById("game_comment").value;
+		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
+		user_theme = document.getElementById("user_theme").innerHTML;
+		id = document.getElementById("game_id").value;
+
+	/* convert strings in page to arrays */	
+		board = (document.getElementById("game_board").value).split(",");
+		deck = (document.getElementById("game_deck").value).split(",");
+		/* If deck is empty, make sure it is truly empty */
+		if (deck[0] == "") {
+			deck = [];
+		}
+		discardpile = document.getElementById("game_discardpile").value.split(",");
+		/* If discardpile is empty, make sure it is truly empty */
+		if (discardpile[0] == "") {
+			discardpile = [];
+		}
+		moved = document.getElementById("game_moved").value.split(",");
+
+	/* Get the card hands for each player and the screen coordinates for their hands */
+		greenhand = document.getElementById("game_greenhand").value.split(",");
+		redhand = document.getElementById("game_redhand").value.split(",");
+		bluehand = document.getElementById("game_bluehand").value.split(",");
+		yellowhand = document.getElementById("game_yellowhand").value.split(",");
+		screencoords = document.getElementById("game_screen").value.split(",");
+
+	/* Get the player list */
+		playerList = [];
+		yplayer = document.getElementById("game_yplayer").value;
+		gplayer = document.getElementById("game_gplayer").value;
+		rplayer = document.getElementById("game_rplayer").value;
+		bplayer = document.getElementById("game_bplayer").value;
+		ryteam = document.getElementById("game_ryteam").value;
+		gbteam = document.getElementById("game_gbteam").value;
+		playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+		turn_color = playerList[turn][1];	
+	
+	}
+
 });
 
 
@@ -1652,9 +1663,8 @@ function drag(ev) {
 	rplayer = $("#game_rplayer").val();
 	bplayer = $("#game_bplayer").val();	 
     playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-	var turn = parseInt($("#game_turn").val());
-	var player = playerList[turn][0].split(" ")[0];
-	var data = ev.dataTransfer.getData("text");
+	turn = parseInt($("#game_turn").val());
+	data = ev.dataTransfer.getData("text");
 	x_offset = ev.clientX - $("#" + data).offset().left;
 	y_offset = ev.clientY - $("#" + data).offset().top;
 	hole_element = ev.target.parentElement;
@@ -1679,10 +1689,9 @@ function drop(ev) {
 	  rplayer = $("#game_rplayer").val();
 	  bplayer = $("#game_bplayer").val();	  
       playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-	  var data = ev.dataTransfer.getData("text");
-	  var turn = parseInt($("#game_turn").val());
-	  var player = playerList[turn][0].split(" ")[0];
-	  var player_color = playerList[turn][1];
+	  data = ev.dataTransfer.getData("text");
+	  turn = parseInt($("#game_turn").val());
+	  player_color = playerList[turn][1];
 	  performDrop(player_color, data, ev);
 	  updateBoardArray();
 	}
@@ -1693,13 +1702,14 @@ function performDrop(player_color, data, ev) {
     draggingObj = dragObjectType(data);
     draggingTo = dragObjectType(ev.target.id);
 	var playerfield = "#game_" + player_color + "hand";
+	var playerhand = [];
 	/* alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
   	  	playedCard = data;
 		/* remove card from hand */
-    	var playerhand = ($(playerfield).val()).split(",");
+    	playerhand = ($(playerfield).val()).split(",");
     	for (i=0; i<=5; i++) {
     		  if (data == playerhand[i]) {
     			  playerhand[i] = "";
@@ -1714,12 +1724,12 @@ function performDrop(player_color, data, ev) {
     	$("#game_discardpile").val(discardpile.toString(","));
   	    ev.target.appendChild(document.getElementById(data));
   	    drop_ok = true;			
-	 }	  
+	 }
 
 
  /* player is moving a card from discardpile back to cards (his hand) */
      if ((draggingObj == "card") && (draggingFrom == "discardpile") && ( (draggingTo == "hand") || (draggingTo == "card") )) {
-     	var playerhand = ($(playerfield).val()).split(",");
+     	playerhand = ($(playerfield).val()).split(",");
 		/* remove card off discard pile */
  		discardpile = ($("#game_discardpile").val()).split(",");
  		removed_card = discardpile.shift();
@@ -1952,7 +1962,6 @@ function dragObjectType(data) {
 function updateBoardArray() {
 /* update the field that stores the board and marble positions */
 	var gamestr = "";
-	var str = "";
 	var mrblid = "";
 	for (i=0; i<=96; i++) {
 		divID = "hole" + i.toString();
@@ -2106,6 +2115,7 @@ function get_holexy(){
 	holexy[94]=[112.5, 687.5, "yellow"];
 	holexy[95]=[137.5, 662.5, "yellow"];
 	holexy[96]=[162.5, 637.5, "yellow"];
+	return holexy;
 }
 
 
@@ -2605,6 +2615,8 @@ function get_paths() {
 	paths[387]=[92];
 
 	back_paths=[3,7,11,15,19,23,27,31,35,39,43,47,51,54,55,59,63,67,71,75,79,115,119,123,127,131,135,139,143,147,150,151,155,159,163,167,171,175,211,215,219,223,227,231,235,239,243,246,247,251,255,259,263,267,271,307,311,315,319,323,327,331,335,339,342,343,347,351,355,359,363,367];
+	
+	return paths;
 
 }
 
