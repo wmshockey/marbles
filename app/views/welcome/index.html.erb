@@ -8,7 +8,10 @@
 		<h1 id="header">Welcome to the Online Game of Marbles</h1>
 	</div>
 
-	<h4 class="col-sm-4"><%= link_to 'Show All My Games', '/games'%></h4>
+
+		<h4 class="col-sm-4"><%= link_to 'Show All My Games', '/games'%></h4>
+		<div class="col-sm-8"><%= "2020-11-28 NEW FEATURE: The player who plays first after the next deal will be indicated by the triangle symbol \u{25C4} beside their name and will rotate to the next player with each full deck deal.  Plus a few other minor changes."%></div>
+
 	<br><br>
 
 	<% ryteams = @games.map {|g| g.ryteam}.uniq %>

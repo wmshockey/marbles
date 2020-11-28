@@ -33,6 +33,7 @@ $(document).ready(() => {
 		  turn = (Math.floor(Math.random() * number_players));
 		  alert(playerList[turn][0] + "-" + playerList[turn][1] + " gets to play first.");
 		  $("#game_turn").val(turn.toString());
+		  $("#game_firstturn").val(turn.toString());
 	
 /* Initialize the Board */
 		  initializeBoard();		 
@@ -76,7 +77,6 @@ $(document).ready(() => {
 	/* check if move is valid and if not, reset board to start of move */
 			if (checkMove(playedCard, board_start, board_end) == false) {
 				/* Move was not valid */
-				alert("Press OK to take your turn over.");
 				/* Restore board and hands to point before the last move */
 				board = board_start;
 				yellowhand = yellowhand_start;
@@ -133,11 +133,6 @@ $(document).ready(() => {
 				} else {
 					/* Set next persons turn */
 					number_players = playerList.length;
-					/* To be fair, the next person in line to play should play even if cards have to be redealt */
-					turn_fair = turn + 1;
-					if (turn_fair >= number_players) {
-						turn_fair = 0;
-					}
 					/* Now see if anyone can play */
 					turn = -1;
 					next = parseInt($("#game_turn").val());
@@ -164,11 +159,21 @@ $(document).ready(() => {
 						$("#game_turn").val(turn.toString());	
 					} else {
 						/* Nobody else can play now - must shuffle and redeal the cards */
-						alert("No one can play now.  Another hand will be dealt.");
+						$("#game_message").val("Another hand has been dealt.");
+						first_turn = parseInt($("#game_firstturn").val());
+						turn = first_turn;
+						before_deal_count = deck.length;
 						dealCards();
-						displayCards(turn_color);
-						turn = turn_fair;
+						after_deal_count = deck.length;
+						/* If there are no more cards in the deck then shift first turn after a deal to next player */
+						if (before_deal_count>1 && after_deal_count<=1) {
+							first_turn = first_turn + 1;
+							if (first_turn >= number_players) {
+								first_turn = 0;
+							}
+						}
 						$("#game_turn").val(turn.toString());
+						$("#game_firstturn").val(first_turn.toString());
 						$("#game_deck").val(deck.toString());
 						$("#game_discardpile").val(discardpile.toString());							
 						$("#game_greenhand").val(greenhand.toString());
@@ -385,7 +390,6 @@ $(document).ready(() => {
 
 /* Control is now turned over to drag and drop functions of browser */
 
-
 	
 /* -----------------------------FUNCTIONS----------------------------------- */
 
@@ -500,8 +504,16 @@ $(document).ready(() => {
 			y = nameLabelCoords[quad][1];
 		/* Display players names on board */
 			player_name = getPlayerName(color);
+			player_nbr = getPlayerNbr(color);
+		/* Append an asterisk if this is the player who gets to play first after a new deal */
+			if (player_nbr == first_turn) {
+				append_str = " &#9668;";
+			} else {
+				append_str = "";
+			}
+		/* Display names of players on the board */
 			if (player_name != "") {
-				labelBoard(x, y, player_name, color, "playername", "leftPlayer");
+				labelBoard(x, y, player_name + append_str, color, "playername", "leftPlayer");
 				card_count = getCardCount(color);
 				if (card_count>=0) {
 					labelBoard(x+20, y+20, card_count, "white", "boardlabel", "leftPlayer")			
@@ -524,6 +536,13 @@ $(document).ready(() => {
 				placeMarble(i, marble_id, marble_image);
 			}
 		}
+		
+	/* Display message on screen if any */
+		var d = document.createElement("div");
+		d.setAttribute("id", "message");
+		d.className = "msgArea text-info bg-info";
+		d.innerHTML = message;
+		document.body.appendChild(d);
 		
 	}	
 
@@ -734,7 +753,7 @@ $(document).ready(() => {
 		/* If deck out of cards, empty the discard pile and shuffle the full deck */
 		number_players = playerList.length;
 		if (deck.length <= 1) {
-			alert("No cards left in the deck.  Will shuffle and deal from full deck now.")
+			$("#game_message").val("A new hand has been dealt from the full deck.");
 			/* Put a comment on screen for what the last discard was before the shuffle */
 			if(comment == "") {
 				com = [discardpile[0]];
@@ -916,34 +935,35 @@ $(document).ready(() => {
 
 		/* Check that total number of marbles on board is always 4 x number_of_players */
 		if (marble_count != marbles_in_play) {
-			alert("Some marbles have been moved off board!  Marble count is " + marble_count);
+			alert("Some marbles have been moved off board!  Marble count is " + marble_count + ".  Take your turn over.");
 			return false;
 		}				
 
 		/* If marble not found in either the start hole or the end hole it is error condition. */
 		if( (start_hole==99) && (end_hole!=99)) {
-			alert("A marble appears on board out of no where.");
+			alert("A marble appears on board out of no where.  Take your turn over.");
 			return false;
 		} else if ( (start_hole!=99) && (end_hole==99)) {
-			alert("A marble has disappeard from the board.");
+			alert("A marble has disappeard from the board.  Take your turn over.");
 			return false;
 		}
 		
 		/* Check if a card was played but no marbles were moved */
 		if (playedCard != "" && moved_count ==0){
-			alert("A card was played but no marbles were moved.");
+			alert("A card was played but no marbles were moved.  Take your turn over.");
 			return false;
 		}
 		
 		/* Check if a marble was moved but no card was played */
 		if (playedCard == "" && moved_count > 0) {
-			alert("A marble was moved but no card was played.")
+			alert("A marble was moved but no card was played.  Take your turn over.")
 			return false;
 		}	
 
-		/* If a card was played then clear the comment field */
+		/* If a card was played then clear the comment and message fields */
 		if (playedCard!="") {
 			$("#game_comment").val("");
+			$("#game_message").val("");
 		}
 
 		/* Check if no card played and no marbles moved */
@@ -995,7 +1015,7 @@ $(document).ready(() => {
 		if ( ["JH", "JD", "JC", "JS"].includes(playedCard) ) {
 			/* Two and only two marbles must be involved */
 			if (moved_count != 2) {
-				alert("Jack played but other than two marbles were moved.");
+				alert("Jack played but other than two marbles were moved.  Take your turn over.");
 				return false;
 			}
 			mid_1 = moved_marbles[0][0].substring(0,1);
@@ -1020,12 +1040,12 @@ $(document).ready(() => {
 			}	
 			/* Make sure that one of the marbles involved is playable */
 			if (!playable_colors.includes(marble_color_1) && !playable_colors.includes(marble_color_2)) {
-				alert("Jack played but none of the marbles moved could be played by the player.");
+				alert("Jack played but none of the marbles moved could be played by the player.  Take your turn over.");
 				return false;
 			}
 			/* Check to make sure the two marbles swapped are of different colors */
 			if (mid_1 == mid_2) {
-				alert("Two marbles of the same color were played when Jack card played.");
+				alert("Two marbles of the same color were played when Jack card played.  Take your turn over.");
 				return false;
 			}
 
@@ -1035,16 +1055,16 @@ $(document).ready(() => {
 			start_hole_2 = moved_marbles[1][1];
 			end_hole_2   = moved_marbles[1][2];
 			if ( (start_hole_1 != end_hole_2) || (start_hole_2 != end_hole_1) ) {
-				alert("Jack played but marble positions were not properly swapped.");
+				alert("Jack played but marble positions were not properly swapped.  Take your turn over.");
 				return false;
 			}
 			/* Check to make sure the two marbles involved were not in start row or home row positions */
 			if (startHoles.includes(start_hole_1) || startHoles.includes(start_hole_2) ) {
-				alert("Cannot use Jack to move marbles in start rows.");
+				alert("Cannot use Jack to move marbles in start rows.  Take your turn over.");
 				return false;
 			}
 			if ( homeHoles.includes(start_hole_1) || homeHoles.includes(start_hole_2) ) {
-				alert("Cannot use Jack to move marbles in home rows.");
+				alert("Cannot use Jack to move marbles in home rows.  Take your turn over.");
 				return false;
 			}
 			return true;
@@ -1067,7 +1087,7 @@ $(document).ready(() => {
 				/* Wrong color so marble is not playable, unless it was killed */
 				end_hole = moved_marbles[i][2];
 				if ( !startHoles.includes(end_hole) ) {
-					alert(player_color + " player is not allowed to move " + marble_color + " marbles.");
+					alert(player_color + " player is not allowed to move " + marble_color + " marbles.  Take your turn over.");
 					return false;
 				}
 			}
@@ -1079,13 +1099,13 @@ $(document).ready(() => {
 			
 			/* Check to make sure an outcard was played */
 			if (!outCards.includes(playedCard)) {
-				alert("Marble brought out of start row but no outcard was played.");
+				alert("Marble brought out of start row but no outcard was played.  Take your turn over.");
 				return false;
 			}
 
 			/* If more than one marble involved coming out of a start row, the second one must be a killed marble */
 			if (moved_count > 1 && marbles_killed!= 1) {
-				alert("Marble brought out of start row but other marbles were moved.");
+				alert("Marble brought out of start row but other marbles were moved.  Take your turn over.");
 				return false;
 			}
 			
@@ -1097,22 +1117,22 @@ $(document).ready(() => {
 				if ( !startHoles.includes(end_hole) ) {
 					if ( green_start_holes.includes(start_hole)) {
 						if ( end_hole != 1) {
-							alert("A green marble came out of start row into the wrong hole.");
+							alert("A green marble came out of start row into the wrong hole.  Take your turn over.");
 							return false;
 						}
 					} else if ( red_start_holes.includes(start_hole)) {
 						if (end_hole != 25) {
-							alert("A red marble came out of start row into the wrong hole.");
+							alert("A red marble came out of start row into the wrong hole.  Take your turn over.");
 							return false;
 						}
 					} else if ( blue_start_holes.includes(start_hole)) {
 						if (end_hole != 49) {
-							alert("A blue marble came out of start row into the wrong hole.");
+							alert("A blue marble came out of start row into the wrong hole.  Take your turn over.");
 							return false;
 						}
 					} else if ( yellow_start_holes.includes(start_hole)) {
 						if (end_hole!= 73) {
-							alert("A yellow marble came out of start row into the wrong hole.");
+							alert("A yellow marble came out of start row into the wrong hole.  Take your turn over.");
 							return false;
 						}
 					}
@@ -1125,7 +1145,7 @@ $(document).ready(() => {
 		
 		/* Check that the total distance moved matches with the value of the card played */
 		if (total_distance != card_value){
-			alert("Number of positions marbles moved was " + total_distance + " but value of played card was " + card_value);
+			alert("Number of positions marbles moved was " + total_distance + " but value of played card was " + card_value + ".  Take your turn over.");
 			return false;
 		}					
 
@@ -1142,7 +1162,7 @@ $(document).ready(() => {
 		/* If more than one marble killed, there must have been a 7 card played */
 		if (marbles_killed > 1) {
 			if (!["7H", "7D", "7C", "7S"].includes(playedCard)) {
-				alert("A 7 card was not played but more than one marble was killed.");
+				alert("A 7 card was not played but more than one marble was killed.  Take your turn over.");
 				return false;
 			}
 		}
@@ -1156,7 +1176,7 @@ $(document).ready(() => {
 				}
 			}
 			if ( count != 1 ) {
-				alert("Other than one marble moved but no 7 card played.");
+				alert("Other than one marble moved but no 7 card played.  Take your turn over.");
 				return false;
 			}
 		}
@@ -1173,7 +1193,7 @@ $(document).ready(() => {
 				}
 			}
 			if (non_killed_end_hole == -1) {
-				alert("All the moved marbles in this turn were killed?");
+				alert("All the moved marbles in this turn were killed?  Take your turn over.");
 				return false;
 			}
 			for (i=0; i<moved_marbles.length; i++) {
@@ -1182,7 +1202,7 @@ $(document).ready(() => {
 				/* check if this is a killed marble, that it only came from the end of the path, not along the way */
 				if ( startHoles.includes(end_hole)) {
 					if (start_hole != non_killed_end_hole) {
-						alert("A marble was killed along the path but no 7 card was played.");
+						alert("A marble was killed along the path but no 7 card was played.  Take your turn over.");
 						return false;
 					}
 				}
@@ -1196,19 +1216,19 @@ $(document).ready(() => {
 			start_hole = moved_marbles[i][1];
 			end_hole = moved_marbles[i][2];
 			if ( red_home_holes.includes(end_hole) && mid!="r") {
-				alert("A non-red marble went into the red home row.");
+				alert("A non-red marble went into the red home row.  Take your turn over.");
 				return false;
 			}
 			if ( blue_home_holes.includes(end_hole) && mid!="b") {
-				alert("A non-blue marble went into the blue home row.");
+				alert("A non-blue marble went into the blue home row.  Take your turn over.");
 				return false;			
 			}
 			if ( yellow_home_holes.includes(end_hole) && mid!="y") {
-				alert("A non-yellow marble went into the yellow home row.");
+				alert("A non-yellow marble went into the yellow home row.  Take your turn over.");
 				return false;
 			}
 			if ( green_home_holes.includes(end_hole) && mid!="g") {
-				alert("A non-green marble went into the green home row.");
+				alert("A non-green marble went into the green home row.  Take your turn over.");
 				return false;			
 			}		
 		}
@@ -1221,16 +1241,16 @@ $(document).ready(() => {
 			dist = moved_marbles[i][4];
 			if (dist!=0) {
 				if (mid=="y" && (40<=start_hole && start_hole<=63) && (end_hole==64 || (73<=end_hole && end_hole<=87))){
-					alert("Yellow marble moved past entry point to its home row.");
+					alert("Yellow marble moved past entry point to its home row.  Take your turn over.");
 					return false;
 				} else if (mid=="b" && (16<=start_hole && start_hole<=39) && (end_hole==40 || (49<=end_hole && end_hole<=63))) {
-					alert("Blue marble moved past entry point to its home row.");
+					alert("Blue marble moved past entry point to its home row.  Take your turn over.");
 					return false;
 				} else if (mid=="r" && (1<=start_hole && start_hole<=15) && (end_hole==16 || (25<=end_hole && end_hole<=39))) {
-					alert("Red marble moved past entry point to its home row.");
+					alert("Red marble moved past entry point to its home row.  Take your turn over.");
 					return false;
 				} else if (mid=="g" && (64<=start_hole && start_hole<=87) && (end_hole==88 || (1<=end_hole && end_hole<=15))) {
-					alert("Green marble moved past entry point to its home row.");
+					alert("Green marble moved past entry point to its home row.  Take your turn over.");
 					return false;
 				}	
 			}
@@ -1245,25 +1265,25 @@ $(document).ready(() => {
 			if (startHoles.includes(end_hole)) {
 				if (mid == "r") {
 					if( !red_start_holes.includes(end_hole)) {
-						alert("A killed red marble went into the wrong starting row.");
+						alert("A killed red marble went into the wrong starting row.  Take your turn over.");
 						return false;
 					}
 				}
 				if (mid == "b") {
 					if (!blue_start_holes.includes(end_hole)) {
-						alert("A killed blue marble went into the wrong starting row.");
+						alert("A killed blue marble went into the wrong starting row.  Take your turn over.");
 						return false;
 					}
 				}
 				if (mid == "y") {
 					if (!yellow_start_holes.includes(end_hole)) {
-						alert("A killed yellow marble went into the wrong starting row.");
+						alert("A killed yellow marble went into the wrong starting row.  Take your turn over.");
 						return false;
 					}
 				}
 				if (mid == "g") {
 					if (!green_start_holes.includes(end_hole)) {
-						alert("A killed green marble went into the wrong starting row.");
+						alert("A killed green marble went into the wrong starting row.  Take your turn over.");
 						return false;
 					}
 				}
@@ -1292,7 +1312,7 @@ $(document).ready(() => {
 					if (mid) {
 						/* Don't say its a jump if the marble being jumped is also one being moved in this turn e.g. with 7 card*/
 						if (!marbles_in_play.includes(mid)) {
-							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each marble being killed.");
+							alert("A marble cannot jump over another marble.  When killing marbles using a 7 card, you have to land on each marble being killed.  Take your turn over.");
 							return false;
 						}
 					}
@@ -1313,27 +1333,27 @@ $(document).ready(() => {
 
 			/* If marble is put back in start row (killed), then more than one marble must have moved */
 			if (startHoles.includes(end_hole)) {
-				alert("A marble was killed but no other marble moved to kill it.");
+				alert("A marble was killed but no other marble moved to kill it.  Take your turn over.");
 				return false;
 			}
 					
 			/* If a move is -4 positions then a 4 card must have been played */
 			if ( (distance == -4) && !(["4H","4S","4D","4C"].includes(playedCard) )) {
-				alert("A marble was moved -4 positions but a 4 card was not played.");
+				alert("A marble was moved -4 positions but a 4 card was not played.  Take your turn over.");
 				return false;
 			}
 		
 			/* If marble moved out of centre hole with a 4 card, there are only 4 valid holes it could go to */
 			if ( card_value == -4) {
 				if (start_hole == 0 && ![4, 28, 52, 76].includes(end_hole)) {
-					alert("A 4 card played with marble coming out of centre hole but marble was moved to wrong hole.");
+					alert("A 4 card played with marble coming out of centre hole but marble was moved to wrong hole.  Take your turn over.");
 					return false;
 				}
 			}
 
 			/* If marble moved backwards but not -4 positions */
 			if ( (distance<0) && (distance!=-4)) {
-				alert("A marble was moved backwards an invalid number of positions");
+				alert("A marble was moved backwards an invalid number of positions.  Take your turn over.");
 				return false;			
 			}
 											
@@ -1391,6 +1411,16 @@ $(document).ready(() => {
 			}
 		}
 		return player_name;
+	}
+
+	function getPlayerNbr(color) {
+		player_nbr = -1;
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][1] == color) {
+				player_nbr = i;
+			}
+		}
+		return player_nbr;
 	}
 		
 	function getScreenCoords(user_color) {
@@ -1556,9 +1586,11 @@ $(document).ready(() => {
 		game_name = document.getElementById("game_name").innerHTML;
 		game_status = document.getElementById("game_status").innerHTML;
 		turn = parseInt(document.getElementById("game_turn").innerHTML);
+		first_turn = parseInt(document.getElementById("game_firstturn").innerHTML);
 		refresh = parseInt(document.getElementById('game_refresh').innerHTML);
 		plays = parseInt(document.getElementById('game_plays').innerHTML);
 		comment = document.getElementById("game_comment").innerHTML;
+		message = document.getElementById("game_message").innerHTML;
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
 		user_theme = document.getElementById("user_theme").innerHTML;
 		id = document.getElementById("game_id").innerHTML;
@@ -1603,9 +1635,11 @@ $(document).ready(() => {
 		game_name = document.getElementById("game_name").value;
 		game_status = document.getElementById("game_status").value;
 		turn = parseInt(document.getElementById("game_turn").value);
+		first_turn = parseInt(document.getElementById("game_firstturn").value);
 		refresh = parseInt(document.getElementById('game_refresh').value);
 		plays = parseInt(document.getElementById('game_plays').value);
 		comment = document.getElementById("game_comment").value;
+		message = document.getElementById("game_message").value;
 		user_name = document.getElementById("user_name").innerHTML.split(" ")[0];
 		user_theme = document.getElementById("user_theme").innerHTML;
 		id = document.getElementById("game_id").value;

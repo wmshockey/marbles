@@ -10,7 +10,7 @@
 	</span>
 
 	<% if @game.status == "Finished"%>
-		<span class = "text-success bg-success congratsMsg">
+		<span class = "text-success bg-success msgArea">
 			<%= "** Congratulations to " + @game.winner + " for winning the game!! **"%>
 		</span>
 	<% else %>
@@ -41,6 +41,7 @@
 		<div id="game_start_date"><%= @game.start_date %></div>
 		<div id="game_status"><%= @game.status %></div>
 		<div id="game_turn"><%= @game.turn %></div>
+		<div id="game_firstturn"><%= @game.firstturn %></div>		
 
 		<div id="game_yplayer"><%= @game.yplayer %></div>
 		<div id="game_gplayer"><%= @game.gplayer %></div>
@@ -58,6 +59,7 @@
 		<div id="game_board"><%= @game.board %></div>
 		<div id="game_discardpile"><%= @game.discardpile %></div>
 		<div id="game_comment"><%= @game.comment %></div>
+		<div id="game_message"><%= @game.message %></div>
 		<div id="game_screen"><%= @game.screen %></div>
 		<div id="game_moved"><%= @game.moved %></div>
 		<div id="game_winner"><%= @game.winner%></div>
