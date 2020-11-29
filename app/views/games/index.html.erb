@@ -23,6 +23,10 @@
       <th class="col-sm-2">Teams/Players</th>
 	  <th class="col-sm-1">Winner</th>
       <th class="col-sm-1">Turn</th>
+	  <th class="col-sm-1"></th>
+	  <th class="col-sm-1"></th>
+	  <th class="col-sm-1"></th>
+	  <th class="col-sm-1"></th>
     </tr>
   </thead>
 
@@ -70,7 +74,7 @@
 		<% players = players.reject { |c| c.empty?} %>
 		<% turn = players[(game.turn).to_i] %>
         <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
-        <td class="col-sm-1 navbar-link"><%= link_to 'Play', game_path(game) %></td>
+        <td class="col-sm-1 navbar-link" ><%= link_to 'Play', game_path(game) %></td>
 		<td class="col-sm-1 navbar-link"><%= link_to 'Edit', edit_game_path(game) %>
 		<% if current_user.id == 1 %>
 			<td class="col-sm-1"><%= link_to 'Debug', debug_game_path(game) %></td>

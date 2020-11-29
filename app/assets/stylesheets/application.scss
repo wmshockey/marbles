@@ -44,8 +44,12 @@ li {
 }
 
 .table{
- background: #C0C0C0 !important;
-  color: black !important;
+	background: #C0C0C0 !important;
+	color: black !important;
+}
+
+thead{
+	background-color: gray;
 }
 
 .bullets {
@@ -197,7 +201,7 @@ li {
     position:absolute;
     top:0px;
     left:40px;
-	font-size: 18px;
+	font-size: 16px;
 }
 
 .line2 { 

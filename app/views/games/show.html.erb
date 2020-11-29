@@ -11,7 +11,7 @@
 
 	<% if @game.status == "Finished"%>
 		<span class = "text-success bg-success msgArea">
-			<%= "** Congratulations to " + @game.winner + " for winning the game!! **"%>
+			<%= "\u{1F44F} Congratulations to the "%><strong><%= @game.winner%></strong><%= " for winning the game!! \u{1F44F} \u{1F3C6}"%>
 		</span>
 	<% else %>
 		<span id="btnArea">
