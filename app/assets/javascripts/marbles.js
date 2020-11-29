@@ -132,8 +132,8 @@ $(document).ready(() => {
 					$("#game_winner").val(winner);				
 				} else {
 					/* Set next persons turn */
+					/* First see if anyone can play */
 					number_players = playerList.length;
-					/* Now see if anyone can play */
 					turn = -1;
 					next = parseInt($("#game_turn").val());
 					next = next + 1;
@@ -389,6 +389,7 @@ $(document).ready(() => {
 	deck_start = deck;
 
 /* Control is now turned over to drag and drop functions of browser */
+
 
 	
 /* -----------------------------FUNCTIONS----------------------------------- */
