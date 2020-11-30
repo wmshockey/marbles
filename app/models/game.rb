@@ -12,6 +12,43 @@ class GameValidator < ActiveModel::Validator
     if (record.yplayer=="" && record.rplayer=="" && record.gplayer=="" && record.bplayer=="")
       record.errors[:base] << 'Need to have at least one player to create a game.'    
     end
+    @games = Game.all
+    team_name_conflict = ""
+    @games.each do |n|
+      if (n.ryteam==record.ryteam)
+        pnames = [n.rplayer, n.yplayer]
+        if (!pnames.include?(record.rplayer) || !pnames.include?(record.yplayer) )
+          team_name_conflict = record.ryteam
+        end
+      end
+      if(n.gbteam==record.ryteam)
+        pnames = [n.gplayer, n.bplayer]
+        if (!pnames.include?(record.rplayer) || !pnames.include?(record.yplayer) )
+          team_name_conflict = record.ryteam
+        end
+      end
+    end
+    if team_name_conflict != ""
+      record.errors.add(:base, 'Team name ' + team_name_conflict + " is already taken.  Please choose a different team name.")
+    end
+    team_name_conflict = ""
+    @games.each do |n|  
+      if (n.ryteam==record.gbteam)
+        pnames = [n.rplayer, n.yplayer]
+        if (!pnames.include?(record.gplayer) || !pnames.include?(record.bplayer) )
+          team_name_conflict = record.gbteam
+        end 
+      end
+      if (n.gbteam==record.gbteam)
+        pnames = [n.gplayer, n.bplayer]
+        if (!pnames.include?(record.gplayer) || !pnames.include?(record.bplayer) )
+          team_name_conflict = record.gbteam
+        end
+      end
+    end
+    if team_name_conflict != ""
+      record.errors.add(:base, 'Team name ' + team_name_conflict + " is already taken.  Please choose a different team name.")
+    end
   end
 end
 
