@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :destroy]
-  before_action :get_teams, only: [:new, :create, :edit, :debug, :play]
+  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :query2, :destroy]
+  before_action :get_teams, only: [:new, :create, :edit, :update, :debug, :play]
 
   # GET /games
   # GET /games.json
@@ -26,10 +26,23 @@ class GamesController < ApplicationController
     render json: @game
   end
 
+  # GET /games/1/query2
+  # GET /games/1.json  
+  def query2
+    render json: @game
+  end
+
   # GET /games/new
   def new
     @game = Game.new
     @users = User.all
+    @user_name = current_user.name
+    @user_id = current_user.id
+    if @user_id==1
+      @games = Game.all
+    else
+      @games = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'")
+    end
   end
 
   # GET /games/1/play
@@ -95,6 +108,7 @@ class GamesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
+      @users = User.all
       @game = Game.find(params[:id])
       @user_name = current_user.name
       @user_email = current_user.email
@@ -112,9 +126,10 @@ class GamesController < ApplicationController
 
     def get_teams
       @games = Game.all
-    	ryteams = @games.map {|g| g.ryteam}.uniq
-    	gbteams = @games.map {|g| g.gbteam}.uniq
-    	@teams = ryteams.concat(gbteams).uniq.sort!  
+    	ryteams = @games.map {|g| g.ryteam+": ("+g.yplayer+","+g.rplayer+")"}.uniq
+    	gbteams = @games.map {|g| g.gbteam+": ("+g.gplayer+","+g.bplayer+")"}.uniq
+    	@teams = ryteams.concat(gbteams).uniq.sort!
+      @teams = @teams.select {|t| t[0]!=":"}
     end
  
     def get_plist 

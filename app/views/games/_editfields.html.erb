@@ -2,10 +2,13 @@
 	<br>
 	<div class="row border border-primary">
 	  <div class="col-sm-2"><%= form.label "Game Name:" %></div>
-	  <div class="col-sm-2"><%= form.text_field :name %></div> 
-	  <div class="hidden col-sm-2"><%= form.label :status %><%= form.text_field :status %></div>
+	  <div class="col-sm-4">		  
+	  	<span><%= form.text_field :name, :style => "width:200px" %></span>
+	  	<span id="nameselect"><%=form.collection_select :copyid, @games.order(name: :asc), :id, :name, {include_blank: ''}, :style => "width:20px" %></span>
+	  </div>
+	  <div class="hidden col-sm-1"><%= form.label :status %><%= form.text_field :status %></div>
 	  <div class="hidden col-sm-2"><%= form.label :turn %><%= form.text_field :turn %></div>
-	  <div class="hidden col-sm-2"><%= form.label :firstturn %><%= form.text_field :firstturn %></div>
+	  <div class="hidden col-sm-1"><%= form.label :firstturn %><%= form.text_field :firstturn %></div>
 	  <div class="hidden col-sm-2"><%= form.label :theme %><%= form.text_field :theme %></div>
 	</div>
 
@@ -52,14 +55,44 @@
 </div>
 
 	<script>
-	  $("#ryselect").on("change", function(){
-		  selected_team = $("#game_selected_ryteam").val();
+		$("#ryselect").on("change", function(){
+		  str = $("#game_selected_ryteam").val();
+		  selected_team = str.substring(0,str.indexOf(":"));
+		  selected_yplayer = str.substring(str.indexOf("(")+1, str.indexOf(","));
+		  selected_rplayer = str.substring(str.indexOf(",")+1, str.indexOf(")"));
 		  $("#game_ryteam").val(selected_team);
+		  $("#game_yplayer").val(selected_yplayer);
+		  $("#game_rplayer").val(selected_rplayer);
 		  $("#game_selected_ryteam").val("");
 	  });
 	  $("#gbselect").on("change", function(){
-		  selected_team = $("#game_selected_gbteam").val();
+		  str = $("#game_selected_gbteam").val();
+		  selected_team = str.substring(0,str.indexOf(":"));
+		  selected_gplayer = str.substring(str.indexOf("(")+1, str.indexOf(","));
+		  selected_bplayer = str.substring(str.indexOf(",")+1, str.indexOf(")"));
 		  $("#game_gbteam").val(selected_team);
-		  $("#game_selected_gbteam").val("");
+		  $("#game_gplayer").val(selected_gplayer);
+		  $("#game_bplayer").val(selected_bplayer);		  
+		  $("#game_selected_gbteam").val("");	
+	  });
+	  $("#nameselect").on("change", function(){
+		 id = $("#game_copyid").val();
+		 $.ajax({
+			url: "/games/"+id+"/query2",
+			dataType: 'json',
+			success: function(data) {
+				$("#game_name").val(data.name);
+				$("#game_yplayer").val(data.yplayer);
+				$("#game_rplayer").val(data.rplayer);
+				$("#game_gplayer").val(data.gplayer);
+				$("#game_bplayer").val(data.bplayer);
+				$("#game_ryteam").val(data.ryteam);
+				$("#game_gbteam").val(data.gbteam);
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				/*alert('ajax error: ' + textStatus + ': ' + errorThrown);*/
+			}
+		});	
+		$("#game_copyid").val("");						  	  	
 	  });
 	</script>

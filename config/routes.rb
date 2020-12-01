@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       get 'play'
       get 'debug'
       get 'query'
+      get 'query2'
     end
   end
   
