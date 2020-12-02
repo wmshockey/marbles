@@ -322,7 +322,6 @@ $(document).ready(() => {
 /* Display cards of person who is logged in */
 		if (user_color != ""){
 			displayCards(user_color);
-			updateBoardArray();	
 		}
 
 /* Put arrow beside the marbles that moved last turn */
@@ -367,7 +366,6 @@ $(document).ready(() => {
 
 /* Display cards of person whose turn it is */
 		displayCards(turn_color);
-		updateBoardArray();
 		
 /* Save everything back out to the page at this point in case it was updated during the move */
 		$("#deck").val(deck.toString());
