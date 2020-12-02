@@ -822,7 +822,7 @@ $(document).ready(() => {
 	function checkMove(playedCard, board_start, board_end) {
 /* Uncomment the line below to turn move checking off for testing purposes */
 		/*moved_marbles = [];
-		return true; */
+		return true;*/
 
 /* check for movement of any marbles */
 		moved_marbles = [];
@@ -1009,6 +1009,19 @@ $(document).ready(() => {
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+		/* Check to make sure player didn't try to kill one of their own marbles */
+		for (i=0; i<moved_count; i++) {
+			start_hole = moved_marbles[i][1];
+			end_hole = moved_marbles[i][2];
+			if ( startHoles.includes(end_hole)) {
+				killed_marble_color = moved_marbles[i][0].substring(0,1);
+				if (killed_marble_color == player_color.substring(0,1)) {
+					alert("You can't kill one of your own marbles.  Take your turn over.");
+					return false;
+				}
 			}
 		}
 
@@ -1876,18 +1889,26 @@ function performDrop(player_color, data, ev) {
 			drop_ok = true;
 		} else {
 		/* This is a straight kill move */
-			/* get hole where killed marble currently resides */
-			targetElement = document.getElementById(killed_marble).parentElement;
-			/* send killed_marble back to its' home */
-			hole_nbr = killed_marble.substring(1,3);
-			home_hole_id = "hole" + hole_nbr;
-			homeElement = document.getElementById(home_hole_id);
-			killedMarbleElement = document.getElementById(killed_marble);
-			homeElement.appendChild(killedMarbleElement);
-			/* put the killer marble into the target hole */
-			killerMarbleElement = document.getElementById(killer_marble);
-			targetElement.appendChild(killerMarbleElement);
-			drop_ok = true;			
+			/* check to make sure player is not trying to kill their own marble */
+			killed_color = killed_marble.substring(0,1);
+			killer_color = killer_marble.substring(0,1);
+			if (killed_color == killer_color) {				
+				alert("You can't kill your own marble.");
+				drop_ok = true;
+			} else {
+				/* get hole where killed marble currently resides */
+				targetElement = document.getElementById(killed_marble).parentElement;
+				/* send killed_marble back to its' home */
+				hole_nbr = killed_marble.substring(1,3);
+				home_hole_id = "hole" + hole_nbr;
+				homeElement = document.getElementById(home_hole_id);
+				killedMarbleElement = document.getElementById(killed_marble);
+				homeElement.appendChild(killedMarbleElement);
+				/* put the killer marble into the target hole */
+				killerMarbleElement = document.getElementById(killer_marble);
+				targetElement.appendChild(killerMarbleElement);
+				drop_ok = true;				
+			}
 		}
 	}
 	
@@ -1959,12 +1980,6 @@ function performDrop(player_color, data, ev) {
 		alert("Invalid Play.  A marble can only be placed on a valid hole spot on the board.");
 		drop_ok = true;
 	}
-
-/* remove any arrows shown during the drag operation */
-	var id_count = $('[id=arrow]');
-    if (id_count.length > 0){
-        $('[id=arrow]').remove();
-    }
 	
 	if (drop_ok) {
 		return true;
