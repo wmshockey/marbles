@@ -33,7 +33,7 @@ body {
 
 #myCanvas {
 	background: url('wood_background2.jpg');
-	background-size: 820px 800px;
+	background-size: 840px 820px;
     background-repeat: no-repeat;
 	margin-left: "5px";	
 }
@@ -84,6 +84,7 @@ thead{
 
 .boardlabel {
 	color: white;
+	font-size: 16px;
 }
 
 .comment {
@@ -213,7 +214,7 @@ thead{
 .msgArea {
 	position:absolute;
 	top:25px;
-	left:510px;
+	left:530px;
 	font-size: 18px;
 }
 

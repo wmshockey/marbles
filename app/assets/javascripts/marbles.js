@@ -47,8 +47,8 @@ $(document).ready(() => {
 		  deck = fulldeck;
 		  discardpile = [];
 	
-/* Initialize the screen positions of players hands, discard pile and deck */
-		  screencoords = ["290", "435", "290", "435", "290", "435", "290", "435"];
+/* Initialize the screen positions of players hands */
+		  screencoords = ["300", "450", "300", "450", "300", "450", "300", "450"];
 		  $("#game_screen").val(screencoords);
 	
 /* Deal cards for first time */
@@ -457,14 +457,14 @@ $(document).ready(() => {
 		c.setAttribute("ondragover", "allowDrop(event)");
 
 	/* Draw board border */
-		ctx.strokeRect(0, 0, 820, 800);
+		ctx.strokeRect(0, 0, 840, 820);
 		ctx.beginPath();
 		ctx.lineWidth = "6";
 		ctx.strokeStyle = "#663300";
-		ctx.moveTo(0,800);
-		ctx.lineTo(820,800);
-		ctx.moveTo(820,800);
-		ctx.lineTo(820,0);
+		ctx.moveTo(0,820);
+		ctx.lineTo(840,820);
+		ctx.moveTo(840,820);
+		ctx.lineTo(840,0);
 		ctx.stroke();
 
 	/* Board Orientation: For board rotations to put current player's home at bottom of screen */
@@ -485,10 +485,10 @@ $(document).ready(() => {
 		
 	/* Get coordinates for the players names and card hand counts */
 		nameLabelCoords = [];
-		nameLabelCoords[0] = [holexy[24][0] - 40, holexy[24][1] + 40];
+		nameLabelCoords[0] = [holexy[24][0] - 70, holexy[24][1] + 40];
 		nameLabelCoords[1] = [holexy[48][0], holexy[48][1] + 40];
 		nameLabelCoords[2] = [holexy[72][0], holexy[72][1] - 40];
-		nameLabelCoords[3] = [holexy[96][0] - 40, holexy[96][1] - 40];
+		nameLabelCoords[3] = [holexy[96][0] - 70, holexy[96][1] - 40];
 
 	/* Display players names and their card hand counts in each of the 4 board quadrants */
 	/* e.g. the color of the left starting holes is actually 1 position beyond the lower player's color */
@@ -565,8 +565,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.style.left = x.toString() + 'px';
 		d.style.top = y.toString() + 'px';
-		d.style.width = "30px";
-		d.style.height = "30px";
+		d.style.width = "35px";
+		d.style.height = "35px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		hole_image = "url(/assets/" + hole_color +"_hole.png)";
@@ -604,8 +604,8 @@ $(document).ready(() => {
 		d.setAttribute("id", "discardpile");
 		d.setAttribute("draggable", "false");
 		d.className = "discardspot";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 33).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 33).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height).toString() + "px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -615,8 +615,8 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.className = "boardlabel";
 		d.innerHTML = "Discards";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height-20).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 40).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
 	/* Draw the discard card count */
 		d = document.createElement("div");
@@ -628,8 +628,8 @@ $(document).ready(() => {
 		} else {
 			d.innerHTML = "0";
 		}
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 60).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 60).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33)).toString() + "px";
 		document.body.appendChild(d);
 		
 	/* Draw the comment area in between Discards and Deck piles */
@@ -637,16 +637,16 @@ $(document).ready(() => {
 		d.setAttribute("id", "comment");
 		d.className = "comment";
 		d.innerHTML = comment.replace(/&amp;/g, "&");
-		d.style.left = ( ((centre_x + 15) -60).toString() + "px");
-		d.style.top =  ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		d.style.left = ( ((centre_x + 25) -60).toString() + "px");
+		d.style.top =  ((centre_y + 25) - (card_height*.33) - card_height).toString() + "px";
 		document.body.appendChild(d);
 
 	/* Draw the deck area i.e. deal pile */
 		d = document.createElement("div");
 		d.setAttribute("id", "deck");
 		d.setAttribute("draggable", "false");
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 25 + 195).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.33) - card_height).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 25 + 195).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height).toString() + "px";
 		d.setAttribute("ondrop", "drop(event)");
 		d.setAttribute("ondragover", "allowDrop(event)");
 		document.body.appendChild(d);
@@ -656,8 +656,8 @@ $(document).ready(() => {
 		d.className = "boardlabel";
 		d.style.position = "absolute";
 		d.innerHTML = "Deck";
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 40 + 195).toString() + "px";
-		d.style.top = "265px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 40 + 195).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
 	/* Draw the deck card count */
 		d = document.createElement("div");
@@ -670,8 +670,8 @@ $(document).ready(() => {
 			d.innerHTML = "0";
 		}		
 		d.innerHTML = deck.length.toString();
-		d.style.left = (((centre_x + 15) - (5 * card_width)/2) + 45 + 195).toString() + "px";
-		d.style.top = ((centre_y + 15) - (card_height*.33)).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 45 + 195).toString() + "px";
+		d.style.top = ((centre_y + 25) - (card_height*.33)).toString() + "px";
 		document.body.appendChild(d);
 	}
 	
@@ -2066,103 +2066,103 @@ function saveScreenCoords(x, y, user_color) {
 /*-----------------Hole Coordinates----------------*/
 function get_holexy(){
 	holexy = [];
-	holexy[0]=[400, 400, "black"];
-	holexy[1]=[50, 330, "green"];
-	holexy[2]=[86.5473338216143, 327.604561184666, "grey"];
-	holexy[3]=[122.469332628705, 320.459231360939, "grey"];
-	holexy[4]=[157.151361062224, 308.68626910316, "grey"];
-	holexy[5]=[190, 292.487113059642, "grey"];
-	holexy[6]=[220.453200122441, 272.138935281545, "grey"];
-	holexy[7]=[247.989898732233, 247.989898732233, "black"];
-	holexy[8]=[272.138935281545, 220.453200122442, "grey"];
-	holexy[9]=[292.487113059642, 190, "grey"];
-	holexy[10]=[308.68626910316, 157.151361062225, "grey"];
-	holexy[11]=[320.459231360939, 122.469332628706, "grey"];
-	holexy[12]=[327.604561184666, 86.5473338216149, "grey"];
-	holexy[13]=[330, 50, "grey"];
-	holexy[14]=[365, 50, "grey"];
-	holexy[15]=[400, 50, "grey"];
-	holexy[16]=[435, 50, "grey"];
-	holexy[17]=[400, 85, "red"];
-	holexy[18]=[400, 120, "red"];
-	holexy[19]=[400, 155, "red"];
-	holexy[20]=[400, 190, "red"];
-	holexy[21]=[87.5, 87.5, "green"];
-	holexy[22]=[112.5, 112.5, "green"];
-	holexy[23]=[137.5, 137.5, "green"];
-	holexy[24]=[162.5, 162.5, "green"];
-	holexy[25]=[470, 50, "red"];
-	holexy[26]=[472.395438815333, 86.5473338216143, "grey"];
-	holexy[27]=[479.54076863906, 122.469332628705, "grey"];
-	holexy[28]=[491.313730896839, 157.151361062224, "grey"];
-	holexy[29]=[507.512886940357, 190, "grey"];
-	holexy[30]=[527.861064718454, 220.453200122441, "grey"];
-	holexy[31]=[552.010101267766, 247.989898732233, "black"];
-	holexy[32]=[579.546799877558, 272.138935281545, "grey"];
-	holexy[33]=[610, 292.487113059642, "grey"];
-	holexy[34]=[642.848638937774, 308.68626910316, "grey"];
-	holexy[35]=[677.530667371293, 320.459231360939, "grey"];
-	holexy[36]=[713.452666178385, 327.604561184666, "grey"];
-	holexy[37]=[750, 330, "grey"];
-	holexy[38]=[750, 365, "grey"];
-	holexy[39]=[750, 400, "grey"];
-	holexy[40]=[750, 435, "grey"];
-	holexy[41]=[715, 400, "blue"];
-	holexy[42]=[680, 400, "blue"];
-	holexy[43]=[645, 400, "blue"];
-	holexy[44]=[610, 400, "blue"];
-	holexy[45]=[712.5, 87.5, "red"];
-	holexy[46]=[687.5, 112.5, "red"];
-	holexy[47]=[662.5, 137.5, "red"];
-	holexy[48]=[637.5, 162.5, "red"];
-	holexy[49]=[750, 470, "blue"];
-	holexy[50]=[713.452666178385, 472.395438815333, "grey"];
-	holexy[51]=[677.530667371294, 479.54076863906, "grey"];
-	holexy[52]=[642.848638937774, 491.313730896839, "grey"];
-	holexy[53]=[610, 507.512886940357, "grey"];
-	holexy[54]=[579.546799877558, 527.861064718454, "grey"];
-	holexy[55]=[552.010101267766, 552.010101267766, "black"];
-	holexy[56]=[527.861064718454, 579.546799877558, "grey"];
-	holexy[57]=[507.512886940357, 610, "grey"];
-	holexy[58]=[491.313730896839, 642.848638937774, "grey"];
-	holexy[59]=[479.54076863906, 677.530667371293, "grey"];
-	holexy[60]=[472.395438815333, 713.452666178385, "grey"];
-	holexy[61]=[470, 750, "grey"];
-	holexy[62]=[435, 750, "grey"];
-	holexy[63]=[400, 750, "grey"];
-	holexy[64]=[365, 750, "grey"];
-	holexy[65]=[400, 715, "yellow"];
-	holexy[66]=[400, 680, "yellow"];
-	holexy[67]=[400, 645, "yellow"];
-	holexy[68]=[400, 610, "yellow"];
-	holexy[69]=[712.5, 712.5, "blue"];
-	holexy[70]=[687.5, 687.5, "blue"];
-	holexy[71]=[662.5, 662.5, "blue"];
-	holexy[72]=[637.5, 637.5, "blue"];
-	holexy[73]=[330, 750, "yellow"];
-	holexy[74]=[327.604561184666, 713.452666178385, "grey"];
-	holexy[75]=[320.459231360939, 677.530667371294, "grey"];
-	holexy[76]=[308.68626910316, 642.848638937774, "grey"];
-	holexy[77]=[292.487113059642, 610, "grey"];
-	holexy[78]=[272.138935281545, 579.546799877558, "grey"];
-	holexy[79]=[247.989898732233, 552.010101267766, "black"];
-	holexy[80]=[220.453200122441, 527.861064718454, "grey"];
-	holexy[81]=[190, 507.512886940357, "grey"];
-	holexy[82]=[157.151361062225, 491.313730896839, "grey"];
-	holexy[83]=[122.469332628705, 479.54076863906, "grey"];
-	holexy[84]=[86.5473338216144, 472.395438815333, "grey"];
-	holexy[85]=[50, 470, "grey"];
-	holexy[86]=[50, 435, "grey"];
-	holexy[87]=[50, 400, "grey"];
-	holexy[88]=[50, 365, "grey"];
-	holexy[89]=[85, 400, "green"];
-	holexy[90]=[120, 400, "green"];
-	holexy[91]=[155, 400, "green"];
-	holexy[92]=[190, 400, "green"];
-	holexy[93]=[87.5, 712.5, "yellow"];
-	holexy[94]=[112.5, 687.5, "yellow"];
-	holexy[95]=[137.5, 662.5, "yellow"];
-	holexy[96]=[162.5, 637.5, "yellow"];
+	holexy[0]=[410, 410,"black"];
+	holexy[1]=[30, 334,"green"];
+	holexy[2]=[69.6799624348955, 331.399237857638,"grey"];
+	holexy[3]=[108.680989711166, 323.641451191876,"grey"];
+	holexy[4]=[146.335763438987, 310.859377883431,"grey"];
+	holexy[5]=[182, 293.271722750469,"grey"];
+	holexy[6]=[215.06347441865, 271.179415448535,"grey"];
+	holexy[7]=[244.96046148071, 244.96046148071,"black"];
+	holexy[8]=[271.179415448535, 215.063474418651,"grey"];
+	holexy[9]=[293.271722750469, 182,"grey"];
+	holexy[10]=[310.859377883431, 146.335763438987,"grey"];
+	holexy[11]=[323.641451191876, 108.680989711166,"grey"];
+	holexy[12]=[331.399237857638, 69.6799624348962,"grey"];
+	holexy[13]=[334, 30,"grey"];
+	holexy[14]=[373, 30,"grey"];
+	holexy[15]=[410, 30,"grey"];
+	holexy[16]=[447, 30,"grey"];
+	holexy[17]=[410, 70,"red"];
+	holexy[18]=[410, 110,"red"];
+	holexy[19]=[410, 150,"red"];
+	holexy[20]=[410, 190,"red"];
+	holexy[21]=[95, 95,"green"];
+	holexy[22]=[125, 125,"green"];
+	holexy[23]=[155, 155,"green"];
+	holexy[24]=[185, 185,"green"];
+	holexy[25]=[486, 30,"red"];
+	holexy[26]=[488.600762142361, 69.6799624348956,"grey"];
+	holexy[27]=[496.358548808123, 108.680989711166,"grey"];
+	holexy[28]=[509.140622116568, 146.335763438987,"grey"];
+	holexy[29]=[526.72827724953, 182,"grey"];
+	holexy[30]=[548.820584551464, 215.06347441865,"grey"];
+	holexy[31]=[575.039538519289, 244.96046148071,"black"];
+	holexy[32]=[604.936525581348, 271.179415448535,"grey"];
+	holexy[33]=[638, 293.271722750469,"grey"];
+	holexy[34]=[673.664236561012, 310.859377883431,"grey"];
+	holexy[35]=[711.319010288833, 323.641451191876,"grey"];
+	holexy[36]=[750.320037565103, 331.399237857638,"grey"];
+	holexy[37]=[790, 334,"grey"];
+	holexy[38]=[790, 373,"grey"];
+	holexy[39]=[790, 410,"grey"];
+	holexy[40]=[790, 447,"grey"];
+	holexy[41]=[750, 410,"blue"];
+	holexy[42]=[710, 410,"blue"];
+	holexy[43]=[670, 410,"blue"];
+	holexy[44]=[630, 410,"blue"];
+	holexy[45]=[725, 95,"red"];
+	holexy[46]=[695, 125,"red"];
+	holexy[47]=[665, 155,"red"];
+	holexy[48]=[635, 185,"red"];
+	holexy[49]=[790, 486,"blue"];
+	holexy[50]=[750.320037565104, 488.600762142361,"grey"];
+	holexy[51]=[711.319010288833, 496.358548808123,"grey"];
+	holexy[52]=[673.664236561012, 509.140622116568,"grey"];
+	holexy[53]=[638, 526.72827724953,"grey"];
+	holexy[54]=[604.936525581348, 548.820584551464,"grey"];
+	holexy[55]=[575.039538519289, 575.039538519289,"black"];
+	holexy[56]=[548.820584551464, 604.936525581348,"grey"];
+	holexy[57]=[526.72827724953, 638,"grey"];
+	holexy[58]=[509.140622116568, 673.664236561012,"grey"];
+	holexy[59]=[496.358548808123, 711.319010288833,"grey"];
+	holexy[60]=[488.600762142361, 750.320037565104,"grey"];
+	holexy[61]=[486, 790,"grey"];
+	holexy[62]=[447, 790,"grey"];
+	holexy[63]=[410, 790,"grey"];
+	holexy[64]=[373, 790,"grey"];
+	holexy[65]=[410, 750,"yellow"];
+	holexy[66]=[410, 710,"yellow"];
+	holexy[67]=[410, 670,"yellow"];
+	holexy[68]=[410, 630,"yellow"];
+	holexy[69]=[725, 725,"blue"];
+	holexy[70]=[695, 695,"blue"];
+	holexy[71]=[665, 665,"blue"];
+	holexy[72]=[635, 635,"blue"];
+	holexy[73]=[334, 790,"yellow"];
+	holexy[74]=[331.399237857638, 750.320037565104,"grey"];
+	holexy[75]=[323.641451191876, 711.319010288833,"grey"];
+	holexy[76]=[310.859377883431, 673.664236561012,"grey"];
+	holexy[77]=[293.271722750469, 638,"grey"];
+	holexy[78]=[271.179415448535, 604.936525581349,"grey"];
+	holexy[79]=[244.96046148071, 575.039538519289,"black"];
+	holexy[80]=[215.063474418651, 548.820584551464,"grey"];
+	holexy[81]=[182, 526.72827724953,"grey"];
+	holexy[82]=[146.335763438987, 509.140622116568,"grey"];
+	holexy[83]=[108.680989711166, 496.358548808123,"grey"];
+	holexy[84]=[69.6799624348956, 488.600762142361,"grey"];
+	holexy[85]=[30, 486,"grey"];
+	holexy[86]=[30, 447,"grey"];
+	holexy[87]=[30, 410,"grey"];
+	holexy[88]=[30, 373,"grey"];
+	holexy[89]=[70, 410,"green"];
+	holexy[90]=[110, 410,"green"];
+	holexy[91]=[150, 410,"green"];
+	holexy[92]=[190, 410,"green"];
+	holexy[93]=[95, 725,"yellow"];
+	holexy[94]=[125, 695,"yellow"];
+	holexy[95]=[155, 665,"yellow"];
+	holexy[96]=[185, 635,"yellow"];
 	return holexy;
 }
 
