@@ -417,25 +417,28 @@ $(document).ready(() => {
 		} else if (turn_color == "blue") {
 			playerhand = bluehand;
 		}
+		if (user_theme == "Standard Marbles - Large Cards" || user_theme == "Labeled Marbles - Large Cards") {
+			card_str = "_c2";
+		} else {
+			card_str = "_c1";
+		}
 		for (i=0; i<=4; i++) {
 			if (playerhand[i]) {
-				cardImage = "/assets/" + playerhand[i] + ".png";
 				spot = "hand";
-				placeCard(spot, playerhand[i], cardImage);
+				placeCard(spot, playerhand[i]);
 			}
 		}
 		if (discardpile[0]) {
-			discard_background = "url(/assets/" + discardpile[0] + ".png)";
+			discard_background = "url(/assets/" + discardpile[0] + card_str + ".png)";
 			$("#discardpile").css('backgroundImage', discard_background);
 		}
 	}
 
 	function placeCard(spot, card_id) {
 		var c = document.createElement("IMG");
-		card_image = "/assets/" + card_id + ".png";
+		card_image = "/assets/" + card_id + card_str + ".png";
 		c.setAttribute("id", card_id);
 		c.className = "card";
-		c.src = "/assets/" + card_id + ".png";
 		c.src = card_image;
 		c.setAttribute("draggable", "true");
 		c.setAttribute("ondragstart", "drag(event)");
@@ -445,7 +448,6 @@ $(document).ready(() => {
 		h = document.getElementById(spot);
 		h.appendChild(c);		
 	}
-
 
 	function drawBoard() {		
 
@@ -523,7 +525,7 @@ $(document).ready(() => {
 		}		
 		
 	/* Display all the marbles on the board */
-		if (user_theme == "Labeled Marbles") {
+		if (user_theme == "Labeled Marbles" || user_theme == "Labeled Marbles - Large Cards") {
 			theme_str = "_t2";
 		} else {
 			theme_str = "_t1";
