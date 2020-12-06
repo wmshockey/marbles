@@ -506,7 +506,7 @@ $(document).ready(() => {
 		/* Display players names on board */
 			player_name = getPlayerName(color);
 			player_nbr = getPlayerNbr(color);
-		/* Append an asterisk if this is the player who gets to play first after a new deal */
+		/* Append a triangle symbol if this is the player who gets to play first after a new deal */
 			if (player_nbr == first_turn) {
 				append_str = " &#9668;";
 			} else {
@@ -722,30 +722,8 @@ $(document).ready(() => {
 		discardpile = $("#game_discardpile").val().split(",");
 		comment = $("#game_comment").val();
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
-		/* If any cards left in players hands, add them to bottom of the discard pile */
-
-		if (greenhand[0]) {
-			for (i=0; i<greenhand.length; i++) {
-				discardpile.push(greenhand[i]);
-			}
-		}
-		if (redhand[0]) {
-			for (i=0; i<redhand.length; i++) {
-				discardpile.push(redhand[i]);
-			}
-		}
-		if (bluehand[0]) {
-			for (i=0; i<bluehand.length; i++) {
-				discardpile.push(bluehand[i]);
-			}
-		}
-		if (yellowhand[0]) {
-			for (i=0; i<yellowhand.length; i++) {
-				discardpile.push(yellowhand[i]);
-			}
-		}
 		
-		/* clear out the players hands */
+		/* At this point, all players hands should be empty */
 		greenhand = [];
 		yellowhand = [];
 		redhand = [];

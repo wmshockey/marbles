@@ -9,24 +9,20 @@
 	<div class="col-sm-6 text-right"><%= button_to "New Game", new_game_path, method: :get %></div>
 </div>
 
-
-<div class="row">
-	
+<div class="row">	
 </div>
 
 <table class="table table-bordered">
   <thead>
     <tr>
       <th class="col-sm-2">Name</th>
-      <th class="col-sm-2">Date</th>
+      <th class="col-sm-1">Date</th>
       <th class="col-sm-1">Status</th>
-      <th class="col-sm-2">Teams/Players</th>
+      <th class="col-sm-3">Teams/Players</th>
 	  <th class="col-sm-1">Winner</th>
       <th class="col-sm-1">Turn</th>
-	  <th class="col-sm-1"></th>
-	  <th class="col-sm-1"></th>
-	  <th class="col-sm-1"></th>
-	  <th class="col-sm-1"></th>
+	  <th class="col-sm-1">Moves</th>
+	  <th class="col-sm-2"></th>
     </tr>
   </thead>
 
@@ -37,13 +33,13 @@
 	  <% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>
       <tr>
 		<% if (current_time - game.updated_at.to_time.to_i) <= 300 %>
-       	 	<td class="col-sm-2 blinking"><%= game.name %></td>
+       	 	<td class="col-sm-2 blinking"><%= link_to game.name, game_path(game) %></td>
 		<% else %>
-			<td class="col-sm-2"><%= game.name %></td>
+			<td class="col-sm-2"><%= link_to game.name, game_path(game) %></td>
 		<% end %>
-        <td class="col-sm-2"><%= game.start_date  %></td>
+        <td class="col-sm-1"><%= game.start_date  %></td>
         <td class="col-sm-1"><%= game.status %></td>
-        <td class="col-sm-4">
+        <td class="col-sm-2">
 			<% if game.ryteam!="" %>
 				<div style="display:inline-block"><%= game.ryteam %></div>
 				<div style="display:inline-block; color:red"><%= "(" + game.rplayer.split(" ")[0] + ", "%></div>
@@ -74,12 +70,17 @@
 		<% players = players.reject { |c| c.empty?} %>
 		<% turn = players[(game.turn).to_i] %>
         <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
-        <td class="col-sm-1 navbar-link" ><%= link_to 'Play', game_path(game) %></td>
-		<td class="col-sm-1 navbar-link"><%= link_to 'Edit', edit_game_path(game) %>
-		<% if current_user.id == 1 %>
-			<td class="col-sm-1"><%= link_to 'Debug', debug_game_path(game) %></td>
-		<% end %>
-        <td class="col-sm-1 navbar-link"><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+		<td class="col-sm-1"><%= game.plays %></td>
+		<div class="col-sm-2">		
+			<td class="navbar-link">
+				<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
+				<%= link_to 'Edit', edit_game_path(game) %>
+				<% if current_user.id == 1 %>
+					<%= link_to 'Debug', debug_game_path(game) %>
+				<% end %>
+		        <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %>
+			</td>
+		</div>
       </tr>
     <% end %>
   </tbody>
