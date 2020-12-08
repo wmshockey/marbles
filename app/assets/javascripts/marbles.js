@@ -774,6 +774,9 @@ $(document).ready(() => {
 	
 
 	function initializeBoard() {
+		for (i=0; i<=96; i++) {
+			board[i] = "";
+		}
 		if ($("#game_yplayer").val()) {
 			for (p=93; p<=96; p++) {
 				board[p] = "y" + p.toString();
