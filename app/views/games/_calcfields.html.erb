@@ -14,52 +14,61 @@
 
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Deck"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :deck, cols: "104", rows: "2"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :deck, cols: "120", rows: "2"%></div>
 	    <span class="col-sm-2"></span>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Board"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :board, cols: "104", rows: "2"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :board, cols: "120", rows: "2"%></div>
 	    <span class="col-sm-2"></span>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Discard Pile"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "104", rows: "2"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :discardpile, cols: "120", rows: "2"%></div>
 	    <span class="col-sm-2"></span>
 	</div>
 
 
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Comment"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :comment, cols: "104", rows: "2"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :comment, cols: "120", rows: "2"%></div>
 		<span class="col-sm-2"></span>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-2 top"><%= form.label "Message"%></div>
-		<div class="col-sm-8 top"><%= form.text_area :message, cols: "104", rows: "1"%></div>
+		<div class="col-sm-8 top"><%= form.text_area :message, cols: "120", rows: "2"%></div>
 		<span class="col-sm-2"></span>
 	</div>
 
 	<div class="row">
-		<div class="col-sm-2 top"><%= "Screen Coordinates"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :screen, cols: "104", rows: "1"%></div>
+		<div class="col-sm-2 top"><%= form.label "Screen Coordinates"%> </div>
+		<div class="col-sm-10 top"><%= form.text_field :screen, :size=>"50"%></div>
 	</div>
 
 	<div class="row">
-		<div class="col-sm-2 top"><%= "Moved Marbles"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :moved, cols: "104", rows: "1"%></div>
+		<div class="col-sm-2 top"><%= form.label "Moved Marbles"%> </div>
+		<div class="col-sm-10 top"><%= form.text_field :moved, :size=>"50"%></div>
 	</div>
 
 	<div class="row">
-		<div class="col-sm-2 top"><%= "Winner"%> </div>
-		<div class="col-sm-10 top"><%= form.text_area :winner, cols: "104", rows: "1"%></div>
+		<div class="col-sm-2 top"><%= form.label "Winner"%> </div>
+		<div class="col-sm-10 top"><%= form.text_field :winner, :size=>"50"%></div>
 	</div>
 
 	<div class="row">
-		<div class="col-sm-2 top"><%= "Plays Made"%> </div>
-		<div class="col-sm-10 top"><%= form.number_field :plays %></div>
+		<div class="col-sm-2 top"><%= form.label "Plays Made"%> </div>
+		<div class="col-sm-10 top"><%= form.number_field :plays%></div>
 	</div>
+	
+	<div class="row">
+		<div class="col-sm-2 top"><%= form.label "Turn"%> </div>
+		<div class="col-sm-1 top"><%= form.text_field :turn, :size=>"10"%></div>
+		<div class="col-sm-2 top"><%= @player%></div>
+		<div class="col-sm-7 top"><%= @plist%></div>
+	</div>
+	
+	<br>
 

@@ -30,15 +30,18 @@
     </div>
 
 	<br>
+
+	<div class="row">
 	<% i = 0%>
 	<% board_array = @game.board.split(",")%>
 	<% until i > 96  do%>
 		<div class="col-sm-1"><%= i%>:<%= board_array[i]%></div>
 		<% i = i + 1%>
 	<% end %>
+	</div>
 	
 	<br>
- 	<%= image_tag "marbles_board_numbered.png", alt: "Marbles Clip Art"%>	
+ 	<div class="row"><%= image_tag "marbles_board_numbered.png", alt: "Marbles Clip Art"%></div>
 
 </body>
 <% end %>
