@@ -6,13 +6,13 @@
 
 
 <h1 id="header">The Online Game of Marbles</h1>
-<p>This is a popular addictive game played using marbles that move around a board based on the value of the cards in a players hand.  <br>Log in or Sign up using the link below. It is free to play.  Have fun!</p>
+<p>This is a popular game played using marbles that move around a board based on the value of the cards in a players hand.  Check out how to play by looking at the <%= link_to "Help Page", '/welcome/help'%> then Log in or Sign up using the link below. It is free to play.  Have fun!</p>
 
 	<h2>Log in</h2>
 
 	<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-		<div class="col-sm-6">
+		<div class="row">
 
 			<%= f.label :email %><br>
 	    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
@@ -27,16 +27,16 @@
 
 		    <%= f.submit "Log in" %><br><br>
 			<%= render "users/shared/links" %>
-			<br><br>
+			<br>
 			<div class="text-muted">Please report any issues to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</div>
 			
 		</div>
 
-
-			<figure class="col-sm-6">
-				<figcaption>Sample screenshot of the game</figcaption>
-				<%= image_tag "marble_game_screenshot2.png", alt: "Marbles Game Screenshot", :class => "page_image" %>
-			</figure>
+		<br>
+		<figure class="row">
+			<figcaption>Sample screenshot of the game</figcaption>
+			<%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %>
+		</figure>
 
 
 

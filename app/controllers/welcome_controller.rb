@@ -1,4 +1,6 @@
 class WelcomeController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[rules help]
+  
   def index
     @user_name = current_user.name;
     @users = User.all;
@@ -6,6 +8,12 @@ class WelcomeController < ApplicationController
   end
   
   def show
+  end
+  
+  def rules
+  end
+  
+  def help
   end
   
 end
