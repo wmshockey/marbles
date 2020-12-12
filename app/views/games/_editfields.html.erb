@@ -7,7 +7,11 @@
 	  	<span><%= form.text_field :name, :style => "width:200px" %></span>
 	  	<span id="nameselect"><%=form.collection_select :copyid, @games.order(name: :asc), :id, :name, {include_blank: ''}, :style => "width:20px" %></span>
 	  </div>
-	  <div class="col-sm-3"><%= form.label "Status:" %><%= form.text_field :status %></div>
+	  <% if current_user.id == 1%>
+	  		<div class="col-sm-3"><%= form.label "Status:" %><%= form.text_field :status %></div>
+	  <% else %>
+	  		<div class="col-sm-3 hidden"><%= form.label "Status:" %><%= form.text_field :status %></div>
+	  <% end %>
 	</div>
 	
 	<% if current_user.id == 1%>

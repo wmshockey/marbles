@@ -14,28 +14,34 @@
 
 		<div class="row">
 
-			<%= f.label :email %><br>
-	    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
+			<div class="col-sm-4">
+				<%= f.label :email %><br>
+		    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
 
-		    <%= f.label :password %><br>
-		    <%= f.password_field :password, autocomplete: "current-password" %><br>
+			    <%= f.label :password %><br>
+			    <%= f.password_field :password, autocomplete: "current-password" %><br>
 
-			<% if devise_mapping.rememberable? %>
-			      <%= f.check_box :remember_me %>
-			      <%= f.label :remember_me %><br>
-			<% end %>
+				<% if devise_mapping.rememberable? %>
+				      <%= f.check_box :remember_me %>
+				      <%= f.label :remember_me %><br>
+				<% end %>
 
-		    <%= f.submit "Log in" %><br><br>
-			<%= render "users/shared/links" %>
-			<br>
-			<div class="text-muted">Please report any issues to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</div>
+			    <%= f.submit "Log in" %><br><br>
+				<%= render "users/shared/links" %>
+				<br>
+				<div class="text-muted">Please report any issues to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</div>
+			</div>
+			
+			<div class="col-sm-8">
+				<div style="opacity:0.2"><%= image_tag "marble_clip_art.png" %></div>
+			</div>
 			
 		</div>
 
 		<br>
 		<figure class="row">
 			<figcaption>Sample screenshot of the game</figcaption>
-			<%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %>
+			<div style="opacity:1.0"><%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %></div>
 		</figure>
 
 

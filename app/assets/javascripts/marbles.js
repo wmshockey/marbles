@@ -11,6 +11,9 @@ $(document).ready(() => {
 /* Listen for player hitting the Save button */
 
   $('[id="Save"]').on("click", function(){
+	  
+/* Disable the "End Turn" button now to prevent double clicks. */
+	  document.getElementById("Save").disabled = true;
 
 	  var header = document.getElementById("header").innerHTML;
 
@@ -70,12 +73,20 @@ $(document).ready(() => {
 */
 
 		else if (header == "Marbles Game") {
+			
+	/* lock the game by setting status to Hold until save has been completed */
+	  	  if ($("#game_status").val() == "Started") {
+	  		  $("#game_status").val("Hold");
+	  	  } else {
+	  		  alert("End Turn button double click or key bounce detected.  Please take your turn over.");
+	  		  $("#game_status").val("Abort");
+	  	  }
 
 	/* save the end of move board positions */
-			board_end = ($("#game_board").val()).split(",");
+		board_end = ($("#game_board").val()).split(",");
 			
 	/* check if move is valid and if not, reset board to start of move */
-			if (checkMove(playedCard, board_start, board_end) == false) {
+			if ( $("#game_status").val()=="Abort"  || (checkMove(playedCard, board_start, board_end) == false) ) {
 				/* Move was not valid */
 				/* Restore board and hands to point before the last move */
 				board = board_start;
@@ -93,6 +104,7 @@ $(document).ready(() => {
 				$("#game_yellowhand").val(yellowhand.toString());					
 				$("#game_board").val(board.toString());
 				$("#game_screen").val(screencoords).toString();
+				$("#game_status").val("Started");
 			} else {
 				/* Move is valid - page values will be saved to the database */
 				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
@@ -156,7 +168,8 @@ $(document).ready(() => {
 					}
 					if (turn != -1) {
 						/* There is a player who still has cards left to play */
-						$("#game_turn").val(turn.toString());	
+						$("#game_turn").val(turn.toString());
+						$("#game_status").val("Started");	
 					} else {
 						/* Nobody else can play now - must shuffle and redeal the cards */
 						$("#game_message").val("Another hand has been dealt.");
@@ -180,6 +193,7 @@ $(document).ready(() => {
 						$("#game_redhand").val(redhand.toString());
 						$("#game_bluehand").val(bluehand.toString());
 						$("#game_yellowhand").val(yellowhand.toString());
+						$("#game_status").val("Started");
 					}						
 				}					
 			}			
@@ -195,6 +209,10 @@ $(document).ready(() => {
 			}
 									
 		}
+
+/*  Enable Save button after javascript code completion */
+	  document.getElementById("Save").disabled = false;
+
   })
 
 
@@ -287,7 +305,7 @@ $(document).ready(() => {
 			}, 5000);
 		}					
 
-/* Get the current user's color */
+/* Get the current user's color(s) */
 		user_color_list = [];
 		for (i=0; i<playerList.length; i++) {
 			if (playerList[i][0] == user_name) {
@@ -296,15 +314,19 @@ $(document).ready(() => {
 		}
 
 /* Set the users color. It will be set to the current turn color if the user is playing that color.
-	Otherwise it will be set to the next color that user happens to be playing */
-		i = turn;
-		while ( !user_color_list.includes(playerList[i][1]) ) {
-			i++;
-			if (i >= playerList.length) {
-				i = 0;
+	Otherwise it will be set to the next color that user happens to be playing. */
+		if (user_color_list.includes(playerList[turn][1])) {
+			user_color = playerList[turn][1];			
+		} else {
+			i = turn;
+			while ( !user_color_list.includes(playerList[i][1]) ) {
+				i++;
+				if ( i >= playerList.length) {
+					i = 0;
+				}
 			}
+			user_color = playerList[i][1];
 		}
-		user_color = playerList[i][1]; 
 
 /* draw the board and card area */
 		drawBoard();
@@ -357,15 +379,30 @@ $(document).ready(() => {
 
 		playedCard = "";  
 
-/* This is edit mode so the user color is same as the turn color */
-		user_color = turn_color; 
+/* Get the current user's color(s) */
+		user_color_list = [];
+		for (i=0; i<playerList.length; i++) {
+			if (playerList[i][0] == user_name) {
+				user_color_list.push(playerList[i][1]);
+			}
+		}
+
+/* This is edit mode so the user color MUST be the same as the turn color */
+		if (user_color_list.includes(playerList[turn][1])) {
+			user_color = playerList[turn][1];			
+		} else {
+			/* Could possibly get here if the user pressed the back button.  Get out of Edit mode and go to Show page */
+			alert("Error: It is not your turn.  You cannot make any more moves until it is your turn.");
+			myurl = location.href.replace("/play?","");
+			window.location.replace(myurl);
+		}
 
 /* Normal Page processing */
 		drawBoard();
 		drawCardArea();
 
-/* Display cards of person whose turn it is */
-		displayCards(turn_color);
+/* Display the users cards */
+		displayCards(user_color);
 		
 /* Save everything back out to the page at this point in case it was updated during the move */
 		$("#deck").val(deck.toString());
