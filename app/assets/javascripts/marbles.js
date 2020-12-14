@@ -1844,7 +1844,6 @@ function performDrop(player_color, data, ev) {
  		drop_ok = true;
  	}
 
-
 /*  player is moving a marble to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
@@ -1910,9 +1909,14 @@ function performDrop(player_color, data, ev) {
 			/* check to make sure player is not trying to kill their own marble */
 			killed_color = killed_marble.substring(0,1);
 			killer_color = killer_marble.substring(0,1);
-			if (killed_color == killer_color) {				
-				alert("You can't kill your own marble.");
-				drop_ok = true;
+			if (killed_color == killer_color) {
+				/* check if player is just moving their same marble back to original hole it was in */
+				if (killed_marble == killer_marble) {
+					dop_ok = true;
+				} else {
+					alert("You can't kill your own marble.");
+					drop_ok = true;					
+				}
 			} else {
 				/* get hole where killed marble currently resides */
 				targetElement = document.getElementById(killed_marble).parentElement;

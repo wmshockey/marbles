@@ -5,16 +5,16 @@
 <div class="container">
 
 
-<h1 id="header">The Online Game of Marbles</h1>
-<p>This is a popular game played using marbles that move around a board based on the value of the cards in a players hand.  Check out how to play by looking at the <%= link_to "Help Page", '/welcome/help'%> then Log in or Sign up using the link below. It is free to play.  Have fun!</p>
-
-	<h2>Log in</h2>
+<h1 id="header" style="color:blue">The Online Game of Marbles</h1>
+<p><i>This is a game played using marbles that move around a board based on the value of the cards in a players hand.  Check out how to play by looking at the <%= link_to "Help Page", '/welcome/help'%> then Log in or Sign up using the link below. It is free to play.  Have fun!</i></p>
 
 	<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
 		<div class="row">
 
 			<div class="col-sm-4">
+				
+				<h2 style="color:blue">Log in</h2>
 				<%= f.label :email %><br>
 		    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
 
@@ -29,22 +29,22 @@
 			    <%= f.submit "Log in" %><br><br>
 				<%= render "users/shared/links" %>
 				<br>
-				<div class="text-muted">Please report any issues to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</div>
+				<div class="text-muted">Please send any feedback to <%= mail_to "wmshockey@gmail.com" %>.</div>
+				<br>
+				
+				<figure class="row">
+					<div style="opacity:1.0"><%= image_tag "marble_clip_art.png" %></div>
+				</figure>
+				
 			</div>
 			
-			<div class="col-sm-8">
-				<div style="opacity:0.2"><%= image_tag "marble_clip_art.png" %></div>
+			<div class="col-sm-8 text-muted">
+				<figcaption>Sample screenshot:</figcaption>
+				<div  class="page_image"  style="opacity:1.0"><%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %></div>
+
 			</div>
 			
 		</div>
-
-		<br>
-		<figure class="row">
-			<figcaption>Sample screenshot of the game</figcaption>
-			<div style="opacity:1.0"><%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %></div>
-		</figure>
-
-
 
 	<% end %>
 
