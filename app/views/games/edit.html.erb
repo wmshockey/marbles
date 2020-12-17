@@ -1,4 +1,4 @@
-<h1 id="header">Edit Game</h1>
+<h2 id="header">Edit Game</h2>
 <div class="col-sm-12 hidden" id="form_name"><%= "game" %></div>
 <br>
 <%= form_with(model: @game, local: true) do |form| %>
@@ -25,8 +25,8 @@
 	<br><br>
 	
     <div class="row" >
-      <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger", id:"Save"%></div>
-      <div class="col-sm-10"><%= link_to 'Back', games_path%></div>
+      <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger btn-lg", id:"Save"%></div>
+      <h3 class="col-sm-10"><%= link_to 'Back', games_path%></h3>
     </div>
 
 </body>

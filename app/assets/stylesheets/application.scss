@@ -16,10 +16,11 @@
 @import "bootstrap";
 
 body {
-	background: url('background.jpg');
+	background: url('background.png');
     background-repeat: no-repeat;
     background-size: cover;
 	margin-left: "5px";
+	background-attachment: fixed;
 } 
 
 #myTable {
@@ -129,6 +130,11 @@ thead{
 .page_image {
 	border: 2px solid black;
 	float: left;	
+}
+
+.form_style {
+	border: 1px solid;
+	background-color: Ivory;
 }
 
 #discardpile {

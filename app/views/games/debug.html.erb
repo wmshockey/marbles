@@ -20,7 +20,7 @@
 		<%= render partial: "editfields", locals: {form: form} %>
 		<br>
 
-		<div>
+		<div class=" container form_style">
 			<%= render partial: "calcfields", locals: {form: form} %>
 		</div>
 	
@@ -31,7 +31,7 @@
 
 	<br>
 
-	<div class="row">
+	<div class="row container form_style">
 	<% i = 0%>
 	<% board_array = @game.board.split(",")%>
 	<% until i > 96  do%>

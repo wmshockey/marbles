@@ -1,4 +1,4 @@
-<h1 id="header">New Game</h1>
+<h2 id="header">New Game</h2>
 
 <div id="form_name", class="hidden"><%= "game" %></div>
 
@@ -23,23 +23,13 @@
 		<div class="hidden">
 			<%= render partial: "calcfields", locals: {form: form} %>
 		</div>
-		
-
-		
+				
 		<div class="row">
 		  <div class="col-sm-2" >
 		    <%= form.submit "Save", class:"btn-lg btn-primary", id:"Save"%>
 		  </div>
-		  <div class="col-sm-1"><%= link_to 'Back', games_path%></div>
-		  <div class="col-sm-4 clipart">
-			  <%= image_tag "marble_clip_art.png", alt: "Marbles Clip Art"%>		  				
-		  </div>
-		  <div class="col-sm-4 clipart">
-			  <%= image_tag "card_deck_image.png", alt: "Deck of Cards Clip Art"%>		  				
-		  </div>
+		  <h3 class="col-sm-1"><%= link_to 'Back', games_path%></h3>
 		</div>
-
-
 
 	</body>
 

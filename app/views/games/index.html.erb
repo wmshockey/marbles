@@ -6,7 +6,7 @@
 
 <div class="row">
 	<h1 id="header" class="col-sm-6">Games</h1>
-	<div class="col-sm-6 text-right"><%= button_to "New Game", new_game_path, method: :get %></div>
+	<div class="col-sm-6 text-right"><%= button_to "New Game", new_game_path, method: :get, :class => 'btn-success btn-lg' %></div>
 </div>
 
 <div class="row">	
@@ -86,13 +86,6 @@
   </tbody>
 </table>
 
-<%== pagy_nav(@pagy) %>
-
-<br>
-
-<div class="col-sm-3">
-	<%= button_to "New Game", new_game_path, method: :get %>
-</div>
-
+<h3 class="col-sm-12"><%== pagy_nav(@pagy) %></h3>
 
 </body>

@@ -5,11 +5,11 @@
 	</div>
 	
 	<div class= "row">
-		<h1 id="header" style="color:blue">Welcome to the Online Game of Marbles</h1>
+		<h2 id="header" style="color:blue">Welcome to the Online Game of Marbles</h2>
 	</div>
 
 
-		<h4 class="col-sm-4"><%= link_to 'Show All My Games', '/games'%></h4>
+		<h4 class="col-sm-4"><strong><%= link_to 'Show All My Games', '/games'%></strong></h4>
 		<div class="col-sm-8"></div>
 
 	<br><br>
@@ -111,6 +111,7 @@
 
 	<% player_stats.sort_by! { |a| -a[2]}%>
 	
+	<br>
 	<h4>Current Individual Standings</h4>
 	<table class="table table-bordered">
 		<thead>
@@ -135,16 +136,9 @@
 			<td><%= @games.count %></td>
 		</tbody>
 	</table>
-	
-	  <div class="col-sm-6 clipart">
-		  <%= image_tag "marble_clip_art.png", alt: "Marbles Clip Art"%>		  				
-	  </div>
-	  <div class="col-sm-6 clipart">
-		  <%= image_tag "card_deck_image.png", alt: "Deck of Cards Clip Art"%>		  				
-	  </div>
 	  
-	  <span class="text-muted col-sm-12">Developed by Warren Shockey in 2020.  Special thanks to beta testers Randy and Lois Schneider, Lenora, Adam, Trina, Merle and Flora Shockey.</span><br>
-	  <span class="text-muted col-sm-12">Please send any feedback, comments or questions to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</span>
+	  <span class="col-sm-12">Developed by Warren Shockey in 2020.  Special thanks to beta testers Randy and Lois Schneider, Lenora, Adam, Trina, Merle and Flora Shockey.</span><br>
+	  <span class="col-sm-12">Please send any feedback, comments or questions to <%= mail_to "wmshockey@gmail.com" %>. Thank-you!</span>
 	  <br><br>
   
 </body>
