@@ -2,50 +2,53 @@
 	 <title>Login</title>
 </head>
 
-<div class="container form_style">
+<body class="splash">
+	<div class="container form_style">
 
 
-<h1 id="header" style="color:blue">The Online Game of Marbles</h1>
-<p><i>This is a game played using marbles that move around a board based on the value of the cards in a players hand.  Check out how to play by looking at the <%= link_to "Help Page", '/welcome/help'%> then Log in or Sign up using the link below. It is free to play.  Have fun!</i></p>
+	<h1 id="header" style="color:blue">The Online Game of Marbles</h1>
+	<p><i>This is a game played using marbles that move around a board based on the value of the cards in a players hand.  Check out how to play by looking at the <%= link_to "Help Page", '/welcome/help'%> then Log in or Sign up using the link below. It is free to play.  Have fun!</i></p>
 
-	<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+		<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-		<div class="row">
+			<div class="row">
 
-			<div class="col-sm-5">
+				<div class="col-sm-5">
 				
-				<h2 style="color:blue">Log in</h2>
-				<%= f.label :email %><br>
-		    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
+					<h2 style="color:blue">Log in</h2>
+					<%= f.label :email %><br>
+			    	<%= f.email_field :email, autofocus: true, autocomplete: "email" %><br>
 
-			    <%= f.label :password %><br>
-			    <%= f.password_field :password, autocomplete: "current-password" %><br>
+				    <%= f.label :password %><br>
+				    <%= f.password_field :password, autocomplete: "current-password" %><br>
 
-				<% if devise_mapping.rememberable? %>
-				      <%= f.check_box :remember_me %>
-				      <%= f.label :remember_me %><br>
-				<% end %>
+					<% if devise_mapping.rememberable? %>
+					      <%= f.check_box :remember_me %>
+					      <%= f.label :remember_me %><br>
+					<% end %>
 
-			    <%= f.submit "Log in" %><br><br>
-				<%= render "users/shared/links" %>
-				<br>
-				<div class="text-muted">Please send any feedback to <%= mail_to "wmshockey@gmail.com" %>.</div>
-				<br>
+				    <%= f.submit "Log in" %><br><br>
+					<%= render "users/shared/links" %>
+					<br>
+					<div class="text-muted">Please send any feedback to <%= mail_to "wmshockey@gmail.com" %>.</div>
+					<br>
 				
-				<figure class="row">
-					<div style="opacity:1.0"><%= image_tag "marble_clip_art.png" %></div>
-				</figure>
+					<figure class="row">
+						<div style="opacity:1.0"><%= image_tag "marble_clip_art.png" %></div>
+					</figure>
 				
-			</div>
+				</div>
 			
-			<div class="col-sm-7 text-muted">
-				<figcaption>Sample screenshot:</figcaption>
-				<div  class="page_image"  style="opacity:1.0"><%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %></div>
+				<div class="col-sm-7 text-muted">
+					<figcaption>Sample screenshot:</figcaption>
+					<div  class="page_image"  style="opacity:1.0"><%= image_tag "marble_game_screenshot1.png", alt: "Marbles Game Screenshot" %></div>
 
-			</div>
+				</div>
 			
-		</div>
+			</div>
 
-	<% end %>
+		<% end %>
 
-</div>
+	</div>
+	
+</body>

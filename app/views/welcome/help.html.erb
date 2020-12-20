@@ -1,57 +1,59 @@
-<div class="container form_style">
+<body class="splash">
+	<div class="container form_style">
 
-<h1 id="header">The Game</h1>
-<p>This site is for playing the game of Marbles which has been very popular with our family and friends for the past several years.  It was developed in 2020 after the Covid-19 pandemic restrictions limited our ability to play together around the table.  Please also read the Rules page before playing for the first time.  Have fun and send any comments, questions or suggestions to <%= mail_to "wmshockey@gmail.com" %>.  Thank-you!! </p>
+	<h1 id="header">The Game</h1>
+	<p>This site is for playing the game of Marbles which has been very popular with our family and friends for the past several years.  It was developed in 2020 after the Covid-19 pandemic restrictions limited our ability to play together around the table.  Please also read the Rules page before playing for the first time.  Have fun and send any comments, questions or suggestions to <%= mail_to "wmshockey@gmail.com" %>.  Thank-you!! </p>
 
-<h1>How to Play</h1>
+	<h1>How to Play</h1>
 
-<p>The online computer version plays with the same rules as the original board game.  See the <%= link_to "Rules", '/welcome/rules', :style => "color:red" %> page on this site for details.  There are few points to note when playing online:</p>
+	<p>The online computer version plays with the same rules as the original board game.  See the <%= link_to "Rules", '/welcome/rules', :style => "color:red" %> page on this site for details.  There are few points to note when playing online:</p>
 
-<ul class="bullets">
+	<ul class="bullets">
 
-<%= image_tag "marble_game_screenshot2.png", alt: "Marbles Game Screenshot", :class => "marbles_board" %>
+	<%= image_tag "marble_game_screenshot2.png", alt: "Marbles Game Screenshot", :class => "marbles_board" %>
 
-	<li>The minimum requirements to run the online game is a desktop or laptop computer with either a Windows 10, ChromeOS or Mac OSX operating system with at least a 13 inch screen size and a web browser that supports HTML5.  This can be any recent version (since 2014) of Chrome, Firefox, Internet Explorer (version 9 or later), Edge or Safari.  The game can be played with standard HD laptop resolutions of 1366x768 or better and depending on the screen size, you may have set the zoom level on your browser to get the whole game board to fit on the screen. The game can be played with an iPad or other touch screen devices but is not ideally suited for it.</li>
+		<li>The minimum requirements to run the online game is a desktop or laptop computer with either a Windows 10, ChromeOS or Mac OSX operating system with at least a 13 inch screen size and a web browser that supports HTML5.  This can be any recent version (since 2014) of Chrome, Firefox, Internet Explorer (version 9 or later), Edge or Safari.  The game can be played with standard HD laptop resolutions of 1366x768 or better and depending on the screen size, you may have set the zoom level on your browser to get the whole game board to fit on the screen. The game can be played with an iPad or other touch screen devices but is not ideally suited for it.</li>
 	
-	<li>In order to play the game on the marblemind.ca website, you will need a user account.  Use the Sign-up link on the Welcome page to register a user account.  The game is free to play.</li>
+		<li>In order to play the game on the marblemind.ca website, you will need a user account.  Use the Sign-up link on the Welcome page to register a user account.  The game is free to play.</li>
 	
-	<li>To initially create a game, you click on the "New Game" button when viewing the list of games.  The "New Game" form will let you enter whatever name you wish to give to the game, and let you assign which users will be playing which colors in the game.  You can also play as teams.  If you enter a team name below the Yellow and Red players, they will form one team.  Similarly if you enter a team name below the Green and Blue players, they will form the other team.</li>
+		<li>To initially create a game, you click on the "New Game" button when viewing the list of games.  The "New Game" form will let you enter whatever name you wish to give to the game, and let you assign which users will be playing which colors in the game.  You can also play as teams.  If you enter a team name below the Yellow and Red players, they will form one team.  Similarly if you enter a team name below the Green and Blue players, they will form the other team.</li>
 	
-	<li>When creating a game, notice that there is an option to turn the "Auto refresh" off.  However you should always leave this set to the default setting "on" unless you are on a very slow dial-up type network.  When the Auto refresh is turned off, each player will have to hit the yellow "Refresh" button whenever a player announces that they have finished their turn.</li>
+		<li>When creating a game, notice that there is an option to turn the "Auto refresh" off.  However you should always leave this set to the default setting "on" unless you are on a very slow dial-up type network.  When the Auto refresh is turned off, each player will have to hit the yellow "Refresh" button whenever a player announces that they have finished their turn.</li>
 
-	<li>Playing a card and moving a marble on the board is done using the standard drag and drop operation performed with a mouse or trackpad on your computer</li>
+		<li>Playing a card and moving a marble on the board is done using the standard drag and drop operation performed with a mouse or trackpad on your computer</li>
 	
-	<li>The computer handles all the card shuffling and card dealing.</li>
+		<li>The computer handles all the card shuffling and card dealing.</li>
 	
-	<li>If it is your turn to play, a green "Start Turn" button will appear at the bottom of the board on the left hand side.  You must click on this start button first before you can play a card or move a marble.  When you have finished your turn, you click on the red button "End Turn".  If your move was valid, the play will be turned over to the next player and you will see a "waiting for..." message appear on the bottom of the board.</li>
+		<li>If it is your turn to play, a green "Start Turn" button will appear at the bottom of the board on the left hand side.  You must click on this start button first before you can play a card or move a marble.  When you have finished your turn, you click on the red button "End Turn".  If your move was valid, the play will be turned over to the next player and you will see a "waiting for..." message appear on the bottom of the board.</li>
 
-<li>Other players cannot see your cards on the screen.</li>
+	<li>Other players cannot see your cards on the screen.</li>
 
-<li>The green arrow that points to marbles on the screen is showing you which marbles moved in the previous turn. </li>
+	<li>The green arrow that points to marbles on the screen is showing you which marbles moved in the previous turn. </li>
 
-<%= image_tag "new_game_screenshot.png", alt: "New Game Screenshot", :class => "marbles_board" %>
+	<%= image_tag "new_game_screenshot.png", alt: "New Game Screenshot", :class => "marbles_board" %>
 
-	<li>When "killing" another marble you put your marble on top of the marble to be "killed" and the computer will automatically place the killed marble back into it's starting row.  You cannot manually move a marble into it's starting row.  So if killing multiple marbles with a 7 card, you have to land on each marble to be killed to send them back to their starting row.</li>
+		<li>When "killing" another marble you put your marble on top of the marble to be "killed" and the computer will automatically place the killed marble back into it's starting row.  You cannot manually move a marble into it's starting row.  So if killing multiple marbles with a 7 card, you have to land on each marble to be killed to send them back to their starting row.</li>
 	
-	<li>When playing a Jack, you place your marble on top of the marble you want to swap with and the computer will automatically move the displaced marble to the proper spot.</li>
+		<li>When playing a Jack, you place your marble on top of the marble you want to swap with and the computer will automatically move the displaced marble to the proper spot.</li>
 	
-	<li>The computer will check all moves to make sure they are valid moves.  If not, the board will be reset to the start of your move and you will be asked to take your turn over again.</li>
+		<li>The computer will check all moves to make sure they are valid moves.  If not, the board will be reset to the start of your move and you will be asked to take your turn over again.</li>
 	
-	<li>The triangle symbol &#x25c4; shown beside a player's name means that this player is the one who plays first following the next card deal.  The player who plays first after a deal will change to the next player whenever a full deck is dealt. </li>
+		<li>The triangle symbol &#x25c4; shown beside a player's name means that this player is the one who plays first following the next card deal.  The player who plays first after a deal will change to the next player whenever a full deck is dealt. </li>
 
-	<li>If you can't make a play, just press the red "End Turn" button without playing a card or moving a marble.  You will be asked to confirm that you are unable to play.  In this case a "Can't Play" label will appear next to your name on the board and the other players will proceed to take their turns until the hand is fully played.</li>
+		<li>If you can't make a play, just press the red "End Turn" button without playing a card or moving a marble.  You will be asked to confirm that you are unable to play.  In this case a "Can't Play" label will appear next to your name on the board and the other players will proceed to take their turns until the hand is fully played.</li>
 	
-	<li>Just as with the board game, you should play your card first and then move your marble.</li>
+		<li>Just as with the board game, you should play your card first and then move your marble.</li>
 	
-	<li>Your card hand will initially appear in the centre of the board, just below the centre hole.  If you have enough screen space and want to move it elsewhere to the side of the board you can do so.  It must be your turn in order to do it though.  Behind the card hand is an image of a hand.  You can select that wrist of the hand to drag and drop the entire hand to another place on the side. </li>
+		<li>Your card hand will initially appear in the centre of the board, just below the centre hole.  If you have enough screen space and want to move it elsewhere to the side of the board you can do so.  It must be your turn in order to do it though.  Behind the card hand is an image of a hand.  You can select that wrist of the hand to drag and drop the entire hand to another place on the side. </li>
 	
-	<li>The white numbers shown below each players names on the board, are the number of cards left in their hand.  Similarly, the numbers shown below the discard pile and deck are the number cards left in those piles.  The total of all those numbers will always equal 56, the total number of cards in the deck.</li>
+		<li>The white numbers shown below each players names on the board, are the number of cards left in their hand.  Similarly, the numbers shown below the discard pile and deck are the number cards left in those piles.  The total of all those numbers will always equal 56, the total number of cards in the deck.</li>
 	
-	<li>Note that if only two players are playing, they should put their names into either the Yellow or Red colors so that they play opposite each other on the board.  Also note that it is possible for one user to play more than one color but this is a different variation of the game.</li>
+		<li>Note that if only two players are playing, they should put their names into either the Yellow or Red colors so that they play opposite each other on the board.  Also note that it is possible for one user to play more than one color but this is a different variation of the game.</li>
 	
-	<li>The game is more fun and interactive if you have an audio channel open so all players can talk to each other while playing.  This can be done by putting your phone on speaker when connected with facetime audio, zoom audio, skype or just a standard phone call.</li>
+		<li>The game is more fun and interactive if you have an audio channel open so all players can talk to each other while playing.  This can be done by putting your phone on speaker when connected with facetime audio, zoom audio, skype or just a standard phone call.</li>
 	
-	<li>Other than the above, the rules of the computer game are the same as the actual board game and are listed on the Rules page of this site.</li>
-</ul>
+		<li>Other than the above, the rules of the computer game are the same as the actual board game and are listed on the Rules page of this site.</li>
+	</ul>
 
-</div>
+	</div>
+</body>

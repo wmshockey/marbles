@@ -3,6 +3,9 @@
 <br>
 <%= form_with(model: @game, local: true) do |form| %>
 
+
+<body class="container splash">
+	
   <% if @game.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>
@@ -14,7 +17,7 @@
     </div>
   <% end %>
 
-<body class="container">
+
 	
 	<%= render partial: "editfields", locals: {form: form} %>
 

@@ -1,48 +1,52 @@
-<div class="container form_style">
-	<h2 id="header">Sign up for the online game of Marbles</h2>
+<body class="splash">
+	
+	<div class="container form_style">
+		<h2 id="header">Sign up for the online game of Marbles</h2>
 
-	<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-	  <%= render "users/shared/error_messages", resource: resource %>
+		<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+		  <%= render "users/shared/error_messages", resource: resource %>
 
-	  <div class="row field">
-	    <div class="col-sm-2"><%= f.label :email %></div>
-	    <div class="col-sm-3"><%= f.email_field :email, autofocus: true, autocomplete: "email" %></div>
-		<div class="col-sm-7"></div>
-	  </div>
+		  <div class="row field">
+		    <div class="col-sm-2"><%= f.label :email %></div>
+		    <div class="col-sm-3"><%= f.email_field :email, autofocus: true, autocomplete: "email" %></div>
+			<div class="col-sm-7"></div>
+		  </div>
 
-	  <div class="row field">
-		  <div class="col-sm-2"><%= f.label :name %></div>
-		  <div class="col-sm-10"><%= f.text_field :name, autofocus: true %><i> (First and Last)</i></div>
-	  </div>
+		  <div class="row field">
+			  <div class="col-sm-2"><%= f.label :name %></div>
+			  <div class="col-sm-10"><%= f.text_field :name, autofocus: true %><i> (First and Last)</i></div>
+		  </div>
 
-	  <div class="row field">
-	    <div class="col-sm-2"><%= f.label :password %></div>
-	    <div class="col-sm-10"><%= f.password_field :password, autocomplete: "new-password" %>
-	    <% if @minimum_password_length %>
-	    <em>(<%= @minimum_password_length %> character minimum)</em>
-	    <% end %></div>
-	  </div>
+		  <div class="row field">
+		    <div class="col-sm-2"><%= f.label :password %></div>
+		    <div class="col-sm-10"><%= f.password_field :password, autocomplete: "new-password" %>
+		    <% if @minimum_password_length %>
+		    <em>(<%= @minimum_password_length %> character minimum)</em>
+		    <% end %></div>
+		  </div>
 
-	  <div class="row field">
-	    <div class="col-sm-2"><%= f.label :password_confirmation %></div>
-	    <div class="col-sm-3"><%= f.password_field :password_confirmation, autocomplete: "new-password" %></div>
-		<div class="col-sm-7"></div>
-	  </div>
+		  <div class="row field">
+		    <div class="col-sm-2"><%= f.label :password_confirmation %></div>
+		    <div class="col-sm-3"><%= f.password_field :password_confirmation, autocomplete: "new-password" %></div>
+			<div class="col-sm-7"></div>
+		  </div>
 
-	  <br>
-	  <div class=" row field">
-		  <div class="col-sm-2"><%= f.label "Theme" %></div>
-		  <div class="col-sm-3"><%= f.select :theme, ["Standard Marbles","Labeled Marbles", "Standard Marbles - Large Cards", "Labeled Marbles - Large Cards"], autofocus: true, value:"Standard Marbles" %></div>
-		  <div class="col-sm-7"></div>
-	  </div>
+		  <br>
+		  <div class=" row field">
+			  <div class="col-sm-2"><%= f.label "Theme" %></div>
+			  <div class="col-sm-3"><%= f.select :theme, ["Standard Marbles","Labeled Marbles", "Standard Marbles - Large Cards", "Labeled Marbles - Large Cards"], autofocus: true, value:"Standard Marbles" %></div>
+			  <div class="col-sm-7"></div>
+		  </div>
 	  
-	  <br>
-	  <div class="actions">
-	    <%= f.submit "Sign up" %>
-	  </div>
-	<% end %>
+		  <br>
+		  <div class="actions">
+		    <%= f.submit "Sign up" %>
+		  </div>
+		<% end %>
 
-	<br>
-	<%= render "users/shared/links" %>
+		<br>
+		<%= render "users/shared/links" %>
 
-</div>
+	</div>
+
+</body>

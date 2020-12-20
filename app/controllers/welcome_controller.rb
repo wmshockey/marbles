@@ -1,5 +1,5 @@
 class WelcomeController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[rules help]
+  skip_before_action :authenticate_user!, only: %i[rules help letsencrypt1 letsencrypt2 letsencrypt3]
   
   def index
     @user_name = current_user.name;
@@ -16,4 +16,16 @@ class WelcomeController < ApplicationController
   def help
   end
   
+  def letsencrypt1
+    render plain: "oJ8NnQdu5K6hIriSh3vZXlwrJbdt78geYn2eoEp1QpA.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+  end
+    
+  def letsencrypt2
+    render plain: "e8WMI9bNCYys_GMCuwiJh8rjjBvcWwN-9wA6BKfaehA.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+  end
+  
+  def letsencrypt3
+    render plain: "lxzQ72EkbDCTM9VpU5LZ9VJCyRgaYroz0rItOfIeQ5o.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+  end
+    
 end
