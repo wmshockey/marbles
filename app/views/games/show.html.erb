@@ -6,7 +6,7 @@
 
 	<span class="line2">
 		<span class="boardlabel" id="header">Show Game</span>
-		<strong><span class="boardlabel">: <%= @game.name %></span></strong>	
+		<strong><span class="boardlabel">: <%= @game.name %></span></strong><div style="color:white">Moves: <%= @game.plays %></div>
 	</span>
 
 	<% if @game.status == "Finished"%>
