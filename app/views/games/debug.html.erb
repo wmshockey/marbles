@@ -39,7 +39,9 @@
 		<% i = i + 1%>
 	<% end %>
 	</div>
-	
+
+	<div class="row">ENV variables = <%= ENV["GMAIL_USERNAME"]%>,  <%= ENV["GMAIL_PASSWORD"]%>,  <%= ENV["MARBLES_DB_USERNAME"]%>,  <%= ENV["MARBLES_DB_PASSWORD"]%></div>
+
 	<br>
  	<div class="row"><%= image_tag "marbles_board_numbered.png", alt: "Marbles Clip Art"%></div>
 

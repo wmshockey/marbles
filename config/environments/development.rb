@@ -65,8 +65,8 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {host: 'marblemind.ca'}
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      user_name:      'marblemind01@gmail.com',
-      password:       'Bonny2831',
+      user_name:      ENV["GMAIL_USERNAME"],
+      password:       ENV["GMAIL_PASSWORD"],
       domain:         'smtp.google.com',
       address:       'smtp.gmail.com',
       port:          '587',
