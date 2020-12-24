@@ -8,13 +8,13 @@ MySQL version is 15.1 Distrib 5.5.56-MariaDB
 
 The Ruby on Rails and MySQL backend runs on an Linux CentOS server version 7.
 
-Cloning the entire repository from GIT will contain everything needed to install the application except for one file.  The environment variables that need to be set up are:
+Cloning the entire repository from GIT will contain everything needed to install the application.  The environment variables that need to be set up are:
 
 For the MySQL database access:
-MARBLES_DB_USERNAME
-MARBLES_DB_PASSWORD
+MARBLES_DB_USERNAME, 
+MARBLES_DB_PASSWORD, 
 For the GMAIL email account to handle user account notifications:
-GMAIL_USERNAME
+GMAIL_USERNAME, 
 GMAIL_PASSWORD
 
 The devise gem is used to manage user authentication.
