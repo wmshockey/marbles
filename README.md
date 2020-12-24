@@ -22,4 +22,6 @@ Within the Javascript code, there are a couple of places where Ajax is used to c
 
 Please respect the terms of the LICENSE agreement.
 
+My current implementation of the game is open for public use at www.marblemind.ca provided you register with a verifiable email address.
+
 If any questions about how to deploy the application, you can conatact me at wmshockey@gmail.com
