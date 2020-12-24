@@ -1,9 +1,9 @@
 
 /*
 	This is the one main javascript file used by the Marblemind game.
-	Copyright Phastware Consulting Ltd.
-	Developer: Warren Shockey 2020
-	All rights reserved
+	Copyright 2020, Phastware Consulting Ltd.
+	Developer: Warren Shockey
+	Licensed under GNU General Public License Version 3.
 */
 
 $(document).ready(() => {  

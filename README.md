@@ -1,6 +1,6 @@
 # README
 
-This game of Marbles is essentially a web browser game with most of the process logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.
+This game of Marbles is essentially a web browser game with most of the process logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.  This is a standard Rails application.
 
 Ruby version is 2.6.1p33
 Rails version is 5.2.4.2
@@ -8,7 +8,14 @@ MySQL version is 15.1 Distrib 5.5.56-MariaDB
 
 The Ruby on Rails and MySQL backend runs on an Linux CentOS server version 7.
 
-Pulling the entire repository from GIT will contain everything needed to install the application except for one file.  There is a local_env.yml file in the config directory tha contains the various passwords needed to access the database and to send out the necessary email notifications through an account using GMAIL.
+Cloning the entire repository from GIT will contain everything needed to install the application except for one file.  The environment variables that need to be set up are:
+
+For the MySQL database access:
+MARBLES_DB_USERNAME
+MARBLES_DB_PASSWORD
+For the GMAIL email account to handle user account notifications:
+GMAIL_USERNAME
+GMAIL_PASSWORD
 
 The devise gem is used to manage user authentication.
 
