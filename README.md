@@ -1,6 +1,6 @@
 # README
 
-This game Marbles s essentially a web browser game with most of the game logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.
+This game of Marbles is essentially a web browser game with most of the process logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.
 
 Ruby version is 2.6.1p33
 Rails version is 5.2.4.2
