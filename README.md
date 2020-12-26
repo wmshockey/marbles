@@ -1,10 +1,10 @@
 # README
 
-This game of Marbles is a multii-player web browser game with most of the processing logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.  This is a standard Rails application.
+This game of Marbles is a multii-player web browser game with most of the processing logic performed in the javascript file marbles.js.   Ruby on Rails is used primarily as the backend to save the game records.  This is a standard Rails application. \
 
-Ruby version is 2.6.1p33
-Rails version is 5.2.4.2
-MySQL version is 15.1 Distrib 5.5.56-MariaDB
+Ruby version is 2.6.1p33 \
+Rails version is 5.2.4.2 \
+MySQL version is 15.1 Distrib 5.5.56-MariaDB \
 
 The Ruby on Rails and MySQL backend runs on an Linux CentOS server version 7.
 
@@ -15,7 +15,7 @@ MARBLES_DB_USERNAME,\
 MARBLES_DB_PASSWORD,\
 For the GMAIL email account to handle user account notifications:\
 GMAIL_USERNAME,\
-GMAIL_PASSWORD\
+GMAIL_PASSWORD \
 
 The devise gem is used to manage user authentication.
 
