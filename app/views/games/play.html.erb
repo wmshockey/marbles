@@ -10,9 +10,11 @@
 
 		<%= form_with(model: @game, local: true) do |form| %>
 
-			<span id="btnArea">
-			    <%= form.submit "End Turn", class:"btn btn-danger", id:"Save"%>
-			</span>
+			<div id="btnArea">
+			    <%= form.submit "End Turn", class:"btn btn-danger btn-lg", id:"Save"%>
+				<div style="padding-top: 10px"><%= link_to "Restart Turn", play_game_path(@game), class:"btn btn-warning btn-sm"%></div>
+			</div>
+
 
 			<% if @game.errors.any? %>
 			    <div id="error_explanation">

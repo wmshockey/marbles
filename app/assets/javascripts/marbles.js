@@ -1912,7 +1912,7 @@ function performDrop(player_color, data, ev) {
 			if (killed_color == killer_color) {
 				/* check if player is just moving their same marble back to original hole it was in */
 				if (killed_marble == killer_marble) {
-					dop_ok = true;
+					drop_ok = true;
 				} else {
 					alert("You can't kill your own marble.");
 					drop_ok = true;					

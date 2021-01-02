@@ -17,13 +17,13 @@
 		<span id="btnArea">
 			<% if @user_name == @player %>
 				<% @button_text = " Start Turn" %>
-				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success blinking', id:"Start" %>
+				<%= button_to @button_text, play_game_path(@game), method: :get, class:'btn btn-success btn-lg blinking', id:"Start" %>
 			<% else %>
 				<span class = "text-warning bg-warning">
 					<%= "** Waiting for " + @player.split(" ")[0] + " **"%>
 				</span>
 				<br>
-				<div><%= button_to "Refresh", game_path(@game), method: :get, class:'btn btn-warning'%></div>
+				<div style="padding-top: 10px"><%= button_to "Refresh", game_path(@game), method: :get, class:'btn btn-warning btn-sm'%></div>
 			<% end %>
 
 		</span>
