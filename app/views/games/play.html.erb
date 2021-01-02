@@ -12,7 +12,7 @@
 
 			<div id="btnArea">
 			    <%= form.submit "End Turn", class:"btn btn-danger btn-lg", id:"Save"%>
-				<div style="padding-top: 10px"><%= link_to "Restart Turn", play_game_path(@game), class:"btn btn-warning btn-sm"%></div>
+				<div style="padding-top: 10px"><%= link_to "Restart Turn", play_game_path(@game), id: "Restart", class:"btn btn-warning btn-sm"%></div>
 			</div>
 
 
@@ -48,3 +48,14 @@
 	<span> <%= link_to 'Back', games_path%></span>
 <% end %>
 
+
+<script>
+	$("#Restart").on("click", function(evt){
+		if (!confirm("Marbles and cards will be reset to start of turn positions.")) {
+	        evt.preventDefault();
+	        return false;			
+		}
+	});	
+</script>
+
+	
