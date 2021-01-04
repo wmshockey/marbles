@@ -74,10 +74,7 @@
 		<div class="col-sm-2">		
 			<td class="navbar-link">
 				<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
-				<%= link_to 'Edit', edit_game_path(game) %>
-				<% if current_user.id == 1 %>
-					<%= link_to 'Debug', debug_game_path(game) %>
-				<% end %>
+				<%= link_to 'Edit', edit_game_path(game) %><span>&nbsp&nbsp</span>
 		        <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %>
 			</td>
 		</div>

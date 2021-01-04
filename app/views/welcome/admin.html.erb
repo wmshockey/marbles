@@ -1,0 +1,122 @@
+<body class="container splash">
+
+	<% if current_user.id == 1 %>
+	
+		<div class="row">
+			<%= image_tag "marbles_logo.png", alt: "Marbles Game Logo", class: "marbles_logo"%>
+		</div>
+
+		<div class="row">
+			<h1 id="header" class="col-sm-6">Games Admin</h1>
+		</div>
+
+		<div class="row"></div>
+
+		<table class="table table-bordered">
+		  <thead>
+		    <tr>
+		      <th class="col-sm-2">Name</th>
+		      <th class="col-sm-1">Date</th>
+		      <th class="col-sm-1">Status</th>
+		      <th class="col-sm-3">Teams/Players</th>
+			  <th class="col-sm-1">Winner</th>
+		      <th class="col-sm-1">Turn</th>
+			  <th class="col-sm-1">Moves</th>
+			  <th class="col-sm-2"></th>
+		    </tr>
+		  </thead>
+
+	
+		  <tbody>
+			<% current_time = Time.now.to_i%>
+		    <% @records.each do |game| %>
+			  <% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>
+		      <tr>
+				<% if (current_time - game.updated_at.to_time.to_i) <= 300 %>
+		       	 	<td class="col-sm-2 blinking"><%= link_to game.name, game_path(game) %></td>
+				<% else %>
+					<td class="col-sm-2"><%= link_to game.name, game_path(game) %></td>
+				<% end %>
+		        <td class="col-sm-1"><%= game.start_date  %></td>
+		        <td class="col-sm-1"><%= game.status %></td>
+		        <td class="col-sm-2">
+					<% if game.ryteam!="" %>
+						<div style="display:inline-block"><%= game.ryteam %></div>
+						<div style="display:inline-block; color:red"><%= "(" + game.rplayer.split(" ")[0] + ", "%></div>
+						<div style="display:inline-block; color:yellow"><%= game.yplayer.split(" ")[0] + ")"%></div>
+					<% else %>
+						<% if game.rplayer!="" %>
+							<div style="display:inline-block; color:red"><%= game.rplayer.split(" ")[0] %></div>
+						<% end %>
+						<% if game.yplayer!=""%>
+							<div style="display:inline-block; color:yellow"><%= " " + game.yplayer.split(" ")[0]%></div>
+						<% end %>
+					<% end %>		
+					<% if game.gbteam!="" %>
+						<br>
+						<div style="display:inline-block"><%= game.gbteam %></div>
+						<div style="display:inline-block; color:green"><%= "(" + game.gplayer.split(" ")[0] + ", " %></div>
+						<div style="display:inline-block; color:blue"><%= game.bplayer.split(" ")[0] + ")"%></div>
+					<% else %>
+						<% if game.gplayer!="" %>
+							<div style="display:inline-block; color:green"><%= game.gplayer.split(" ")[0] %></div>
+						<% end %>
+						<% if game.bplayer!="" %>
+							<div style="display:inline-block; color:blue"><%= " " + game.bplayer.split(" ")[0] %></div>
+						<% end %>
+					<% end %>
+				</td>			
+				<td class="col-sm-1"><%= game.winner %></td>
+				<% players = players.reject { |c| c.empty?} %>
+				<% turn = players[(game.turn).to_i] %>
+		        <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
+				<td class="col-sm-1"><%= game.plays %></td>
+				<div class="col-sm-2">		
+					<td class="navbar-link">
+						<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
+						<%= link_to 'Copy', copy_game_path(game.id),  data: {confirm: 'Are you sure you want to make a copy of this game?' } %><span>&nbsp&nbsp</span>
+						<%= link_to 'Debug', debug_game_path(game) %>
+					</td>
+				</div>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+
+		<h3 class="col-sm-12"><%== pagy_nav(@pagy) %></h3>
+		
+		
+		<div class="row">
+			<h1 id="header" class="col-sm-6">Users Admin</h1>
+		</div>
+
+		<div class="row"></div>
+
+		<table class="table table-bordered">
+		  <thead>
+		    <tr>
+		      <th class="col-sm-1">ID</th>
+		      <th class="col-sm-2">Name</th>
+		      <th class="col-sm-2">Email</th>
+		      <th class="col-sm-1">Theme</th>
+			  <th class="col-sm-2">Confirmed At</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+			  <% @users.each do |u| %>
+			  	<tr>
+			  	  <td class="col-sm-1"><%= u.id %></td>
+				  <td class="col-sm-2"><%= u.name %></td>
+				  <td class="col-sm-2"><%= u.email %></td>
+				  <td class="col-sm-2"><%= u.theme %></td>
+				  <td class="col-sm-2"><%= u.confirmed_at %></td>
+				</tr>
+			  <% end %>
+		  </tbody>
+		</table>				
+		
+	<% else %>
+		<%= "This view is for the administrator only "%>		
+	<% end %>
+
+</body>

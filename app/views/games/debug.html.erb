@@ -16,13 +16,14 @@
 
 <body class="container">
 	
-		<br>
-		<%= render partial: "editfields", locals: {form: form} %>
-		<br>
+	<br>
+	<%= render partial: "editfields", locals: {form: form} %>
+	<br>
 
-		<div class=" container form_style">
-			<%= render partial: "calcfields", locals: {form: form} %>
-		</div>
+	<div class=" container form_style">
+		<%= render partial: "calcfields", locals: {form: form} %>
+	</div>
+	<br>
 	
     <div class="row" >
       <div class="col-sm-2"><%= form.submit "Save", class:"btn btn-danger", id:"Save"%></div>
@@ -39,8 +40,6 @@
 		<% i = i + 1%>
 	<% end %>
 	</div>
-
-	<div class="row">ENV variables = <%= ENV["GMAIL_USERNAME"]%>,  <%= ENV["GMAIL_PASSWORD"]%>,  <%= ENV["MARBLES_DB_USERNAME"]%>,  <%= ENV["MARBLES_DB_PASSWORD"]%></div>
 
 	<br>
  	<div class="row"><%= image_tag "marbles_board_numbered.png", alt: "Marbles Clip Art"%></div>

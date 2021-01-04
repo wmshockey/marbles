@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :query2, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :query2, :destroy, :copy]
   before_action :get_teams, only: [:new, :create, :edit, :update, :debug, :play]
 
   # GET /games
@@ -7,11 +7,7 @@ class GamesController < ApplicationController
   def index
     @user_name = current_user.name
     @user_id = current_user.id
-    if @user_id==1
-      @recs = Game.all.order(created_at: :desc)
-    else
-      @recs = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'").order(created_at: :desc)
-    end
+    @recs = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'").order(created_at: :desc)
     @pagy, @records = pagy( @recs.order(created_at: :desc) )
   end
 
@@ -38,11 +34,7 @@ class GamesController < ApplicationController
     @users = User.all
     @user_name = current_user.name
     @user_id = current_user.id
-    if @user_id==1
-      @games = Game.all
-    else
-      @games = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'")
-    end
+    @games = Game.all.where("yplayer='#{@user_name}' or rplayer='#{@user_name}' or gplayer='#{@user_name}' or bplayer='#{@user_name}'")
   end
 
   # GET /games/1/play
@@ -59,6 +51,22 @@ class GamesController < ApplicationController
   def debug
     @users = User.all
   end  
+
+  # GET /games/1/copy
+  def copy
+    @game = Game.find(params[:id])
+    respond_to do |format|
+      game_copy = @game.copy(@game)
+      if game_copy
+        format.html { redirect_to welcome_admin_url, notice: "Game #{@game.name} was successfully copied to: #{game_copy.name}." }
+        format.json { head :no_content }
+      else
+        flash[:error] = "Game copy failed."
+        format.html { render :show, notice: 'Game copy failed.' }
+        format.json { render json: game_copy.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
 
   # POST /games

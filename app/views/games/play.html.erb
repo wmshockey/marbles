@@ -12,8 +12,8 @@
 
 			<div id="btnArea">
 			    <%= form.submit "End Turn", class:"btn btn-danger btn-lg", id:"Save"%>
-				<div style="padding-top: 10px"><%= link_to "Restart Turn", play_game_path(@game), id: "Restart", class:"btn btn-warning btn-sm"%></div>
 			</div>
+			<div class="btnRestart"><%= link_to "Restart Turn", play_game_path(@game), id: "Restart", class:"btn btn-warning btn-sm"%></div>
 
 
 			<% if @game.errors.any? %>

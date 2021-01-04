@@ -57,5 +57,16 @@ class Game < ApplicationRecord
   validates :name, :presence => true
   validates_uniqueness_of :name, :message => ' - %{value} game name has already been taken'
   validates_with GameValidator
+
+  def copy(game)
+    game_copy = game.dup
+    new_name = game.name + "-copy"
+    game_copy.name = new_name
+    game_copy.save
+    return game_copy
+  end  
+
 end
+
+
 

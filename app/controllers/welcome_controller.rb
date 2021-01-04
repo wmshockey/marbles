@@ -16,6 +16,16 @@ class WelcomeController < ApplicationController
   def help
   end
   
+  # For administrator only
+  # GET /admin
+  def admin
+    @users = User.all;
+    @user_name = current_user.name
+    @user_id = current_user.id
+    @recs = Game.all.order(created_at: :desc)
+    @pagy, @records = pagy( @recs.order(created_at: :desc) )
+  end
+  
   def letsencrypt1
     render plain: "oJ8NnQdu5K6hIriSh3vZXlwrJbdt78geYn2eoEp1QpA.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
   end

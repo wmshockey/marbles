@@ -839,8 +839,10 @@ $(document).ready(() => {
 
 	function checkMove(playedCard, board_start, board_end) {
 /* Uncomment the line below to turn move checking off for testing purposes */
-		/*moved_marbles = [];
-		return true;*/
+		if ( $("#game_message").val() == "Debug") {
+			moved_marbles = [];
+			return true;			
+		}
 
 /* check for movement of any marbles */
 		moved_marbles = [];
@@ -1727,7 +1729,8 @@ function drag(ev) {
 	yplayer = $("#game_yplayer").val();
   	gplayer = $("#game_gplayer").val();
 	rplayer = $("#game_rplayer").val();
-	bplayer = $("#game_bplayer").val();	 
+	bplayer = $("#game_bplayer").val();
+	msg = $("#game_message").val(); 
     playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 	turn = parseInt($("#game_turn").val());
 	data = ev.dataTransfer.getData("text");
@@ -1740,7 +1743,7 @@ function drag(ev) {
 		draggingFrom = ev.target.parentElement.id;		
 	}
 	draggingObj = dragObjectType(data);
-	if (draggingObj=="marble" && playedCard=="") {
+	if (draggingObj=="marble" && playedCard=="" && msg!="Debug") {
 		alert("You have to play a card before moving any marbles.");
 		ev.preventDefault();
 	}
@@ -1854,7 +1857,7 @@ function performDrop(player_color, data, ev) {
 		/* If marble is being manually moved to start row, it has to go into it's original starting hole */
 		if ( startHoles.includes(target_hole_nbr)) {			
 			marble_color = mid.substring(0,1);
-			if (marble_color != player_color.substring(0,1)) {
+			if (marble_color != player_color.substring(0,1) && msg!="Debug") {
 				alert("Can't move another players marble into their start row.")
 				drop_ok = true;
 			} else if (marble_color == "r" && !red_start_holes.includes(target_hole_nbr)){
