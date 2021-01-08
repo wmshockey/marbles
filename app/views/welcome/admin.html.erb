@@ -15,9 +15,10 @@
 		<table class="table table-bordered">
 		  <thead>
 		    <tr>
-		      <th class="col-sm-2">Name</th>
+		      <th class="col-sm-1">Name</th>
 		      <th class="col-sm-1">Date</th>
 		      <th class="col-sm-1">Status</th>
+			  <th class="col-sm-1">Updated</th>
 		      <th class="col-sm-3">Teams/Players</th>
 			  <th class="col-sm-1">Winner</th>
 		      <th class="col-sm-1">Turn</th>
@@ -37,8 +38,9 @@
 				<% else %>
 					<td class="col-sm-2"><%= link_to game.name, game_path(game) %></td>
 				<% end %>
-		        <td class="col-sm-1"><%= game.start_date  %></td>
+		        <td class="col-sm-1"><%= game.start_date %></td>
 		        <td class="col-sm-1"><%= game.status %></td>
+				<td class="col-sm-1"><%= game.updated_at.strftime("%Y-%m-%d %H:%M")%></td>
 		        <td class="col-sm-2">
 					<% if game.ryteam!="" %>
 						<div style="display:inline-block"><%= game.ryteam %></div>
@@ -109,7 +111,7 @@
 				  <td class="col-sm-2"><%= u.name %></td>
 				  <td class="col-sm-2"><%= u.email %></td>
 				  <td class="col-sm-2"><%= u.theme %></td>
-				  <td class="col-sm-2"><%= u.confirmed_at %></td>
+				  <td class="col-sm-2"><%= u.confirmed_at.strftime("%Y-%m-%d %H:%M") %></td>
 				</tr>
 			  <% end %>
 		  </tbody>

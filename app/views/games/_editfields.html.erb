@@ -7,26 +7,7 @@
 	  	<span><%= form.text_field :name, :style => "width:200px" %></span>
 	  	<span id="nameselect"><%=form.collection_select :copyid, @games.order(name: :asc), :id, :name, {include_blank: ''}, :style => "width:20px" %></span>
 	  </div>
-	  <% if current_user.id == 1%>
-	  		<div class="col-sm-3"><%= form.label "Status:" %><%= form.text_field :status %></div>
-	  <% else %>
-	  		<div class="col-sm-3 hidden"><%= form.label "Status:" %><%= form.text_field :status %></div>
-	  <% end %>
 	</div>
-	
-	<% if current_user.id == 1%>
-		<div class="row border border-primary">
-		  	<div class="col-sm-2"><%= form.label "Turn:" %></div><div class="col-sm-1"><%= form.text_field :turn, :size=>"5" %></div>
-	  		<div class="col-sm-6 top"><%= @plist%></div>
-	  	  	<div class="col-sm-3"><%= form.label "First Turn:" %><%= form.text_field :firstturn, :size=>"5" %></div>	  		  
-		</div>
-	<% else %>
-		<div class="row border border-primary hidden">
-		  	<div class="col-sm-2"><%= form.label "Turn:" %></div><div class="col-sm-1"><%= form.text_field :turn, :size=>"5" %></div>
-	  		<div class="col-sm-6 top"><%= @plist%></div>
-	  	  	<div class="col-sm-3"><%= form.label "First Turn:" %><%= form.text_field :firstturn, :size=>"5" %></div>
-		</div>
-	<% end %>
 
 	<br>
 

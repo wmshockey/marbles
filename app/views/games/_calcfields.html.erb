@@ -1,6 +1,22 @@
 	<div class="row">
-		<div class="col-sm-2 top"><%= "Game ID"%> </div>
+		<div class="col-sm-2 top"><%= form.label "Game ID"%> </div>
 		<div class="col-sm-10 top"><%= form.number_field :id %></div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Status:" %></div>
+		<div class="col-sm-10"><%= form.text_field :status %></div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "Turn:" %></div>
+		<div class="col-sm-2"><%= form.text_field :turn, :size=>"5" %></div>
+		<div class="col-sm-8 top"><%= @plist%></div>
+	</div>
+		  	
+	<div class="row">
+		<div class="col-sm-2"><%= form.label "First Turn:" %></div>
+		<div class="col-sm-10"><%= form.text_field :firstturn, :size=>"5" %></div>	  		  
 	</div>
 
 	<div class="row">
