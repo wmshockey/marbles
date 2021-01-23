@@ -768,7 +768,7 @@ $(document).ready(() => {
 
 		/* If deck out of cards, empty the discard pile and shuffle the full deck */
 		number_players = playerList.length;
-		if (deck.length <= 1) {
+		if (deck.length < number_players) {
 			$("#game_message").val("A new hand has been dealt from the full deck.");
 			/* Put a comment on screen for what the last discard was before the shuffle */
 			if(comment == "") {
@@ -783,7 +783,7 @@ $(document).ready(() => {
 		} 	
 		/* deal the cards */
 		cards_left = deck.length;
-		max_deal = cards_left / number_players;
+		max_deal = Math.floor(cards_left / number_players);
 		if ( max_deal > 5) {
 			max_deal = 5;
 		}
