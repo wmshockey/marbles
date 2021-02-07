@@ -51,7 +51,7 @@ $(document).ready(() => {
 		  discardpile = [];
 	
 /* Initialize the screen positions of players hands */
-		  screencoords = ["300", "450", "300", "450", "300", "450", "300", "450"];
+		  screencoords = ["275", "450", "275", "450", "275", "450", "275", "450"];
 		  $("#game_screen").val(screencoords);
 	
 /* Deal cards for first time */
@@ -198,14 +198,10 @@ $(document).ready(() => {
 				}					
 			}			
 			
-	/* lock the discard pile by setting last discard as the discard background */
+	/* Remove discard child from discardpile and set it as background only */
 			discardElement = document.getElementById("discardpile");
 			if ( discardElement.childNodes[0]) {
-				discard = discardElement.childNodes[0];
-				discard_url = discard.getAttribute('src');
 				discardElement.removeChild(discardElement.childNodes[0]);
-				discard_background = "url(" + discard_url + ")";
-				$("#discardpile").css('backgroundImage', discard_background);
 			}
 									
 		}
@@ -333,13 +329,12 @@ $(document).ready(() => {
 		drawCardArea();
 
 /* show the card on top of the discard pile */
-		if (discardpile.length != 0) {
-			discard_background = "url(/assets/" + discardpile[0] + ".png)";
-		} else {
-			discard_background = "discard_background.png";
-		}	  
 		discardElement = document.getElementById("discardpile");
-		discardElement.style.backgroundImage = discard_background;
+		if (discardpile.length != 0) {
+			discardElement.innerHTML = discardpile[0];
+		} else {
+			discardElement.innerHTML = "";
+		}
 	  	 
 /* Display cards of person who is logged in */
 		if (user_color != ""){
@@ -454,36 +449,51 @@ $(document).ready(() => {
 		} else if (turn_color == "blue") {
 			playerhand = bluehand;
 		}
-		if (user_theme == "Standard Marbles - Large Cards" || user_theme == "Labeled Marbles - Large Cards") {
-			card_str = "_c2";
-		} else {
-			card_str = "_c1";
-		}
 		for (i=0; i<=4; i++) {
 			if (playerhand[i]) {
 				spot = "hand";
 				placeCard(spot, playerhand[i]);
 			}
 		}
-		if (discardpile[0]) {
-			discard_background = "url(/assets/" + discardpile[0] + card_str + ".png)";
-			$("#discardpile").css('backgroundImage', discard_background);
+		if (discardpile[0]) {			
+			discardElement = document.getElementById("discardpile");
+			discardElement.innerHTML = formatCard(discardpile[0]);	
 		}
 	}
 
 	function placeCard(spot, card_id) {
-		var c = document.createElement("IMG");
-		card_image = "/assets/" + card_id + card_str + ".png";
+		var c = document.createElement("div");
+		c.innerHTML = formatCard(card_id);
 		c.setAttribute("id", card_id);
 		c.className = "card";
-		c.src = card_image;
 		c.setAttribute("draggable", "true");
 		c.setAttribute("ondragstart", "drag(event)");
 		c.style.width = "65px";
 		c.style.height = "100px";
 /* put the card into the DOM */
 		h = document.getElementById(spot);
-		h.appendChild(c);		
+		h.appendChild(c);
+	}
+
+	function formatCard(card_id) {		
+		card_code = card_id;		
+		if (["J1", "J2", "J3", "J4"].includes(card_code)) {
+			card_html = "<div style='font-size:20px; top:0px; left:7px'>Joker</div>" + "<div style='font-size:50px; top:40px'>" + "&#127183;" + "</div>";
+		} else {			
+			card_code_length = card_code.length;
+			card_code_suit = card_code.substring(card_code_length-1,card_code_length);
+			card_code_nbr = card_code.substring(0,card_code_length-1);
+			if (card_code_suit=="D") {
+				card_html = "<span style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:red; font-size:60px'>" + "&diams;" + "</span>";
+			} else if (card_code_suit=="H") {
+				card_html = "<span style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:red; font-size:60px'>" + "&hearts;" + "</span>";
+			} else if (card_code_suit=="S") {
+				card_html = "<span style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:black; font-size:60px'>" + "&spades;" + "</span>";
+			} else if (card_code_suit=="C") {
+				card_html = "<span style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:black; font-size:60px'>" + "&clubs;" + "</span>";
+			}	
+		}
+		return card_html;
 	}
 
 	function drawBoard() {		
@@ -562,7 +572,7 @@ $(document).ready(() => {
 		}		
 		
 	/* Display all the marbles on the board */
-		if (user_theme == "Labeled Marbles" || user_theme == "Labeled Marbles - Large Cards") {
+		if (user_theme == "Labeled Marbles") {
 			theme_str = "_t2";
 		} else {
 			theme_str = "_t1";
@@ -654,7 +664,7 @@ $(document).ready(() => {
 		d.style.position = "absolute";
 		d.className = "boardlabel";
 		d.innerHTML = "Discards";
-		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 40).toString() + "px";
+		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 36).toString() + "px";
 		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height-20).toString() + "px";
 		document.body.appendChild(d);
 	/* Draw the discard card count */
@@ -684,6 +694,7 @@ $(document).ready(() => {
 		d = document.createElement("div");
 		d.setAttribute("id", "deck");
 		d.setAttribute("draggable", "false");
+		d.className = "card";
 		d.style.left = (((centre_x + 25) - (5 * card_width)/2) + 25 + 195).toString() + "px";
 		d.style.top = ((centre_y + 25) - (card_height*.33) - card_height).toString() + "px";
 		d.setAttribute("ondrop", "drop(event)");
@@ -1600,7 +1611,7 @@ $(document).ready(() => {
 			} else if (card_code_suit=="C") {
 				playerhand[i] = A2U(card_code_nbr) + "&clubs;";
 			} else if (["J1","J2","J3","J4"].includes(playerhand[i])) {
-				playerhand[i] = "&#129313;";
+				playerhand[i] = "&#127183;";
 			}
 		}
 		return playerhand.join(" ");		
@@ -1769,10 +1780,19 @@ function drop(ev) {
 function performDrop(player_color, data, ev) {
     drop_ok = false;
     draggingObj = dragObjectType(data);
-    draggingTo = dragObjectType(ev.target.id);
+	targetElement = ev.target;
+/* If dragging to an unknown object on board, try it's parent */
+	if (targetElement.id == "") {
+		if (targetElement.parentElement) {
+			targetElement = targetElement.parentElement;
+		} else {
+			targetElement = getElementById("board");
+		}
+	}
+    draggingTo = dragObjectType(targetElement.id);
 	var playerfield = "#game_" + player_color + "hand";
 	var playerhand = [];
-	/* alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
+/*	alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
@@ -1791,8 +1811,12 @@ function performDrop(player_color, data, ev) {
     	discardpile.unshift(data);
   	    discardpile = discardpile.filter(item => item);
     	$("#game_discardpile").val(discardpile.toString(","));
-  	    ev.target.appendChild(document.getElementById(data));
-  	    drop_ok = true;			
+		discardElement = document.getElementById(data);
+  	    targetElement.appendChild(discardElement);
+		discardElement.style.position = "absolute";
+		discardElement.style.left = "0px";
+		discardElement.style.top = "0px";
+		drop_ok = true;
 	 }
 
 
