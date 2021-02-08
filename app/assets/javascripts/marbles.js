@@ -1777,9 +1777,20 @@ function performDrop(player_color, data, ev) {
     drop_ok = false;
     draggingObj = dragObjectType(data);
 	targetElement = ev.target;
-/* If dragging to the html element inside a card, target the card, not the html element */
-	if (targetElement.id == "card_text") {
-		targetElement = targetElement.parentElement;
+/* If dragging a card to the html element inside another card, target the parent of the card, not the html element */
+	if (draggingObj == "card" && targetElement.id == "card_text") {
+		pElement = targetElement.parentElement;
+		if (pElement.id == "discardpile") {
+			targetElement = document.getElementById("discardpile");
+		} else {
+			/* player is putting a card on top of another card? */
+			if (pElement.parentElement.id == "discardpile") {
+				/* player is trying to discard a second card */
+				alert("You have already played a card this turn.");
+			}
+			/* Put the card back into the hand where it belongs */
+			targetElement = document.getElementById("hand");
+		}
 	}
     draggingTo = dragObjectType(targetElement.id);
 	var playerfield = "#game_" + player_color + "hand";
@@ -1803,6 +1814,7 @@ function performDrop(player_color, data, ev) {
     	discardpile.unshift(data);
   	    discardpile = discardpile.filter(item => item);
     	$("#game_discardpile").val(discardpile.toString(","));
+		/* Move card from hand to discard in the DOM */
 		discardElement = document.getElementById(data);
   	    targetElement.appendChild(discardElement);
 		discardElement.style.position = "absolute";
@@ -1823,6 +1835,7 @@ function performDrop(player_color, data, ev) {
  		playerhand.unshift(removed_card);
  	  	playerhand = playerhand.filter(item => item);
  	    $(playerfield).val(playerhand.toString(","));
+		/* Move card from discard pile back into hand in the DOM */
 		c = document.getElementById(data);
 		c.style.position = null;
 		c.style.left = null;
