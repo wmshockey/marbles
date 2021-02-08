@@ -457,7 +457,7 @@ $(document).ready(() => {
 		}
 		if (discardpile[0]) {			
 			discardElement = document.getElementById("discardpile");
-			discardElement.innerHTML = formatCard(discardpile[0]);	
+			discardElement.innerHTML = formatCard(discardpile[0]);
 		}
 	}
 
@@ -478,19 +478,19 @@ $(document).ready(() => {
 	function formatCard(card_id) {		
 		card_code = card_id;		
 		if (["J1", "J2", "J3", "J4"].includes(card_code)) {
-			card_html = "<div style='font-size:20px; top:0px; left:7px'>Joker</div>" + "<div style='font-size:50px; top:40px'>" + "&#127183;" + "</div>";
+			card_html = "<div id='card_text' style='font-size:20px; top:0px; left:7px'>Joker</div>" + "<div id='card_text' style='font-size:50px; top:40px'>" + "&#127183;" + "</div>";
 		} else {			
 			card_code_length = card_code.length;
 			card_code_suit = card_code.substring(card_code_length-1,card_code_length);
 			card_code_nbr = card_code.substring(0,card_code_length-1);
 			if (card_code_suit=="D") {
-				card_html = "<span style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:red; font-size:60px'>" + "&diams;" + "</span>";
+				card_html = "<span id='card_text' style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span id='card_text' style='color:red; font-size:60px'>" + "&diams;" + "</span>";
 			} else if (card_code_suit=="H") {
-				card_html = "<span style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:red; font-size:60px'>" + "&hearts;" + "</span>";
+				card_html = "<span id='card_text' style='color:red; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span id='card_text' style='color:red; font-size:60px'>" + "&hearts;" + "</span>";
 			} else if (card_code_suit=="S") {
-				card_html = "<span style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:black; font-size:60px'>" + "&spades;" + "</span>";
+				card_html = "<span id='card_text' style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span id='card_text' style='color:black; font-size:60px'>" + "&spades;" + "</span>";
 			} else if (card_code_suit=="C") {
-				card_html = "<span style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span style='color:black; font-size:60px'>" + "&clubs;" + "</span>";
+				card_html = "<span id='card_text' style='color:black; font-size:30px'>" + A2U(card_code_nbr) + "</span><br />" + "<span id='card_text' style='color:black; font-size:60px'>" + "&clubs;" + "</span>";
 			}	
 		}
 		return card_html;
@@ -1754,10 +1754,6 @@ function drag(ev) {
 		draggingFrom = ev.target.parentElement.id;		
 	}
 	draggingObj = dragObjectType(data);
-	if (draggingObj=="marble" && playedCard=="" && msg!="Debug") {
-		alert("You have to play a card before moving any marbles.");
-		ev.preventDefault();
-	}
 }
 
 function drop(ev) {
@@ -1781,18 +1777,14 @@ function performDrop(player_color, data, ev) {
     drop_ok = false;
     draggingObj = dragObjectType(data);
 	targetElement = ev.target;
-/* If dragging to an unknown object on board, try it's parent */
-	if (targetElement.id == "") {
-		if (targetElement.parentElement) {
-			targetElement = targetElement.parentElement;
-		} else {
-			targetElement = getElementById("board");
-		}
+/* If dragging to the html element inside a card, target the card, not the html element */
+	if (targetElement.id == "card_text") {
+		targetElement = targetElement.parentElement;
 	}
     draggingTo = dragObjectType(targetElement.id);
 	var playerfield = "#game_" + player_color + "hand";
 	var playerhand = [];
-/*	alert("dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
+	/* alert("data= " + data + " dragging " + draggingObj + " From " + draggingFrom + " To " + draggingTo); */
 
 /* player is moving a card from hand to discard */
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
@@ -1832,6 +1824,9 @@ function performDrop(player_color, data, ev) {
  	  	playerhand = playerhand.filter(item => item);
  	    $(playerfield).val(playerhand.toString(","));
 		c = document.getElementById(data);
+		c.style.position = null;
+		c.style.left = null;
+		c.style.top = null;
 		h = document.getElementById("hand");
 		h.appendChild(c);
 		playedCard = "";  		
@@ -1846,9 +1841,9 @@ function performDrop(player_color, data, ev) {
  			alert("Invalid play.  You have already played a card this move.");
  		} else {
 			if (draggingTo == "card") {
-				ev.target.parentElement.appendChild(document.getElementById(data));
+				targetElement.parentElement.appendChild(document.getElementById(data));
 			} else if (draggingTo == "hand"){
-				ev.target.appendChild(document.getElementById(data));
+				targetElement.appendChild(document.getElementById(data));
 			} 			
  		}  	  
    	    drop_ok = true;	 	
