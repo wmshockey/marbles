@@ -1754,6 +1754,10 @@ function drag(ev) {
 		draggingFrom = ev.target.parentElement.id;		
 	}
 	draggingObj = dragObjectType(data);
+	if (draggingObj=="marble" && playedCard=="") {
+		alert("You have to play a card before moving any marbles.");
+		ev.preventDefault();
+	}
 }
 
 function drop(ev) {
