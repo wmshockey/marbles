@@ -22,7 +22,7 @@ $(document).ready(() => {
 	  gplayer = $("#game_gplayer").val();
 	  rplayer = $("#game_rplayer").val();
 	  bplayer = $("#game_bplayer").val();	  
-	  playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
+	  playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer); 
 
 /*
 -------------------------------------------------		
@@ -57,12 +57,12 @@ $(document).ready(() => {
 /* Deal cards for first time */
 		  shuffle(deck);
 		  dealCards();
-		  $("#game_deck").val(deck.toString());
-		  $("#game_discardpile").val(discardpile.toString());
-		  $("#game_greenhand").val(greenhand.toString());
-		  $("#game_redhand").val(redhand.toString());
-		  $("#game_bluehand").val(bluehand.toString());
-		  $("#game_yellowhand").val(yellowhand.toString());
+		  $("#game_deck").val(btoa(deck.toString()));
+		  $("#game_discardpile").val(btoa(discardpile.toString()));
+		  $("#game_greenhand").val(btoa(greenhand.toString()));
+		  $("#game_redhand").val(btoa(redhand.toString()));
+		  $("#game_bluehand").val(btoa(bluehand.toString()));
+		  $("#game_yellowhand").val(btoa(yellowhand.toString()));
 
 		}
 
@@ -95,13 +95,13 @@ $(document).ready(() => {
 				redhand = redhand_start;
 				bluehand = bluehand_start;
 				deck = deck_start;
-				discardpile = discardpile_start;
-				$("#game_deck").val(deck.toString());
-				$("#game_discardpile").val(discardpile.toString());
-				$("#game_greenhand").val(greenhand.toString());
-				$("#game_redhand").val(redhand.toString());					
-				$("#game_bluehand").val(bluehand.toString());					
-				$("#game_yellowhand").val(yellowhand.toString());					
+				discardpile = discardpile_start;			
+	  		    $("#game_deck").val(btoa(deck.toString()));
+	  		    $("#game_discardpile").val(btoa(discardpile.toString()));
+	  		    $("#game_greenhand").val(btoa(greenhand.toString()));
+	  		    $("#game_redhand").val(btoa(redhand.toString()));
+	  		    $("#game_bluehand").val(btoa(bluehand.toString()));
+	  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));				
 				$("#game_board").val(board.toString());
 				$("#game_screen").val(screencoords).toString();
 				$("#game_status").val("Started");
@@ -186,13 +186,13 @@ $(document).ready(() => {
 							}
 						}
 						$("#game_turn").val(turn.toString());
-						$("#game_firstturn").val(first_turn.toString());
-						$("#game_deck").val(deck.toString());
-						$("#game_discardpile").val(discardpile.toString());							
-						$("#game_greenhand").val(greenhand.toString());
-						$("#game_redhand").val(redhand.toString());
-						$("#game_bluehand").val(bluehand.toString());
-						$("#game_yellowhand").val(yellowhand.toString());
+						$("#game_firstturn").val(first_turn.toString());					
+			  		    $("#game_deck").val(btoa(deck.toString()));
+			  		    $("#game_discardpile").val(btoa(discardpile.toString()));
+			  		    $("#game_greenhand").val(btoa(greenhand.toString()));
+			  		    $("#game_redhand").val(btoa(redhand.toString()));
+			  		    $("#game_bluehand").val(btoa(bluehand.toString()));
+			  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));
 						$("#game_status").val("Started");
 					}						
 				}					
@@ -209,6 +209,23 @@ $(document).ready(() => {
 /*  Enable Save button after javascript code completion */
 	  document.getElementById("Save").disabled = false;
 
+  })
+  
+  
+/* User hit the save button when on the Debug Game screen - Encode fields */
+  $('[id="debugSave"]').on("click", function(){
+	  str = $("#game_deck").val();
+	  $("#game_deck").val(btoa(str));
+	  str = $("#game_discardpile").val();
+	  $("#game_discardpile").val(btoa(str));
+	  str = $("#game_greenhand").val();
+	  $("#game_greenhand").val(btoa(str));
+	  str = $("#game_redhand").val();
+	  $("#game_redhand").val(btoa(str));
+	  str = $("#game_bluehand").val();
+	  $("#game_bluehand").val(btoa(str));
+	  str = $("#game_yellowhand").val();
+	  $("#game_yellowhand").val(btoa(str));		
   })
 
 
@@ -268,6 +285,27 @@ $(document).ready(() => {
 /* Initialize the board to all empty */
 		board.fill("");
 	}
+
+/*
+------------------------------------------------
+DEBUG GAME SCREEN
+------------------------------------------------
+*/
+	if (header == "Debug Game") {
+		str = $("#game_deck").val();
+		$("#game_deck").val(atob(str));
+		str = $("#game_discardpile").val();
+		$("#game_discardpile").val(atob(str));
+		str = $("#game_greenhand").val();
+		$("#game_greenhand").val(atob(str));
+		str = $("#game_redhand").val();
+		$("#game_redhand").val(atob(str));
+		str = $("#game_bluehand").val();
+		$("#game_bluehand").val(atob(str));
+		str = $("#game_yellowhand").val();
+		$("#game_yellowhand").val(atob(str));
+	}
+
 
 /*	
 ----------------------------------------------------	
@@ -400,12 +438,13 @@ $(document).ready(() => {
 		displayCards(user_color);
 		
 /* Save everything back out to the page at this point in case it was updated during the move */
-		$("#deck").val(deck.toString());
-		$("#game_discardpile").val(discardpile.toString());
-		$("#greenhand").val(greenhand.toString());
-		$("#redhand").val(redhand.toString());
-		$("#bluehand").val(bluehand.toString());
-		$("#yellowhand").val(yellowhand.toString());
+		
+	    $("#game_deck").val(btoa(deck.toString()));
+	    $("#game_discardpile").val(btoa(discardpile.toString()));
+	    $("#game_greenhand").val(btoa(greenhand.toString()));
+	    $("#game_redhand").val(btoa(redhand.toString()));
+	    $("#game_bluehand").val(btoa(bluehand.toString()));
+	    $("#game_yellowhand").val(btoa(yellowhand.toString()));
 				
 	}
 	
@@ -767,7 +806,7 @@ $(document).ready(() => {
 		gplayer = $("#game_gplayer").val();
 		rplayer = $("#game_rplayer").val();
 		bplayer = $("#game_bplayer").val();
-		discardpile = $("#game_discardpile").val().split(",");
+		discardpile = atob($("#game_discardpile").val()).split(",");
 		comment = $("#game_comment").val();
 	    playerList = getPlayerList(yplayer, gplayer, rplayer, bplayer);
 		
@@ -812,12 +851,14 @@ $(document).ready(() => {
 				bluehand.push(deck.pop());
 			}
 		}		
-		$("#deck").val(deck.toString());
-		$("#discardpile").val(discardpile.toString());
-		$("#greenhand").val(greenhand.toString());
-		$("#redhand").val(redhand.toString());
-		$("#bluehand").val(bluehand.toString());
-		$("#yellowhand").val(yellowhand.toString());		
+		
+	    $("#game_deck").val(btoa(deck.toString()));
+	    $("#game_discardpile").val(btoa(discardpile.toString()));
+	    $("#game_greenhand").val(btoa(greenhand.toString()));
+	    $("#game_redhand").val(btoa(redhand.toString()));
+	    $("#game_bluehand").val(btoa(bluehand.toString()));
+	    $("#game_yellowhand").val(btoa(yellowhand.toString()));
+		
 	}
 	
 
@@ -1005,19 +1046,19 @@ $(document).ready(() => {
 				if (turn_color == "yellow") {
 					playerhand = yellowhand;
 					yellowhand = [];
-					$("#game_yellowhand").val(yellowhand);					
+					$("#game_yellowhand").val(btoa(yellowhand.toString()));					
 				} else if (turn_color == "green") {
 					playerhand = greenhand;
 					greenhand = [];
-					$("#game_greenhand").val(greenhand);		
+					$("#game_greenhand").val(btoa(greenhand.toString()));		
 				} else if (turn_color == "red") {
 					playerhand = redhand;
 					redhand = [];
-					$("#game_redhand").val(redhand);
+					$("#game_redhand").val(btoa(redhand.toString()));
 				} else if (turn_color == "blue") {
 					playerhand = bluehand;
 					bluehand = [];
-					$("#game_bluehand").val(bluehand);
+					$("#game_bluehand").val(btoa(bluehand.toString()));
 				}
 				/* return players cards to the discard pile */				
 				for (i=0; i<playerhand.length; i++) {
@@ -1033,7 +1074,7 @@ $(document).ready(() => {
 					}
 				}
 				discardpile = td;				
-				$("#game_discardpile").val(discardpile.toString());
+				$("#game_discardpile").val(btoa(discardpile.toString()));
 				/* save the discarded playerhand as a comment so it can be shown to other players */
 				comment = formatComment(playerhand);
 				$("#game_comment").val(comment);
@@ -1642,12 +1683,12 @@ $(document).ready(() => {
 
 	/* convert strings in page to arrays */	
 		board = (document.getElementById("game_board").innerHTML).split(",");
-		deck = (document.getElementById("game_deck").innerHTML).split(",");
+		deck = (atob(document.getElementById("game_deck").innerHTML)).split(",");
 		/* If deck is empty, make sure it is truly empty */
 		if (deck[0] == "") {
 			deck = [];
 		}
-		discardpile = document.getElementById("game_discardpile").innerHTML.split(",");
+		discardpile = atob(document.getElementById("game_discardpile").innerHTML).split(",");
 		/* If discardpile is empty, make sure it is truly empty */
 		if (discardpile[0] == "") {
 			discardpile = [];
@@ -1655,10 +1696,10 @@ $(document).ready(() => {
 		moved = document.getElementById("game_moved").innerHTML.split(",");
 
 	/* Get the card hands for each player and the screen coordinates for their hands */
-		greenhand = document.getElementById("game_greenhand").innerHTML.split(",");
-		redhand = document.getElementById("game_redhand").innerHTML.split(",");
-		bluehand = document.getElementById("game_bluehand").innerHTML.split(",");
-		yellowhand = document.getElementById("game_yellowhand").innerHTML.split(",");
+		greenhand = atob(document.getElementById("game_greenhand").innerHTML).split(",");
+		redhand = 	atob(document.getElementById("game_redhand").innerHTML).split(",");
+		bluehand = 	atob(document.getElementById("game_bluehand").innerHTML).split(",");
+		yellowhand = atob(document.getElementById("game_yellowhand").innerHTML).split(",");
 		screencoords = document.getElementById("game_screen").innerHTML.split(",");
 
 	/* Get the player list */
@@ -1691,12 +1732,12 @@ $(document).ready(() => {
 
 	/* convert strings in page to arrays */	
 		board = (document.getElementById("game_board").value).split(",");
-		deck = (document.getElementById("game_deck").value).split(",");
+		deck = (atob(document.getElementById("game_deck").value)).split(",");
 		/* If deck is empty, make sure it is truly empty */
 		if (deck[0] == "") {
 			deck = [];
 		}
-		discardpile = document.getElementById("game_discardpile").value.split(",");
+		discardpile = atob(document.getElementById("game_discardpile").value).split(",");
 		/* If discardpile is empty, make sure it is truly empty */
 		if (discardpile[0] == "") {
 			discardpile = [];
@@ -1704,10 +1745,10 @@ $(document).ready(() => {
 		moved = document.getElementById("game_moved").value.split(",");
 
 	/* Get the card hands for each player and the screen coordinates for their hands */
-		greenhand = document.getElementById("game_greenhand").value.split(",");
-		redhand = document.getElementById("game_redhand").value.split(",");
-		bluehand = document.getElementById("game_bluehand").value.split(",");
-		yellowhand = document.getElementById("game_yellowhand").value.split(",");
+		greenhand = atob(document.getElementById("game_greenhand").value).split(",");
+		redhand = 	atob(document.getElementById("game_redhand").value).split(",");
+		bluehand = 	atob(document.getElementById("game_bluehand").value).split(",");
+		yellowhand = atob(document.getElementById("game_yellowhand").value).split(",");
 		screencoords = document.getElementById("game_screen").value.split(",");
 
 	/* Get the player list */
@@ -1805,19 +1846,19 @@ function performDrop(player_color, data, ev) {
     if ( (draggingObj == "card") && (draggingFrom == "hand") && (draggingTo == "discard") ) {
   	  	playedCard = data;
 		/* remove card from hand */
-    	playerhand = ($(playerfield).val()).split(",");
+    	playerhand = atob($(playerfield).val()).split(",");
     	for (i=0; i<=5; i++) {
     		  if (data == playerhand[i]) {
     			  playerhand[i] = "";
     		  }
     	}
   	    playerhand = playerhand.filter(item => item);
-    	$(playerfield).val(playerhand.toString()); 	  
+    	$(playerfield).val(btoa(playerhand.toString())); 	  
 		/* place card on top of discard pile */
-    	discardpile = ($("#game_discardpile").val()).split(",");
+    	discardpile = atob(($("#game_discardpile").val())).split(",");
     	discardpile.unshift(data);
   	    discardpile = discardpile.filter(item => item);
-    	$("#game_discardpile").val(discardpile.toString(","));
+    	$("#game_discardpile").val(btoa(discardpile.toString(",")));
 		/* Move card from hand to discard in the DOM */
 		discardElement = document.getElementById(data);
   	    targetElement.appendChild(discardElement);
@@ -1830,15 +1871,15 @@ function performDrop(player_color, data, ev) {
 
  /* player is moving a card from discardpile back to cards (his hand) */
      if ((draggingObj == "card") && (draggingFrom == "discardpile") && ( (draggingTo == "hand") || (draggingTo == "card") )) {
-     	playerhand = ($(playerfield).val()).split(",");
+     	playerhand = atob($(playerfield).val()).split(",");
 		/* remove card off discard pile */
- 		discardpile = ($("#game_discardpile").val()).split(",");
+ 		discardpile = atob($("#game_discardpile").val()).split(",");
  		removed_card = discardpile.shift();
- 		$("#game_discardpile").val(discardpile.toString(","));
+ 		$("#game_discardpile").val(btoa(discardpile.toString(",")));
 		/* add card back to hand */
  		playerhand.unshift(removed_card);
  	  	playerhand = playerhand.filter(item => item);
- 	    $(playerfield).val(playerhand.toString(","));
+ 	    $(playerfield).val(btoa(playerhand.toString(",")));
 		/* Move card from discard pile back into hand in the DOM */
 		c = document.getElementById(data);
 		c.style.position = null;
@@ -1846,7 +1887,7 @@ function performDrop(player_color, data, ev) {
 		c.style.top = null;
 		h = document.getElementById("hand");
 		h.appendChild(c);
-		playedCard = "";  		
+		playedCard = "";	
    	  	drop_ok = true;
      }
 
@@ -1863,7 +1904,7 @@ function performDrop(player_color, data, ev) {
 				targetElement.appendChild(document.getElementById(data));
 			} 			
  		}  	  
-   	    drop_ok = true;	 	
+   	    drop_ok = true;
 	 }
 	 
 /* player is moving a card to somewhere on open board */

@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :set_game, only: [:show, :edit, :update, :debug, :play, :query, :query2, :destroy, :copy]
   before_action :get_teams, only: [:new, :create, :edit, :update, :debug, :play]
-
+  
   # GET /games
   # GET /games.json
   def index
@@ -155,7 +155,7 @@ class GamesController < ApplicationController
         @plist.push(@game.bplayer)
       end
     end
-
+    
     # Only allow a list of trusted parameters through.
     def game_params
       params.require(:game).permit(:name, :id, :start_date, :status, :yplayer, :gplayer, :rplayer, :bplayer, :ryteam, :gbteam, :turn, :comment, :board, :deck, :discardpile, :greenhand, :redhand, :bluehand, :yellowhand, :screen, :winner, :refresh, :moved, :plays, :updated_at, :firstturn, :message)
