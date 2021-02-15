@@ -73,130 +73,145 @@ $(document).ready(() => {
 */
 
 		else if (header == "Marbles Game") {
-			
-	/* lock the game by setting status to Hold until save has been completed */
-	  	  if ($("#game_status").val() == "Started") {
-	  		  $("#game_status").val("Hold");
-	  	  } else {
-	  		  alert("End Turn button double click or key bounce detected.  Please take your turn over.");
-	  		  $("#game_status").val("Abort");
-	  	  }
 
 	/* save the end of move board positions */
-		board_end = ($("#game_board").val()).split(",");
+		  board_end = ($("#game_board").val()).split(",");
 			
-	/* check if move is valid and if not, reset board to start of move */
-			if ( $("#game_status").val()=="Abort"  || (checkMove(playedCard, board_start, board_end) == false) ) {
-				/* Move was not valid */
-				/* Restore board and hands to point before the last move */
-				board = board_start;
-				yellowhand = yellowhand_start;
-				greenhand = greenhand_start;
-				redhand = redhand_start;
-				bluehand = bluehand_start;
-				deck = deck_start;
-				discardpile = discardpile_start;			
-	  		    $("#game_deck").val(btoa(deck.toString()));
-	  		    $("#game_discardpile").val(btoa(discardpile.toString()));
-	  		    $("#game_greenhand").val(btoa(greenhand.toString()));
-	  		    $("#game_redhand").val(btoa(redhand.toString()));
-	  		    $("#game_bluehand").val(btoa(bluehand.toString()));
-	  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));				
-				$("#game_board").val(board.toString());
-				$("#game_screen").val(screencoords).toString();
-				$("#game_status").val("Started");
-			} else {
-				/* Move is valid - page values will be saved to the database */
-				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
-				hand_div = document.getElementById("hand");
-				x_coord = hand_div.offsetLeft;
-				y_coord = hand_div.offsetTop;
-				saveScreenCoords(x_coord, y_coord, user_color);
-				$("#game_screen").val(screencoords).toString();
+	/* First check if this is a special mercy move to return the previous players cards after they accidentally threw them away or if this is a standard maove */
+		  if (mercyMove == "") {
+		  	
+		/* check if move is valid and if not, reset board to start of move */
+  			if ( checkMove(playedCard, board_start, board_end) == false ) {
+  				/* Move was not valid */
+  				/* Restore board and hands to point before the last move */
+  				board = board_start;
+  				yellowhand = yellowhand_start;
+  				greenhand = greenhand_start;
+  				redhand = redhand_start;
+  				bluehand = bluehand_start;
+  				deck = deck_start;
+  				discardpile = discardpile_start;			
+  	  		    $("#game_deck").val(btoa(deck.toString()));
+  	  		    $("#game_discardpile").val(btoa(discardpile.toString()));
+  	  		    $("#game_greenhand").val(btoa(greenhand.toString()));
+  	  		    $("#game_redhand").val(btoa(redhand.toString()));
+  	  		    $("#game_bluehand").val(btoa(bluehand.toString()));
+  	  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));				
+  				$("#game_board").val(board.toString());
+  				$("#game_screen").val(screencoords).toString();
+  				$("#game_status").val("Started");
+  			} else {
+  				/* Move is valid - page values will be saved to the database */
+  				/* Need to save the screen coordinates in case anyone moved their hand to a new spot during their move.*/
+  				hand_div = document.getElementById("hand");
+  				x_coord = hand_div.offsetLeft;
+  				y_coord = hand_div.offsetTop;
+  				saveScreenCoords(x_coord, y_coord, user_color);
+  				$("#game_screen").val(screencoords).toString();
 
-				/* Need to save the list of marbles that moved this turn for display with green arrows */
-				moved_marble_ids = "";
-				if (moved_marbles) {
-					for (i=0; i<moved_marbles.length; i++) {
-						moved_marble_ids = moved_marbles[i][0].toString() + "," + moved_marble_ids;
-					}										
+  				/* Need to save the list of marbles that moved this turn for display with green arrows */
+  				moved_marble_ids = "";
+  				if (moved_marbles) {
+  					for (i=0; i<moved_marbles.length; i++) {
+  						moved_marble_ids = moved_marbles[i][0].toString() + "," + moved_marble_ids;
+  					}										
+  				}
+  				$("#game_moved").val(moved_marble_ids);
+
+  				/* Increment the number of plays made */
+  				plays = parseInt($("#game_plays").val());
+  				plays++;
+  				$("#game_plays").val(plays.toString());
+
+  				/* Check for game over if all the players playable colors are in their home rows */
+  				board_str = $("#game_board").val();
+  				board = board_str.split(",");
+  				if (gameOver()) {
+  					if (ryteam && playable_colors.includes("red")) {
+  						winner = ryteam;
+  					} else if (gbteam && playable_colors.includes("green")) {
+  						winner = gbteam;
+  					} else {
+  						winner = user_name;
+  						/* winner = getPlayerName(playable_colors[0]); */
+  					}
+  					$("#game_status").val("Finished");
+  					$("#game_winner").val(winner);				
+  				} else {
+  					/* Set next persons turn */
+  					/* First see if anyone can play */
+  					number_players = playerList.length;
+  					turn = -1;
+  					next = parseInt($("#game_turn").val());
+  					next = next + 1;
+  					for (i=0; i<number_players; i++) {
+  						/* look at the next players hand to see if they have any cards left to play */
+  						if (next >= number_players) {
+  							next = 0;
+  						}
+  						/* Check to see if this player has any cards left to play */
+  						next_color = playerList[next][1];
+  						playerhand_str = "#game_" + next_color + "hand";
+  						playerhand = ($(playerhand_str).val()).split(",");
+  						if (playerhand[0] == "") {
+  							next = next + 1;
+  						} else {
+  							turn = next;
+  							turn_color = next_color;
+  							break;
+  						}					
+  					}
+  					if (turn != -1) {
+  						/* There is a player who still has cards left to play */
+  						$("#game_turn").val(turn.toString());
+  						$("#game_status").val("Started");	
+  					} else {
+  						/* Nobody else can play now - must shuffle and redeal the cards */
+  						$("#game_message").val("Another hand has been dealt.");
+  						first_turn = parseInt($("#game_firstturn").val());
+  						turn = first_turn;
+  						before_deal_count = deck.length;
+  						dealCards();
+  						after_deal_count = deck.length;
+  						/* If there are no more cards in the deck then shift first turn after a deal to next player */
+  						if (before_deal_count>1 && after_deal_count<=1) {
+  							first_turn = first_turn + 1;
+  							if (first_turn >= number_players) {
+  								first_turn = 0;
+  							}
+  						}
+  						$("#game_turn").val(turn.toString());
+  						$("#game_firstturn").val(first_turn.toString());					
+  			  		    $("#game_deck").val(btoa(deck.toString()));
+  			  		    $("#game_discardpile").val(btoa(discardpile.toString()));
+  			  		    $("#game_greenhand").val(btoa(greenhand.toString()));
+  			  		    $("#game_redhand").val(btoa(redhand.toString()));
+  			  		    $("#game_bluehand").val(btoa(bluehand.toString()));
+  			  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));
+  						$("#game_status").val("Started");
+  					}						
+  				}					
+  			}		
+			
+		  } else {
+/* This is a mercy move to give the previous players discarded cards back to them after they accidentlally threw them in */
+			/* Set turn to player who had their discards returned to them */
+			number_players = playerList.length;
+			for (i=0; i<number_players; i++) {
+				if (mercyMove == playerList[i][1]) {
+					turn = i;
+					turn_color = playerList[i][1];
+					turn_name =  playerList[i][0];
+					$("#game_turn").val(turn.toString());
 				}
-				$("#game_moved").val(moved_marble_ids);
-
-				/* Increment the number of plays made */
-				plays = parseInt($("#game_plays").val());
-				plays++;
-				$("#game_plays").val(plays.toString());
-
-				/* Check for game over if all the players playable colors are in their home rows */
-				board_str = $("#game_board").val();
-				board = board_str.split(",");
-				if (gameOver()) {
-					if (ryteam && playable_colors.includes("red")) {
-						winner = ryteam;
-					} else if (gbteam && playable_colors.includes("green")) {
-						winner = gbteam;
-					} else {
-						winner = user_name;
-						/* winner = getPlayerName(playable_colors[0]); */
-					}
-					$("#game_status").val("Finished");
-					$("#game_winner").val(winner);				
-				} else {
-					/* Set next persons turn */
-					/* First see if anyone can play */
-					number_players = playerList.length;
-					turn = -1;
-					next = parseInt($("#game_turn").val());
-					next = next + 1;
-					for (i=0; i<number_players; i++) {
-						/* look at the next players hand to see if they have any cards left to play */
-						if (next >= number_players) {
-							next = 0;
-						}
-						/* Check to see if this player has any cards left to play */
-						next_color = playerList[next][1];
-						playerhand_str = "#game_" + next_color + "hand";
-						playerhand = ($(playerhand_str).val()).split(",");
-						if (playerhand[0] == "") {
-							next = next + 1;
-						} else {
-							turn = next;
-							turn_color = next_color;
-							break;
-						}					
-					}
-					if (turn != -1) {
-						/* There is a player who still has cards left to play */
-						$("#game_turn").val(turn.toString());
-						$("#game_status").val("Started");	
-					} else {
-						/* Nobody else can play now - must shuffle and redeal the cards */
-						$("#game_message").val("Another hand has been dealt.");
-						first_turn = parseInt($("#game_firstturn").val());
-						turn = first_turn;
-						before_deal_count = deck.length;
-						dealCards();
-						after_deal_count = deck.length;
-						/* If there are no more cards in the deck then shift first turn after a deal to next player */
-						if (before_deal_count>1 && after_deal_count<=1) {
-							first_turn = first_turn + 1;
-							if (first_turn >= number_players) {
-								first_turn = 0;
-							}
-						}
-						$("#game_turn").val(turn.toString());
-						$("#game_firstturn").val(first_turn.toString());					
-			  		    $("#game_deck").val(btoa(deck.toString()));
-			  		    $("#game_discardpile").val(btoa(discardpile.toString()));
-			  		    $("#game_greenhand").val(btoa(greenhand.toString()));
-			  		    $("#game_redhand").val(btoa(redhand.toString()));
-			  		    $("#game_bluehand").val(btoa(bluehand.toString()));
-			  		    $("#game_yellowhand").val(btoa(yellowhand.toString()));
-						$("#game_status").val("Started");
-					}						
-				}					
-			}			
+			}
+			$("#game_message").val(" " + targetColor[0].toUpperCase() + targetColor.substring(1) + " player's cards have been returned to them.");
+			$("#game_comment").val("");
+			/* Increment the number of plays made */
+			plays = parseInt($("#game_plays").val());
+			plays++;
+			$("#game_plays").val(plays.toString());
+		  }
 			
 	/* Remove discard child from discardpile and set it as background only */
 			discardElement = document.getElementById("discardpile");
@@ -281,6 +296,7 @@ $(document).ready(() => {
 		$("#game_turn").val("0");
 		$("#game_plays").val("0");
 		playedCard = "";
+		mercyMove = "";
 		discardpile = [];
 /* Initialize the board to all empty */
 		board.fill("");
@@ -410,7 +426,8 @@ DEBUG GAME SCREEN
 /* Get all variables off the web page into internal global variables */
 		getPageValues();
 
-		playedCard = "";  
+		playedCard = "";
+		mercyMove = "";  
 
 /* Get the current user's color(s) */
 		user_color_list = [];
@@ -600,12 +617,12 @@ DEBUG GAME SCREEN
 			}
 		/* Display names of players on the board */
 			if (player_name != "") {
-				labelBoard(x, y, player_name + append_str, color, "playername", "leftPlayer");
+				labelBoard(x, y, player_name + append_str, color, "playername", "playerName");
 				card_count = getCardCount(color);
 				if (card_count>=0) {
-					labelBoard(x+20, y+20, card_count, "white", "boardlabel", "leftPlayer")			
+					labelBoard(x+20, y+20, card_count, "white", "boardlabel", "cardCount")			
 				} else {
-					labelBoard(x+20, y+20, "Can't play", "white", "boardlabel", "lowerPlayer");
+					labelBoard(x+20, y+20, "Can't play", "white", "boardlabel", "cardCount");
 				}
 			}			
 		}		
@@ -723,6 +740,8 @@ DEBUG GAME SCREEN
 	/* Draw the comment area in between Discards and Deck piles */
 		d = document.createElement("div");
 		d.setAttribute("id", "comment");
+		d.setAttribute("draggable", "true");
+		d.setAttribute("ondragstart", "drag(event)");
 		d.className = "comment";
 		d.innerHTML = comment.replace(/&amp;/g, "&");
 		d.style.left = ( ((centre_x + 25) -60).toString() + "px");
@@ -1078,6 +1097,8 @@ DEBUG GAME SCREEN
 				/* save the discarded playerhand as a comment so it can be shown to other players */
 				comment = formatComment(playerhand);
 				$("#game_comment").val(comment);
+				/* Put a message on screen to tell everyone the player could not make a move */
+				$("#game_message").val(turn_color + " player could not make a move.");
 				return true;
 			} else {
 				return false;
@@ -1480,6 +1501,12 @@ DEBUG GAME SCREEN
 	/* Write a text string label to a spot on the board */
 		var d = document.createElement("div");
 		d.setAttribute("id", id);
+		if (id == "playerName") {
+			id2 = "playerName-" + tcolor;
+			d.setAttribute("id", id2);
+			d.setAttribute("ondrop", "drop(event)");
+			d.setAttribute("ondragover", "allowDrop(event)");
+		}
 		d.className = classname;
 		d.style.position = "absolute";
 		d.style.color = tcolor;
@@ -1662,6 +1689,18 @@ DEBUG GAME SCREEN
 	    var reserved = '';
 	    for (var i = 0; i < str.length; i++) {
 	        reserved += '&#' + str.charCodeAt(i) + ';';
+	    }
+	    return reserved;
+	}
+	
+	function U2A(str) {
+	    var reserved = '';
+	    var code = str.match(/&#(d+);/g);
+	    if (code === null) {
+	        return str;
+	    }
+	    for (var i = 0; i < code.length; i++) {
+	        reserved += String.fromCharCode(code[i].replace(/[&#;]/g, ''));
 	    }
 	    return reserved;
 	}
@@ -1924,6 +1963,42 @@ function performDrop(player_color, data, ev) {
  		drop_ok = true;
  	}
 
+/* player is moving the throw away cards beside the discard pile onto another players name */
+    if ((draggingObj == "comment") && (draggingTo == "playerName")) {
+		if (playedCard != "") {
+			alert("You can't return discards to someone if you have already made your own move.");
+			mercyMove = "";
+		} else {
+			targetId = targetElement.id;
+			targetColor = targetId.substring(targetId.indexOf("-")+1, targetId.length);
+			throwAwayCards = document.getElementById("comment").innerHTML;
+			throwAwayMessage = $("#game_message").val();
+			throwAwayColor = throwAwayMessage.substring(0, throwAwayMessage.indexOf(" "));
+			if (targetColor != throwAwayColor) {
+				alert("You can only return the discards to the player who discarded them.");
+				mercyMove = "";	
+			} else {
+				if (confirm("Returning " + targetColor + " player's discards back to their hand. \nPress the Ok button to confirm, \nPress Cancel if this is not what you want to do.")) {
+					throwAwayCards = unFormatComment(document.getElementById("comment").innerHTML);
+					playerhand_str = "#game_" + targetColor + "hand";
+					playerhand = ($(playerhand_str).val()).split(",");
+					if (playerhand[0] != "") {
+						alert("You can't return discards into a hand that already has cards.");
+						mercyMove = "";
+					} else {
+						playerhand = throwAwayCards.split(" ");
+						$(playerhand_str).val(btoa(playerhand.toString()));
+						mercyMove = targetColor;
+						endTurnButtonElement = document.getElementById("Save");
+						endTurnButtonElement.click();	
+					}
+				}			
+			}
+
+		}
+  	  	drop_ok = true;
+    }
+
 /*  player is moving a marble to an empty hole */
     if ((draggingObj == "marble") && (draggingTo == "hole")){
 		m = document.getElementById(data);
@@ -2104,12 +2179,27 @@ function dragObjectType(data) {
 		obj = "hand"
 	} else if (data.substring(0,4) == "myCa") {
 		obj = "board"
+	} else if (data.substring(0,6) == "player") {
+		obj = "playerName"
+	} else if (data == "comment") {
+		obj = "comment"
 	}
 	else {
 		obj = "unknown"
 	}
 	return obj
 }
+
+function unFormatComment(unicodeStr) {
+	cardStr = unicodeStr.replaceAll("\u2666", "D");
+	cardStr = cardStr.replaceAll("\u2665", "H");
+	cardStr = cardStr.replaceAll("\u2660", "S");
+	cardStr = cardStr.replaceAll("\u2663", "C");
+	cardStr = cardStr.replaceAll("\u{1F0CF}", "J1");
+	cardStr = cardStr.replaceAll(" ",",");
+	return cardStr;
+}
+
 
 function updateBoardArray() {
 /* update the field that stores the board and marble positions */
