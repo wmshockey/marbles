@@ -1105,19 +1105,6 @@ DEBUG GAME SCREEN
 			}
 		}
 
-		/* Check to make sure player didn't try to kill one of their own marbles */
-		for (i=0; i<moved_count; i++) {
-			start_hole = moved_marbles[i][1];
-			end_hole = moved_marbles[i][2];
-			if ( startHoles.includes(end_hole)) {
-				killed_marble_color = moved_marbles[i][0].substring(0,1);
-				if (killed_marble_color == player_color.substring(0,1)) {
-					alert("You can't kill one of your own marbles.  Take your turn over.");
-					return false;
-				}
-			}
-		}
-
 		/* If Jack card was played then handle move checks completely different */
 		if ( ["JH", "JD", "JC", "JS"].includes(playedCard) ) {
 			/* Two and only two marbles must be involved */
