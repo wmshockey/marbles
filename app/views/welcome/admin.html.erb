@@ -78,6 +78,7 @@
 						<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
 						<%= link_to 'Copy', copy_game_path(game.id),  data: {confirm: 'Are you sure you want to make a copy of this game?' } %><span>&nbsp&nbsp</span>
 						<%= link_to 'Debug', debug_game_path(game) %>
+						<%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %>
 					</td>
 				</div>
 		      </tr>
