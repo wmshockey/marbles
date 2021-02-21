@@ -32,6 +32,7 @@
 			<% current_time = Time.now.to_i%>
 		    <% @records.each do |game| %>
 			  <% players = [game.yplayer, game.gplayer, game.rplayer, game.bplayer]%>
+			  <% duration = game.updated_at.to_time.to_i - game.created_at.to_time.to_i %>
 		      <tr>
 				<% if (current_time - game.updated_at.to_time.to_i) <= 300 %>
 		       	 	<td class="col-sm-2 blinking"><%= link_to game.name, game_path(game) %></td>
@@ -41,7 +42,7 @@
 		        <td class="col-sm-1"><%= game.start_date %></td>
 		        <td class="col-sm-1"><%= game.status %></td>
 				<td class="col-sm-1"><%= game.updated_at.strftime("%Y-%m-%d %H:%M")%></td>
-		        <td class="col-sm-2">
+		        <td class="col-sm-3">
 					<% if game.ryteam!="" %>
 						<div style="display:inline-block"><%= game.ryteam %></div>
 						<div style="display:inline-block; color:red"><%= "(" + game.rplayer.split(" ")[0] + ", "%></div>
@@ -72,7 +73,7 @@
 				<% players = players.reject { |c| c.empty?} %>
 				<% turn = players[(game.turn).to_i] %>
 		        <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
-				<td class="col-sm-1"><%= game.plays %></td>
+				<td class="col-sm-1"><div><%= game.plays %></div> <div><%=(duration/60.0).to_i%> min</div><div><%= (duration/game.plays).to_i %> s/m</div></td>
 				<div class="col-sm-2">		
 					<td class="navbar-link">
 						<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
