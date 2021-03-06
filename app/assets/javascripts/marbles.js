@@ -970,9 +970,9 @@ DEBUG GAME SCREEN
 								if (back_paths.includes(marble_path_index)) {
 									distance = -distance;
 								}
-								/* set distance to 0 if marble moved out of start row */
+								/* set distance to 1 if marble moved out of start row */
 								if (startHoles.includes(start_hole)) {
-									distance = 0;
+									distance = 1;
 											}
 								/* Note that it is possible when coming out of the 0 centre hole
 								that you can get to holes 5, 29, 53 or 77 by two different paths.  One path is going negative from the centre
@@ -1188,6 +1188,54 @@ DEBUG GAME SCREEN
 		}	
 
 
+	/* Check that all killed marbles are on the valid path of a moved marble */
+		killer_marble_paths = [];
+		killer_marble_dists = [];
+		/* Get the path of a non-killed marble that was moved*/
+		for (i=0; i<moved_marbles.length; i++) {
+			end_hole = moved_marbles[i][2];
+			if (!startHoles.includes(end_hole)) {
+				if(moved_marbles[i][3] >= 0) {
+					killer_marble_paths.push(moved_marbles[i][3]);
+					killer_marble_dists.push(moved_marbles[i][4]);					
+				}
+			}
+		}
+	/* Check that each killed marble is on a valid path of a killer marble */
+		invalid_kills = 0;
+		for (i=0; i<moved_marbles.length; i++) {
+			end_hole = moved_marbles[i][2];
+			if (startHoles.includes(end_hole)) {
+				killed_marble_start_hole = moved_marbles[i][1];
+				valid_kill = false;
+				/* Killed marble must be on the path between killer marbles start and end holes */
+				for (j=0; j<killer_marble_paths.length; j++) {
+					if (paths[killer_marble_paths[j]].includes(killed_marble_start_hole)) {
+						if (["7H", "7D", "7C", "7S"].includes(playedCard)) {
+							for (k=0; k<=killer_marble_dists[j]; k++) {
+								if ( killed_marble_start_hole == paths[killer_marble_paths[j]][k] ) {
+									valid_kill = true;
+								}
+							}							
+						} else {
+							last_index = killer_marble_dists[j];
+							if ( killed_marble_start_hole == paths[killer_marble_paths[j]][last_index] ) {
+								valid_kill = true;
+							}
+						}
+					}
+				}
+				if (!valid_kill) {
+					invalid_kills = invalid_kills + 1;
+				}					
+			}
+		}
+		if (invalid_kills > 0) {
+			alert("Attempt to kill marbles outside of a valid move path. Take your turn over.");
+			return false;
+		}
+
+
 		/* Check if a marble is coming out of a start row */
 		if (start_hole_involved) {
 			
@@ -1274,7 +1322,7 @@ DEBUG GAME SCREEN
 				return false;
 			}
 		}
-
+		
 
 		/* If a 7 card was not played, no marbles should have been killed along the path */
 		if (!["7H", "7D", "7C", "7S"].includes(playedCard)) {
@@ -2033,6 +2081,10 @@ function performDrop(player_color, data, ev) {
 	if ((draggingObj == "marble") && (draggingFrom!="board") && (draggingTo == "marble")) {
 		killed_marble = ev.target.id;
 		killer_marble = data;
+		startHoleElement = document.getElementById(data).parentElement;
+		startHoleNbr = parseInt(startHoleElement.id.substring(4,6));
+		targetElement = document.getElementById(killed_marble).parentElement;
+		targetHoleNbr = parseInt(targetElement.id.substring(4,6));
 		/* If a Jack is played, swap the two marbles involved. */
 		if (["JH", "JD", "JC", "JS"].includes(playedCard)) {
 			killedMarbleElement = document.getElementById(killed_marble);
@@ -2045,6 +2097,19 @@ function performDrop(player_color, data, ev) {
 			playerElement.appendChild(killedMarbleElement);
 			/* place the players marble in the target marbles hole */
 			targetElement.appendChild(killerMarbleElement);
+			drop_ok = true;
+		/* Check if marble is brought out of start row into the wrong hole. */
+		} else if (green_start_holes.includes(startHoleNbr) && targetHoleNbr != 1) {
+			alert("Green marble coming out of start row into the wrong hole.");
+			drop_ok = true;
+		} else if (red_start_holes.includes(startHoleNbr) && targetHoleNbr != 25) {
+			alert("Red marble coming out of start row into the wrong hole.");
+			drop_ok = true;
+		} else if (blue_start_holes.includes(startHoleNbr) && targetHoleNbr != 49) {
+			alert("Blue marble coming out of start row into the wrong hole.");
+			drop_ok = true;
+		} else if (yellow_start_holes.includes(startHoleNbr) && targetHoleNbr != 73) {
+			alert("Yellow marble coming out of start row into the wrong hole.");
 			drop_ok = true;
 		} else {
 		/* This is a straight kill move */
