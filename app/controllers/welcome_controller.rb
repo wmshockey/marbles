@@ -27,15 +27,15 @@ class WelcomeController < ApplicationController
   end
   
   def letsencrypt1
-    render plain: "oJ8NnQdu5K6hIriSh3vZXlwrJbdt78geYn2eoEp1QpA.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+    render plain: "KsMFTs7WyL1Qp0fWMM6ngIPQw0P796gDPmUHecmBYqY.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
   end
     
   def letsencrypt2
-    render plain: "e8WMI9bNCYys_GMCuwiJh8rjjBvcWwN-9wA6BKfaehA.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+    render plain: "UKlc744p08tlNn1lquxybh3fruOSue9T5qEN1eVY3Qo.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
   end
   
   def letsencrypt3
-    render plain: "lxzQ72EkbDCTM9VpU5LZ9VJCyRgaYroz0rItOfIeQ5o.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
+    render plain: "ZK5b5WgrDWKe_aKth25wXy1k_ebCR0PAqmYB0ARZ2H0.Q0_MeqZMHofUrqQw5JM1lIwytsur7x2iEgCzcPGJQ50"
   end
     
 end

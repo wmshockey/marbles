@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   get 'welcome/rules' => "welcome#rules"
   get 'welcome/help' => "welcome#help"
   get 'welcome/admin' => "welcome#admin"
-  get '/.well-known/acme-challenge/oJ8NnQdu5K6hIriSh3vZXlwrJbdt78geYn2eoEp1QpA' => "welcome#letsencrypt1"
-  get '/.well-known/acme-challenge/e8WMI9bNCYys_GMCuwiJh8rjjBvcWwN-9wA6BKfaehA' => "welcome#letsencrypt2"
-  get '/.well-known/acme-challenge/lxzQ72EkbDCTM9VpU5LZ9VJCyRgaYroz0rItOfIeQ5o' => "welcome#letsencrypt3"
+  get '/.well-known/acme-challenge/KsMFTs7WyL1Qp0fWMM6ngIPQw0P796gDPmUHecmBYqY' => "welcome#letsencrypt1"
+  get '/.well-known/acme-challenge/UKlc744p08tlNn1lquxybh3fruOSue9T5qEN1eVY3Qo' => "welcome#letsencrypt2"
+  get '/.well-known/acme-challenge/ZK5b5WgrDWKe_aKth25wXy1k_ebCR0PAqmYB0ARZ2H0' => "welcome#letsencrypt3"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'welcome#index'
   
