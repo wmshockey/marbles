@@ -73,7 +73,11 @@
 				<% players = players.reject { |c| c.empty?} %>
 				<% turn = players[(game.turn).to_i] %>
 		        <td class="col-sm-1"><%= turn.split(" ")[0] %></td>
-				<td class="col-sm-1"><div><%= game.plays %></div> <div><%=(duration/60.0).to_i%> min</div><div><%= (duration/game.plays).to_i %> s/m</div></td>
+				<% if game.plays != 0%>
+					<td class="col-sm-1"><div><%= game.plays %></div> <div><%=(duration/60.0).to_i%> min</div><div><%= (duration/game.plays).to_i %> s/m</div></td>
+				<% else %>
+					<td></td>
+				<% end %>
 				<div class="col-sm-2">		
 					<td class="navbar-link">
 						<%= link_to 'Play', game_path(game) %><span>&nbsp&nbsp</span>	
