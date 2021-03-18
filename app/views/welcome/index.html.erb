@@ -9,7 +9,7 @@
 	</div>
 
 		<h4 class="col-sm-4"><strong><%= link_to 'Show All My Games', '/games'%></strong></h4>
-		<div class="col-sm-8 text-info"></div>
+		<div class="col-sm-8 text-info bg-info">Update 2021-03-18: Show scores only for matches the player is a participant in.</div>
 
 	<br><br>
 
@@ -21,6 +21,26 @@
 
 	<div style="font-style: italic"><%= "Games currently in progress:  #{current_games.count}"%></div>
 	
+	<% mygames = @games.select {|g| [g.rplayer, g.yplayer, g.bplayer, g.gplayer].include?(@user_name)} %>
+	<% team_matchups = [] %>
+	<% i = 0 %>
+	<% mygames.each do |m| %>
+		<% if m.ryteam != "" && m.gbteam != "" %>
+			<% team_matchups.push([m.ryteam, m.gbteam, 0, 0])%>
+			<% i = i + 1 %>
+		<% end %>
+	<% end %>
+	<% team_matchups = team_matchups.uniq.sort! %>
+	<% i = 0 %>
+	<% while i < team_matchups.length do %>
+		<% match_games = mygames.select {|g| g.ryteam==team_matchups[i][0] && g.gbteam==team_matchups[i][1]} %>
+		<% ry_gamewins = match_games.select {|g| g.winner == team_matchups[i][0]} %>
+		<% gb_gamewins = match_games.select {|g| g.winner == team_matchups[i][1]} %>
+		<% team_matchups[i][2] = ry_gamewins.count() %>
+		<% team_matchups[i][3] = gb_gamewins.count() %>
+		<% i = i + 1 %>		
+	<% end %>
+
 	<% team_stats = []%>
 	<% i = 0%>
 	<% teams.each do |t| %> 
@@ -40,18 +60,45 @@
 			<% i = i + 1%>
 		<% end %>
 	<% end %>
-
-	<% team_stats.sort_by! { |a| -a[4] }%>
+	<% team_stats.sort_by! { |a| -a[0] }%>
 	
-	<h4>Current Team Standings</h4>
+
+	<h4>Score Board</h4>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Teams</th>
+				<th>Games Played</th>
+				<th>Score</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<% i = 0 %>
+			<% while i < team_matchups.length do %>
+				<tr>
+					<% ryteam = team_matchups[i][0] %>
+					<% gbteam = team_matchups[i][1] %>
+					<% rywins = team_matchups[i][2] %>
+					<% gbwins = team_matchups[i][3] %>
+					<% num_games = rywins + gbwins %>
+					<td><%= ryteam %> vs <%= gbteam %></td>
+					<td><%= num_games %></td>
+					<td><%= ryteam%>: <%= rywins %> | <%= gbteam %>: <%= gbwins%></td>
+				</tr>
+				<% i = i + 1 %>
+			<% end %>
+		</tbody>
+	</table>
+
+
+	<h4>Teams</h4>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
 				<th>Team</th>
 				<th>Players</th>
 				<th>Games Played</td>
-				<th>Wins</th>
-				<th>Losses</td>
 			</tr>
 		</thead>
 	
@@ -62,8 +109,6 @@
 						<td><%= t[0]%></td>
 						<td><%= t[1]%>, <%= t[2]%></td>
 						<td><%= t[3]%></td>
-						<td><%= t[4]%></td>
-						<td><%= t[5]%></td>
 					</tr>
 				<% end %>
 			<% end %>
@@ -112,10 +157,10 @@
 		<% end %>
 	<% end %>
 
-	<% player_stats.sort_by! { |a| -a[2]}%>
+	<% player_stats.sort_by! { |a| a[0]}%>
 	
 	<br>
-	<h4>Current Individual Standings</h4>
+	<h4>Players</h4>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
